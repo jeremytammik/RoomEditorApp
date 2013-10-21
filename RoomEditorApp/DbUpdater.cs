@@ -128,18 +128,24 @@ namespace GetLoops
       if( .01 < translation.GetLength()
         || .01 < Math.Abs( rotation ) )
       {
-        using( Transaction tx = new Transaction( _doc ) )
+        using( Transaction tx = new Transaction( 
+          _doc ) )
         {
-          tx.Start( "Update Furniture and Equipmant Instance Placement" );
+          tx.Start( "Update Furniture and "
+            + "Equipmant Instance Placement" );
 
           if( .01 < translation.GetLength() )
           {
-            ElementTransformUtils.MoveElement( _doc, e.Id, translation );
+            ElementTransformUtils.MoveElement( 
+              _doc, e.Id, translation );
           }
           if( .01 < Math.Abs( rotation ) )
           {
-            Line axis = _creapp.NewLineBound( lp.Point, lp.Point + XYZ.BasisZ );
-            ElementTransformUtils.RotateElement( _doc, e.Id, axis, rotation );
+            Line axis = Line.CreateBound( lp.Point, 
+              lp.Point + XYZ.BasisZ );
+
+            ElementTransformUtils.RotateElement( 
+              _doc, e.Id, axis, rotation );
           }
           tx.Commit();
           rc = true;

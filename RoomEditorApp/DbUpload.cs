@@ -68,7 +68,7 @@ namespace GetLoops
         dbModel = db.CreateDocument<DbModel>( dbModel );
       }
 
-      Level level = room.Level;
+      Element level = doc.GetElement( room.LevelId );
 
       uid = level.UniqueId;
 

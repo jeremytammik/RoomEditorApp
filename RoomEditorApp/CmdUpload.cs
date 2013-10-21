@@ -97,14 +97,14 @@ namespace GetLoops
           // short arc in between them, skip the arc
           // and extend both lines.
 
-          p = seg.Curve.get_EndPoint( 0 );
+          p = seg.Curve.GetEndPoint( 0 );
 
           jtloop.Add( new Point2dInt( p ) );
 
           Debug.Assert( null == q || q.IsAlmostEqualTo( p ),
             "expected last endpoint to equal current start point" );
 
-          q = seg.Curve.get_EndPoint( 1 );
+          q = seg.Curve.GetEndPoint( 1 );
 
           if( _debug_output )
           {
@@ -276,8 +276,8 @@ namespace GetLoops
 
             if( _debug_output )
             {
-              p = curve.get_EndPoint( 0 );
-              q = curve.get_EndPoint( 1 );
+              p = curve.GetEndPoint( 0 );
+              q = curve.GetEndPoint( 1 );
               Debug.Print( "{0} --> {1}",
                 Util.PointString( p ),
                 Util.PointString( q ) );
@@ -291,8 +291,8 @@ namespace GetLoops
 
             if( _debug_output )
             {
-              p = curve.get_EndPoint( 0 );
-              q = curve.get_EndPoint( 1 );
+              p = curve.GetEndPoint( 0 );
+              q = curve.GetEndPoint( 1 );
               Debug.Print( "{0} --> {1} following face",
                 Util.PointString( p ),
                 Util.PointString( q ) );
@@ -334,7 +334,7 @@ namespace GetLoops
             // short arc in between them, skip the arc
             // and extend both lines.
 
-            p = curve.get_EndPoint( 0 );
+            p = curve.GetEndPoint( 0 );
 
             Debug.Assert( null == q 
               || q.IsAlmostEqualTo( p, 1e-04 ),
@@ -342,7 +342,7 @@ namespace GetLoops
                 "expected last endpoint to equal current start point, not distance {0}", 
                 (null == q ? 0 : p.DistanceTo( q ))  ) );
 
-            q = curve.get_EndPoint( 1 );
+            q = curve.GetEndPoint( 1 );
 
             if( _debug_output )
             {
@@ -503,11 +503,11 @@ namespace GetLoops
           LocationPoint lp = e.Location 
             as LocationPoint;
 
-          Transform t = Transform.get_Translation( 
+          Transform t = Transform.CreateTranslation( 
             -lp.Point );
 
-          Transform r = Transform.get_Rotation( 
-            lp.Point, XYZ.BasisZ, -lp.Rotation );
+          Transform r = Transform.CreateRotationAtPoint(
+            XYZ.BasisZ, -lp.Rotation, lp.Point );
 
           geo = geo.GetTransformed( t * r );
         }
@@ -697,7 +697,7 @@ namespace GetLoops
             ComponentManager.ApplicationWindow );
 
         string caption = doc.Title
-          + " : " + room.Level.Name
+          + " : " + doc.GetElement( room.LevelId ).Name
           + " : " + room.Name;
 
         GeoSnoop.DisplayLoops( revit_window,

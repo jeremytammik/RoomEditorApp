@@ -14,7 +14,7 @@ namespace GetLoops
       this Curve curve,
       int i )
     {
-      return curve.get_EndPoint( i );
+      return curve.GetEndPoint( i );
     }
   }
 
@@ -70,17 +70,15 @@ namespace GetLoops
 
       if( orig is Line )
       {
-        return creapp.NewLineBound(
+        return Line.CreateBound( 
           orig.GetEndPoint( 1 ),
           orig.GetEndPoint( 0 ) );
-        //return Line.CreateBound(orig.GetEndPoint(1), orig.GetEndPoint(0));
       }
       else if( orig is Arc )
       {
-        return creapp.NewArc( orig.GetEndPoint( 1 ),
-          orig.GetEndPoint( 0 ),
+        return Arc.Create( orig.GetEndPoint( 1 ), 
+          orig.GetEndPoint( 0 ), 
           orig.Evaluate( 0.5, true ) );
-        //return Arc.Create(orig.GetEndPoint(1), orig.GetEndPoint(0), orig.Evaluate(0.5, true));
       }
       else
       {
