@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RevitAddIns>
+  <AddIn Type="Application">
+    <Name>Room Editor</Name>
+    <Assembly>RoomEditorApp.dll</Assembly>
+    <FullClassName>RoomEditorApp.App</FullClassName>
+    <ClientId>557db8fb-418a-4193-ab89-5b7c5bf21661</ClientId>
+    <VendorId>TBC_</VendorId>
+    <VendorDescription>The Building Coder, http://thebuildingcoder.typepad.com</VendorDescription>
+  </AddIn>
+</RevitAddIns>
