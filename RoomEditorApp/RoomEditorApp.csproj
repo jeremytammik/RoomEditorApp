@@ -100,6 +100,23 @@
   <ItemGroup>
     <None Include="RoomEditorApp.addin" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Icon\1Down.png" />
+    <EmbeddedResource Include="Icon\1Down16.png" />
+    <EmbeddedResource Include="Icon\1Down32.png" />
+    <EmbeddedResource Include="Icon\1Up.png" />
+    <EmbeddedResource Include="Icon\1Up16.png" />
+    <EmbeddedResource Include="Icon\1Up32.png" />
+    <EmbeddedResource Include="Icon\2Up.png" />
+    <EmbeddedResource Include="Icon\2Up16.png" />
+    <EmbeddedResource Include="Icon\2Up32.png" />
+    <EmbeddedResource Include="Icon\Question.png" />
+    <EmbeddedResource Include="Icon\Question16.png" />
+    <EmbeddedResource Include="Icon\Question32.png" />
+    <EmbeddedResource Include="Icon\ZigZagRed.png" />
+    <EmbeddedResource Include="Icon\ZigZagRed16.png" />
+    <EmbeddedResource Include="Icon\ZigZagRed32.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterClean">
     <Delete Files="$(AppData)\Autodesk\REVIT\Addins\2014\RoomEditorApp.addin" />
