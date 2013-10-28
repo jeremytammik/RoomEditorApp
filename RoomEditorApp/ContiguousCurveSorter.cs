@@ -6,7 +6,7 @@ using Autodesk.Revit.DB;
 using System.Diagnostics;
 #endregion
 
-namespace GetLoops
+namespace RoomEditorApp
 {
   static class CurveGetEnpointExtension
   {

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 #endregion
 
-namespace GetLoops
+namespace RoomEditorApp
 {
   /// <summary>
   /// A closed polygon boundary loop.

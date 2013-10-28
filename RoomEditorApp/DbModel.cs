@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using DreamSeat;
 #endregion
 
-namespace GetLoops
+namespace RoomEditorApp
 {
   /// <summary>
   /// Base class for all Jeremy Room Editor classes.

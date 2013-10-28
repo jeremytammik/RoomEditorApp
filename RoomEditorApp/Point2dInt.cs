@@ -3,7 +3,7 @@ using System;
 using Autodesk.Revit.DB;
 #endregion
 
-namespace GetLoops
+namespace RoomEditorApp
 {
   /// <summary>
   /// An integer-based 2D point class.

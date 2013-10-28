@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Autodesk.Revit.DB;
 #endregion
 
-namespace GetLoops
+namespace RoomEditorApp
 {
   /// <summary>
   /// A bounding box for a collection of XYZ instances.

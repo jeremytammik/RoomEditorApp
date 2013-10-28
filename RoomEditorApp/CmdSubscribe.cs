@@ -11,7 +11,7 @@ using Autodesk.Revit.UI.Events;
 using DreamSeat;
 #endregion
 
-namespace GetLoops
+namespace RoomEditorApp
 {
   [Transaction( TransactionMode.ReadOnly )]
   class CmdSubscribe : IExternalCommand

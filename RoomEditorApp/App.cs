@@ -12,7 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Reflection;
 #endregion
 
-namespace GetLoops
+namespace RoomEditorApp
 {
   class App : IExternalApplication
   {

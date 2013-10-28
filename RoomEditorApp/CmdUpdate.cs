@@ -10,7 +10,7 @@ using Autodesk.Revit.UI;
 using DreamSeat;
 #endregion
 
-namespace GetLoops
+namespace RoomEditorApp
 {
   /// <summary>
   /// External command to either set the initial 

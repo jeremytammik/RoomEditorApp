@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Drawing;
 #endregion
 
-namespace GetLoops
+namespace RoomEditorApp
 {
   /// <summary>
   /// A bounding box for a collection 

@@ -32,5 +32,11 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion( "2014.0.0.10" )]
-[assembly: AssemblyFileVersion( "2014.0.0.10" )]
+
+//
+// History:
+// 2013-10-21 - 2014.0.0.10 - implemented RoomEditorApp and migrated GetLoops source from Revit 2013 to 2014
+// 2013-10-28 - 2014.0.0.11 - replaced GetLoops namespace by RoomEditorApp and installed CouchDB
+//
+[assembly: AssemblyVersion( "2014.0.0.11" )]
+[assembly: AssemblyFileVersion( "2014.0.0.11" )]

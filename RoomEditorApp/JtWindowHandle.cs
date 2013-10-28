@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Windows.Forms;
 #endregion
 
-namespace GetLoops
+namespace RoomEditorApp
 {
   /// <summary>
   /// Wrapper class for converting 

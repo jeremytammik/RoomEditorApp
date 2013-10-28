@@ -7,7 +7,7 @@ using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 #endregion
 
-namespace GetLoops
+namespace RoomEditorApp
 {
   // based on 06972592 [How to get the shape of Structural Framing objects]
   // /a/j/adn/case/sfdc/06972592/src/FramingXsecAnalyzer/FramingXsecAnalyzer/GeoSnoop.cs

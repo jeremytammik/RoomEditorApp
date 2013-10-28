@@ -7,7 +7,7 @@ using Autodesk.Revit.DB;
 using DreamSeat;
 #endregion
 
-namespace GetLoops
+namespace RoomEditorApp
 {
 
   class DbUpdater

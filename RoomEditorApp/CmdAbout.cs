@@ -5,7 +5,7 @@ using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 #endregion
 
-namespace GetLoops
+namespace RoomEditorApp
 {
   [Transaction( TransactionMode.ReadOnly )]
   class CmdAbout : IExternalCommand

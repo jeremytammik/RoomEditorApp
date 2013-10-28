@@ -4,7 +4,7 @@ using System.Windows.Forms;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 
-namespace GetLoops
+namespace RoomEditorApp
 {
   class Util
   {

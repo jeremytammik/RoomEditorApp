@@ -8,7 +8,7 @@ using Autodesk.Revit.DB.Architecture;
 using DreamSeat;
 #endregion
 
-namespace GetLoops
+namespace RoomEditorApp
 {
   class RoomEditorDb
   {

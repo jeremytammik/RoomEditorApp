@@ -16,7 +16,7 @@ using IWin32Window = System.Windows.Forms.IWin32Window;
 using DreamSeat;
 #endregion
 
-namespace GetLoops
+namespace RoomEditorApp
 {
   [Transaction( TransactionMode.ReadOnly )]
   public class CmdUpload : IExternalCommand
