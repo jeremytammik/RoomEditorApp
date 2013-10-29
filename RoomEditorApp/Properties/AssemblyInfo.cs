@@ -37,7 +37,8 @@ using System.Runtime.InteropServices;
 // History:
 // 2013-10-21 - 2014.0.0.10 - implemented RoomEditorApp and migrated GetLoops source from Revit 2013 to 2014
 // 2013-10-28 - 2014.0.0.11 - replaced GetLoops namespace by RoomEditorApp and installed CouchDB
-// 2013-10-29 - 2014.0.0.12 - explaored why is this much slower in Revit 2014 than in 2013
+// 2013-10-28 - 2014.0.0.12 - added icon resources to project
+// 2013-10-29 - 2014.0.0.13 - explored this is slower in Revit 2014 than in 2013 and removed call to SetRaiseWithoutDelay
 //
-[assembly: AssemblyVersion( "2014.0.0.12" )]
-[assembly: AssemblyFileVersion( "2014.0.0.12" )]
+[assembly: AssemblyVersion( "2014.0.0.13" )]
+[assembly: AssemblyFileVersion( "2014.0.0.13" )]

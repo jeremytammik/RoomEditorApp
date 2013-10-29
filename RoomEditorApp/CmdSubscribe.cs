@@ -116,14 +116,14 @@ namespace RoomEditorApp
       ref string message,
       ElementSet elements )
     {
-      if( !App.Subscribed 
+      if( !App.Subscribed
         && -1 == DbUpdater.LastSequence )
       {
         DbUpdater.SetLastSequence();
       }
 
-      App.ToggleSubscription( 
-        new EventHandler<IdlingEventArgs>( 
+      App.ToggleSubscription(
+        new EventHandler<IdlingEventArgs>(
           OnIdling ) );
 
       return Result.Succeeded;

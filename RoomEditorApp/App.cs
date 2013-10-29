@@ -84,11 +84,11 @@ namespace RoomEditorApp
     /// <summary>
     /// Return path to embedded resource icon
     /// </summary>
-    static string IconResourcePath( 
-      string name, 
+    static string IconResourcePath(
+      string name,
       string size )
     {
-      return _namespace 
+      return _namespace
         + "." + "Icon" // folder name
         + "." + name + size // icon name
         + ".png"; // filename extension
@@ -108,11 +108,11 @@ namespace RoomEditorApp
       //return new BitmapImage( new Uri(
       //  Path.Combine( _imageFolder, imageName ) ) );
 
-      string [] names = a.GetManifestResourceNames();
+      string[] names = a.GetManifestResourceNames();
 
       Stream s = a.GetManifestResourceStream( path );
 
-      Debug.Assert( null != s, 
+      Debug.Assert( null != s,
         "expected valid icon resource" );
 
       BitmapImage img = new BitmapImage();
@@ -171,12 +171,12 @@ namespace RoomEditorApp
 
       int n = classNameStem.Length;
 
-      Debug.Assert( text.Length == n, 
+      Debug.Assert( text.Length == n,
         "expected equal number of text and class name entries" );
 
       _buttons = new RibbonItem[n];
 
-      RibbonPanel panel 
+      RibbonPanel panel
         = a.CreateRibbonPanel( _caption );
 
       #region Use separate push buttons
@@ -207,7 +207,7 @@ namespace RoomEditorApp
       SplitButtonData splitBtnData
         = new SplitButtonData( _caption, _caption );
 
-      SplitButton splitBtn = panel.AddItem( 
+      SplitButton splitBtn = panel.AddItem(
         splitBtnData ) as SplitButton;
 
       Assembly asm = typeof( App ).Assembly;
@@ -216,7 +216,7 @@ namespace RoomEditorApp
       {
         PushButtonData d = new PushButtonData(
           classNameStem[i], text[i], _path,
-          _namespace + "." + _cmd_prefix 
+          _namespace + "." + _cmd_prefix
           + classNameStem[i] );
 
         d.ToolTip = tooltip[i];
@@ -245,13 +245,13 @@ namespace RoomEditorApp
       return Result.Succeeded;
     }
 
-    public Result OnShutdown( 
+    public Result OnShutdown(
       UIControlledApplication a )
     {
       if( Subscribed )
       {
-        _uiapp.Idling 
-          -= new EventHandler<IdlingEventArgs>( 
+        _uiapp.Idling
+          -= new EventHandler<IdlingEventArgs>(
             ( sender, ea ) => { } );
       }
       return Result.Succeeded;
@@ -265,7 +265,7 @@ namespace RoomEditorApp
     {
       get
       {
-        return _buttons[3].ItemText.Equals( 
+        return _buttons[3].ItemText.Equals(
           _unsubscribe );
       }
     }
@@ -274,7 +274,7 @@ namespace RoomEditorApp
     /// Toggle on and off subscription to 
     /// automatic cloud updates.
     /// </summary>
-    public static void ToggleSubscription( 
+    public static void ToggleSubscription(
       EventHandler<IdlingEventArgs> handler )
     {
       if( Subscribed )
