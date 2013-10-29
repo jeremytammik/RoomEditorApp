@@ -21,7 +21,7 @@ namespace RoomEditorApp
     /// </summary>
     public delegate void IdlingHandler(
       object sender,
-      IdlingEventArgs e );
+      IdlingEventArgs ea );
 
     /// <summary>
     /// Caption
@@ -252,7 +252,7 @@ namespace RoomEditorApp
       {
         _uiapp.Idling 
           -= new EventHandler<IdlingEventArgs>( 
-            ( o, e ) => { } );
+            ( sender, ea ) => { } );
       }
       return Result.Succeeded;
     }
@@ -275,16 +275,16 @@ namespace RoomEditorApp
     /// automatic cloud updates.
     /// </summary>
     public static void ToggleSubscription( 
-      EventHandler<IdlingEventArgs> h )
+      EventHandler<IdlingEventArgs> handler )
     {
       if( Subscribed )
       {
-        _uiapp.Idling -= h;
+        _uiapp.Idling -= handler;
         _buttons[3].ItemText = _subscribe;
       }
       else
       {
-        _uiapp.Idling += h;
+        _uiapp.Idling += handler;
         _buttons[3].ItemText = _unsubscribe;
       }
     }

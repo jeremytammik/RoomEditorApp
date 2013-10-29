@@ -16,16 +16,32 @@ namespace RoomEditorApp
   [Transaction( TransactionMode.ReadOnly )]
   class CmdSubscribe : IExternalCommand
   {
+    /// <summary>
+    /// How many Idling calls to wait before reporting
+    /// </summary>
+    const int _message_interval = 100;
+
+    /// <summary>
+    /// Number of Idling calls received in this session
+    /// </summary>
+    static int _counter = 0;
+
     void OnIdling(
       object sender,
       IdlingEventArgs ea )
     {
-      //Debug.Print( "OnIdling: {0}",
-      //  DateTime.Now.ToString( "HH:mm:ss.fff" ) );
+      ++_counter;
+
+      if( 0 == ( _counter % _message_interval ) )
+      {
+        Debug.Print( "{0} OnIdling called {1} times",
+          DateTime.Now.ToString( "HH:mm:ss.fff" ),
+          _counter );
+      }
 
       // Use with care! This loads the CPU:
 
-      ea.SetRaiseWithoutDelay();
+      //ea.SetRaiseWithoutDelay();
 
       try
       {
