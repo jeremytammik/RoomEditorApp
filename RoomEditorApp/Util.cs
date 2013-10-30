@@ -1,25 +1,15 @@
-﻿using System;
+﻿#region Namespaces
+using System;
 using System.Diagnostics;
 using System.Windows.Forms;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
+#endregion // Namespaces
 
 namespace RoomEditorApp
 {
   class Util
   {
-    #region Flip SVG Y coordinates
-    public static bool SvgFlip = true;
-
-    /// <summary>
-    /// Flip Y coordinate for SVG export.
-    /// </summary>
-    public static int SvgFlipY( int y )
-    {
-      return SvgFlip ? -y : y;
-    }
-    #endregion // Flip SVG Y coordinates
-
     #region Unit conversion
     const double _feet_to_mm = 25.4 * 12;
 
@@ -47,10 +37,9 @@ namespace RoomEditorApp
       double d )
     {
       //return (int) ( _radians_to_degrees * d + 0.5 );
-      return (int) Math.Round( _radians_to_degrees * d, 
+      return (int) Math.Round( _radians_to_degrees * d,
         MidpointRounding.AwayFromZero );
     }
-
     #endregion // Unit conversion
 
     #region Formatting
@@ -168,26 +157,24 @@ namespace RoomEditorApp
     #endregion // Formatting
 
     #region Messages
-    const string _caption = "Room Editor";
-
     /// <summary>
     /// Display a short big message.
     /// </summary>
     public static void InfoMsg( string msg )
     {
       Debug.Print( msg );
-      TaskDialog.Show( _caption, msg );
+      TaskDialog.Show( App.Caption, msg );
     }
 
     /// <summary>
     /// Display a longer smaller message.
     /// </summary>
-    public static void InfoMsg2( 
-      string instruction, 
+    public static void InfoMsg2(
+      string instruction,
       string msg )
     {
       Debug.Print( msg );
-      TaskDialog dlg = new TaskDialog( _caption );
+      TaskDialog dlg = new TaskDialog( App.Caption );
       dlg.MainInstruction = instruction;
       dlg.MainContent = msg;
       dlg.Show();
@@ -199,7 +186,7 @@ namespace RoomEditorApp
     public static void ErrorMsg( string msg )
     {
       Debug.Print( msg );
-      TaskDialog dlg = new TaskDialog( _caption );
+      TaskDialog dlg = new TaskDialog( App.Caption );
       dlg.MainIcon = TaskDialogIcon.TaskDialogIconWarning;
       dlg.MainInstruction = msg;
       dlg.Show();
@@ -227,5 +214,17 @@ namespace RoomEditorApp
       return rc;
     }
     #endregion // Browse for directory
+
+    #region Flip SVG Y coordinates
+    public static bool SvgFlip = true;
+
+    /// <summary>
+    /// Flip Y coordinate for SVG export.
+    /// </summary>
+    public static int SvgFlipY( int y )
+    {
+      return SvgFlip ? -y : y;
+    }
+    #endregion // Flip SVG Y coordinates
   }
 }

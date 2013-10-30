@@ -17,16 +17,16 @@ namespace RoomEditorApp
   class App : IExternalApplication
   {
     /// <summary>
-    /// Idling event handler delegate
-    /// </summary>
-    public delegate void IdlingHandler(
-      object sender,
-      IdlingEventArgs ea );
-
-    /// <summary>
     /// Caption
     /// </summary>
-    const string _caption = "Room Editor";
+    public const string Caption = "Room Editor";
+
+    /// <summary>
+    /// Idling event handler delegate
+    /// </summary>
+    //public delegate void IdlingHandler(
+    //  object sender,
+    //  IdlingEventArgs ea );
 
     /// <summary>
     /// Switch between subscribe 
@@ -60,7 +60,7 @@ namespace RoomEditorApp
     /// <summary>
     /// Singleton external application class instance.
     /// </summary>
-    internal static App _app = null;
+    //internal static App _app = null;
 
     /// <summary>
     /// Provide access to singleton class instance.
@@ -125,24 +125,19 @@ namespace RoomEditorApp
     }
 
     /// <summary>
-    /// Create a ribbon panel for the MEP sample application.
-    /// We present a column of three buttons: Electrical, HVAC and About.
-    /// The first two include subitems, the third does not.
+    /// Create a custom ribbon panel and populate
+    /// it with our commands, saving the resulting
+    /// ribbon items for later access.
     /// </summary>
     static void AddRibbonPanel(
       UIControlledApplication a )
     {
-      // Upload selection to cloud
-      // Upload all to cloud
-      // Update from cloud
-      // Subscribe-Unsubscribe toggle, disabling Update when subscribed
-
       string[] tooltip = new string[] {
         "Upload selected rooms to cloud.",
         "Upload all rooms to cloud.",
         "Update furniture from the last cloud edit.",
         "Subscribe to or unsubscribe from updates.",
-        "About " + _caption + ": ..."
+        "About " + Caption + ": ..."
       };
 
       string[] text = new string[] {
@@ -177,35 +172,10 @@ namespace RoomEditorApp
       _buttons = new RibbonItem[n];
 
       RibbonPanel panel
-        = a.CreateRibbonPanel( _caption );
-
-      #region Use separate push buttons
-#if USE_SEPARATE_PUSH_BUTTONS
-      PushButtonData[] pbd = new PushButtonData[n];
-
-      for( int i = 0; i < n; ++i )
-      {
-        pbd[i] = new PushButtonData(
-          classNameStem[i], text[i], _path,
-          _cmd_prefix + classNameStem[i] );
-
-        pbd[i].ToolTip = text[i];
-      }
-
-      IList<RibbonItem> b = panel.AddStackedItems( 
-        pbd[0], pbd[1] );
-
-      _buttons[0] = b[0];
-      _buttons[1] = b[1];
-
-      _buttons[2] = panel.AddItem( pbd[2] );
-      _buttons[3] = panel.AddItem( pbd[3] );
-      _buttons[4] = panel.AddItem( pbd[4] );
-#endif // USE_SEPARATE_PUSH_BUTTONS
-      #endregion // Use separate push buttons
+        = a.CreateRibbonPanel( Caption );
 
       SplitButtonData splitBtnData
-        = new SplitButtonData( _caption, _caption );
+        = new SplitButtonData( Caption, Caption );
 
       SplitButton splitBtn = panel.AddItem(
         splitBtnData ) as SplitButton;
@@ -232,29 +202,6 @@ namespace RoomEditorApp
 
         _buttons[i] = splitBtn.AddPushButton( d );
       }
-    }
-
-    public Result OnStartup(
-      UIControlledApplication a )
-    {
-      _app = this;
-      _uiapp = a;
-
-      AddRibbonPanel( a );
-
-      return Result.Succeeded;
-    }
-
-    public Result OnShutdown(
-      UIControlledApplication a )
-    {
-      if( Subscribed )
-      {
-        _uiapp.Idling
-          -= new EventHandler<IdlingEventArgs>(
-            ( sender, ea ) => { } );
-      }
-      return Result.Succeeded;
     }
 
     /// <summary>
@@ -287,6 +234,28 @@ namespace RoomEditorApp
         _uiapp.Idling += handler;
         _buttons[3].ItemText = _unsubscribe;
       }
+    }
+
+    public Result OnStartup(
+      UIControlledApplication a )
+    {
+      _uiapp = a;
+
+      AddRibbonPanel( a );
+
+      return Result.Succeeded;
+    }
+
+    public Result OnShutdown(
+      UIControlledApplication a )
+    {
+      if( Subscribed )
+      {
+        _uiapp.Idling
+          -= new EventHandler<IdlingEventArgs>(
+            ( sender, ea ) => { } );
+      }
+      return Result.Succeeded;
     }
   }
 }
