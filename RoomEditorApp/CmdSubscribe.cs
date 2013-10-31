@@ -17,9 +17,14 @@ namespace RoomEditorApp
   class CmdSubscribe : IExternalCommand
   {
     /// <summary>
+    /// How many Idling calls to wait before acting
+    /// </summary>
+    const int _update_interval = 10;
+
+    /// <summary>
     /// How many Idling calls to wait before reporting
     /// </summary>
-    const int _message_interval = 100;
+    const int _message_interval = 1;
 
     /// <summary>
     /// Number of Idling calls received in this session
@@ -41,73 +46,76 @@ namespace RoomEditorApp
 
       // Use with care! This loads the CPU:
 
-      //ea.SetRaiseWithoutDelay();
+      ea.SetRaiseWithoutDelay();
 
-      try
+      if( 0 == ( _counter % _update_interval ) )
       {
-        RoomEditorDb rdb = new RoomEditorDb();
-        int n = rdb.LastSequenceNumber;
-
-        if( n != DbUpdater.LastSequence )
+        //try
         {
-          UIApplication uiApp = sender as UIApplication;
-          Document doc = uiApp.ActiveUIDocument.Document;
+          RoomEditorDb rdb = new RoomEditorDb();
+          int n = rdb.LastSequenceNumber;
 
-          Debug.Print( "Start furniture update: {0}",
-            DateTime.Now.ToString( "HH:mm:ss.fff" ) );
+          if( n != DbUpdater.LastSequence )
+          {
+            UIApplication uiApp = sender as UIApplication;
+            Document doc = uiApp.ActiveUIDocument.Document;
 
-          //FilteredElementCollector rooms
-          //  = new FilteredElementCollector( doc )
-          //    .OfClass( typeof( SpatialElement ) )
-          //    .OfCategory( BuiltInCategory.OST_Rooms );
+            Debug.Print( "Start furniture update: {0}",
+              DateTime.Now.ToString( "HH:mm:ss.fff" ) );
 
-          //IEnumerable<string> roomUniqueIds
-          //  = rooms.Select<Element, string>(
-          //    e => e.UniqueId );
+            //FilteredElementCollector rooms
+            //  = new FilteredElementCollector( doc )
+            //    .OfClass( typeof( SpatialElement ) )
+            //    .OfCategory( BuiltInCategory.OST_Rooms );
 
-          //CouchDatabase db = rdb.Db;
+            //IEnumerable<string> roomUniqueIds
+            //  = rooms.Select<Element, string>(
+            //    e => e.UniqueId );
 
-          //ChangeOptions opt = new ChangeOptions();
+            //CouchDatabase db = rdb.Db;
 
-          //opt.IncludeDocs = true;
-          //opt.Since = CmdUpdate.LastSequence;
-          //opt.View = "roomedit/map_room_to_furniture";
+            //ChangeOptions opt = new ChangeOptions();
 
-          //CouchChanges<DbFurniture> changes
-          //  = db.GetChanges<DbFurniture>( opt );
+            //opt.IncludeDocs = true;
+            //opt.Since = CmdUpdate.LastSequence;
+            //opt.View = "roomedit/map_room_to_furniture";
 
-          //CouchChangeResult<DbFurniture>[] results
-          //  = changes.Results;
+            //CouchChanges<DbFurniture> changes
+            //  = db.GetChanges<DbFurniture>( opt );
 
-          //DbUpdater updater = new DbUpdater(
-          //  doc, roomUniqueIds );
+            //CouchChangeResult<DbFurniture>[] results
+            //  = changes.Results;
 
-          //foreach( CouchChangeResult<DbFurniture> result
-          //  in results )
-          //{
-          //  updater.UpdateBimFurniture( result.Doc );
+            //DbUpdater updater = new DbUpdater(
+            //  doc, roomUniqueIds );
 
-          //  CmdUpdate.LastSequence = result.Sequence;
-          //}
+            //foreach( CouchChangeResult<DbFurniture> result
+            //  in results )
+            //{
+            //  updater.UpdateBimFurniture( result.Doc );
 
-          DbUpdater updater = new DbUpdater( doc );
+            //  CmdUpdate.LastSequence = result.Sequence;
+            //}
 
-          updater.UpdateBim();
+            DbUpdater updater = new DbUpdater( doc );
 
-          Debug.Print( "End furniture update: {0}",
-            DateTime.Now.ToString( "HH:mm:ss.fff" ) );
+            updater.UpdateBim();
+
+            Debug.Print( "End furniture update: {0}",
+              DateTime.Now.ToString( "HH:mm:ss.fff" ) );
+          }
         }
-      }
-      catch( Exception ex )
-      {
-        //uiApp.Application.WriteJournalComment
+        //catch( Exception ex )
+        //{
+        //  //uiApp.Application.WriteJournalComment
 
-        Debug.Print(
-          "Room Editor: an error occurred "
-          + "executing the OnIdling event:\r\n"
-          + ex.ToString() );
+        //  Debug.Print(
+        //    "Room Editor: an error occurred "
+        //    + "executing the OnIdling event:\r\n"
+        //    + ex.ToString() );
 
-        Debug.WriteLine( ex );
+        //  Debug.WriteLine( ex );
+        //}
       }
     }
 
@@ -123,8 +131,8 @@ namespace RoomEditorApp
       }
 
       App.ToggleSubscription(
-        new EventHandler<IdlingEventArgs>(
-          OnIdling ) );
+        //new EventHandler<IdlingEventArgs>
+          OnIdling );
 
       return Result.Succeeded;
     }

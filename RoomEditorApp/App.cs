@@ -226,13 +226,17 @@ namespace RoomEditorApp
     {
       if( Subscribed )
       {
+        Debug.Print( "Unsubscribing..." );
         _uiapp.Idling -= handler;
         _buttons[3].ItemText = _subscribe;
+        Debug.Print( "Unsubscribed." );
       }
       else
       {
+        Debug.Print( "Subscribing..." );
         _uiapp.Idling += handler;
         _buttons[3].ItemText = _unsubscribe;
+        Debug.Print( "Subscribed." );
       }
     }
 
