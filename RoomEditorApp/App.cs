@@ -220,6 +220,7 @@ namespace RoomEditorApp
         _uiapp.Idling -= _handler;
         _handler = null; 
         _buttons[3].ItemText = _subscribe;
+        _timer.Stop();
         _timer.Report( "Subscription timing" );
         _timer = null;
         Debug.Print( "Unsubscribed." );

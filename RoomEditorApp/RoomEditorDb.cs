@@ -43,24 +43,60 @@ namespace RoomEditorApp
     }
 
     /// <summary>
-    /// Determine the last sequence number.
+    /// Return the last sequence number.
     /// </summary>
     public int LastSequenceNumber
     {
       get
       {
-        using( JtTimer pt = new JtTimer( "LastSequenceNumber" ) )
+        using( JtTimer pt = new JtTimer( 
+          "LastSequenceNumber" ) )
         {
           ChangeOptions opt = new ChangeOptions();
+
+          //opt.Limit = 1;
+          //opt.Descending = true;
+
+          //opt.IncludeDocs = true;
+          //opt.View = "roomedit/_changes?descending=true&limit=1";
 
           CouchChanges<DbFurniture> changes
             = _db.GetChanges<DbFurniture>( opt );
 
           CouchChangeResult<DbFurniture> r
-            = changes.Results.Last<CouchChangeResult<DbFurniture>>();
+            = changes.Results.Last<
+              CouchChangeResult<DbFurniture>>();
 
           return r.Sequence;
         }
+      }
+    }
+
+    /// <summary>
+    /// Determine whether the given sequence number
+    /// matches the most up-to-date status.
+    /// </summary>
+    public bool LastSequenceNumberChanged( int since )
+    {
+      using( JtTimer pt = new JtTimer( 
+        "LastSequenceNumberChanged" ) )
+      {
+        ChangeOptions opt = new ChangeOptions();
+
+        opt.Since = since;
+        opt.IncludeDocs = false;
+
+        CouchChanges<DbFurniture> changes
+          = _db.GetChanges<DbFurniture>( opt );
+
+        CouchChangeResult<DbFurniture> r
+          = changes.Results.LastOrDefault<
+            CouchChangeResult<DbFurniture>>();
+
+        Debug.Assert( null == r || since < r.Sequence,
+          "expected monotone growing sequence number" );
+
+        return null != r && since < r.Sequence;
       }
     }
   }

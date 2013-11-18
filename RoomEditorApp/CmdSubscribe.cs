@@ -19,12 +19,12 @@ namespace RoomEditorApp
     /// <summary>
     /// How many Idling calls to wait before acting
     /// </summary>
-    const int _update_interval = 10;
+    const int _update_interval = 100;
 
     /// <summary>
     /// How many Idling calls to wait before reporting
     /// </summary>
-    const int _message_interval = 1;
+    const int _message_interval = 100;
 
     /// <summary>
     /// Number of Idling calls received in this session
@@ -34,7 +34,7 @@ namespace RoomEditorApp
     /// <summary>
     /// Wait far a moment before requerying database.
     /// </summary>
-    static Stopwatch _stopwatch = null;
+    //static Stopwatch _stopwatch = null;
 
     void OnIdling(
       object sender,
@@ -42,28 +42,31 @@ namespace RoomEditorApp
     {
       using( JtTimer pt = new JtTimer( "OnIdling" ) )
       {
-        ++_counter;
-
-        if( 0 == ( _counter % _message_interval ) )
-        {
-          Debug.Print( "{0} OnIdling called {1} times",
-            DateTime.Now.ToString( "HH:mm:ss.fff" ),
-            _counter );
-        }
-
         // Use with care! This loads the CPU:
 
         ea.SetRaiseWithoutDelay();
 
-        // Have we waited long enough since the last attempt?
+        ++_counter;
 
-        if( null == _stopwatch
-          || _stopwatch.ElapsedMilliseconds > 500 )
+        if( 0 == ( _counter % _update_interval ) )
         {
-          RoomEditorDb rdb = new RoomEditorDb();
-          int n = rdb.LastSequenceNumber;
+          if( 0 == ( _counter % _message_interval ) )
+          {
+            Debug.Print( "{0} OnIdling called {1} times",
+              DateTime.Now.ToString( "HH:mm:ss.fff" ),
+              _counter );
+          }
 
-          if( n != DbUpdater.LastSequence )
+          // Have we waited long enough since the last attempt?
+
+          //if( null == _stopwatch
+          //  || _stopwatch.ElapsedMilliseconds > 500 )
+
+          RoomEditorDb rdb = new RoomEditorDb();
+          //int n = rdb.LastSequenceNumber;
+
+          if( rdb.LastSequenceNumberChanged(
+            DbUpdater.LastSequence ) )
           {
             UIApplication uiApp = sender as UIApplication;
             Document doc = uiApp.ActiveUIDocument.Document;
@@ -112,20 +115,21 @@ namespace RoomEditorApp
             Debug.Print( "End furniture update: {0}",
               DateTime.Now.ToString( "HH:mm:ss.fff" ) );
 
-            _stopwatch = new Stopwatch();
-            _stopwatch.Start();
+            //  _stopwatch = new Stopwatch();
+            //  _stopwatch.Start();
+            //}
+            //catch( Exception ex )
+            //{
+            //  //uiApp.Application.WriteJournalComment
+
+            //  Debug.Print(
+            //    "Room Editor: an error occurred "
+            //    + "executing the OnIdling event:\r\n"
+            //    + ex.ToString() );
+
+            //  Debug.WriteLine( ex );
+            //}
           }
-          //catch( Exception ex )
-          //{
-          //  //uiApp.Application.WriteJournalComment
-
-          //  Debug.Print(
-          //    "Room Editor: an error occurred "
-          //    + "executing the OnIdling event:\r\n"
-          //    + ex.ToString() );
-
-          //  Debug.WriteLine( ex );
-          //}
         }
       }
     }
