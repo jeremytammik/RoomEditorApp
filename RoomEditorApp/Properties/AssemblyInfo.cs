@@ -57,6 +57,7 @@ using System.Runtime.InteropServices;
 // 2013-10-29 - 2014.0.0.13 - explored why this is slower in Revit 2014 than in 2013 and removed call to SetRaiseWithoutDelay
 // 2013-10-30 - 2014.0.0.14 - added early history, documented external application implementation and cleaned up
 // 2013-10-31 - 2014.0.0.15 - debugging the less repsonsive Idling event management
+// 2013-11-18 - 2014.0.0.16 - fixed unsubscription as described in http://thebuildingcoder.typepad.com/blog/2013/11/singleton-application-versus-multiple-command-instances.html
 //
-[assembly: AssemblyVersion( "2014.0.0.15" )]
-[assembly: AssemblyFileVersion( "2014.0.0.15" )]
+[assembly: AssemblyVersion( "2014.0.0.16" )]
+[assembly: AssemblyFileVersion( "2014.0.0.16" )]

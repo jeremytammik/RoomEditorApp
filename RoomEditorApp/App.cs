@@ -22,18 +22,16 @@ namespace RoomEditorApp
     public const string Caption = "Room Editor";
 
     /// <summary>
-    /// Idling event handler delegate
-    /// </summary>
-    //public delegate void IdlingHandler(
-    //  object sender,
-    //  IdlingEventArgs ea );
-
-    /// <summary>
     /// Switch between subscribe 
     /// and unsubscribe commands.
     /// </summary>
     const string _subscribe = "Subscribe";
     const string _unsubscribe = "Unsubscribe";
+
+    /// <summary>
+    /// Store the Idling event handler when subscribed.
+    /// </summary>
+    static EventHandler<IdlingEventArgs> _handler = null;
 
     /// <summary>
     /// Executing assembly namespace
@@ -56,24 +54,6 @@ namespace RoomEditorApp
     /// them on and off later and change their text.
     /// </summary>
     static RibbonItem[] _buttons;
-
-    /// <summary>
-    /// Singleton external application class instance.
-    /// </summary>
-    //internal static App _app = null;
-
-    /// <summary>
-    /// Provide access to singleton class instance.
-    /// </summary>
-    //public static App Instance
-    //{
-    //  get { return _app; }
-    //}
-
-    /// <summary>
-    /// Leep track of our Idling status.
-    /// </summary>
-    //internal static bool _idling = false;
 
     /// <summary>
     /// Our one and only Revit-provided 
@@ -227,7 +207,8 @@ namespace RoomEditorApp
       if( Subscribed )
       {
         Debug.Print( "Unsubscribing..." );
-        _uiapp.Idling -= handler;
+        _uiapp.Idling -= _handler;
+        _handler = null; 
         _buttons[3].ItemText = _subscribe;
         Debug.Print( "Unsubscribed." );
       }
@@ -235,6 +216,7 @@ namespace RoomEditorApp
       {
         Debug.Print( "Subscribing..." );
         _uiapp.Idling += handler;
+        _handler = handler;
         _buttons[3].ItemText = _unsubscribe;
         Debug.Print( "Subscribed." );
       }

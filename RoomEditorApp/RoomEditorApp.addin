@@ -2,7 +2,7 @@
 <RevitAddIns>
   <AddIn Type="Application">
     <Name>Room Editor</Name>
-    <Assembly>RoomEditorApp.dll</Assembly>
+    <Assembly>C:\a\vs\RoomEditorApp\RoomEditorApp\bin\Debug\RoomEditorApp.dll</Assembly>
     <FullClassName>RoomEditorApp.App</FullClassName>
     <ClientId>557db8fb-418a-4193-ab89-5b7c5bf21661</ClientId>
     <VendorId>TBC_</VendorId>
