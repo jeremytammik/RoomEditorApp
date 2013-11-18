@@ -92,6 +92,7 @@
     <Compile Include="JtBoundingBox2dInt.cs" />
     <Compile Include="JtBoundingBoxXyz.cs" />
     <Compile Include="JtPlacement2dInt.cs" />
+    <Compile Include="JtTimer.cs" />
     <Compile Include="JtWindowHandle.cs" />
     <Compile Include="Point2dInt.cs" />
     <Compile Include="Point2dIntLoop.cs" />

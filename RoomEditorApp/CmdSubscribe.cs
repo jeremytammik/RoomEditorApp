@@ -31,26 +31,34 @@ namespace RoomEditorApp
     /// </summary>
     static int _counter = 0;
 
+    /// <summary>
+    /// Wait far a moment before requerying database.
+    /// </summary>
+    static Stopwatch _stopwatch = null;
+
     void OnIdling(
       object sender,
       IdlingEventArgs ea )
     {
-      ++_counter;
-
-      if( 0 == ( _counter % _message_interval ) )
+      using( JtTimer pt = new JtTimer( "OnIdling" ) )
       {
-        Debug.Print( "{0} OnIdling called {1} times",
-          DateTime.Now.ToString( "HH:mm:ss.fff" ),
-          _counter );
-      }
+        ++_counter;
 
-      // Use with care! This loads the CPU:
+        if( 0 == ( _counter % _message_interval ) )
+        {
+          Debug.Print( "{0} OnIdling called {1} times",
+            DateTime.Now.ToString( "HH:mm:ss.fff" ),
+            _counter );
+        }
 
-      ea.SetRaiseWithoutDelay();
+        // Use with care! This loads the CPU:
 
-      if( 0 == ( _counter % _update_interval ) )
-      {
-        //try
+        ea.SetRaiseWithoutDelay();
+
+        // Have we waited long enough since the last attempt?
+
+        if( null == _stopwatch
+          || _stopwatch.ElapsedMilliseconds > 500 )
         {
           RoomEditorDb rdb = new RoomEditorDb();
           int n = rdb.LastSequenceNumber;
@@ -103,19 +111,22 @@ namespace RoomEditorApp
 
             Debug.Print( "End furniture update: {0}",
               DateTime.Now.ToString( "HH:mm:ss.fff" ) );
+
+            _stopwatch = new Stopwatch();
+            _stopwatch.Start();
           }
+          //catch( Exception ex )
+          //{
+          //  //uiApp.Application.WriteJournalComment
+
+          //  Debug.Print(
+          //    "Room Editor: an error occurred "
+          //    + "executing the OnIdling event:\r\n"
+          //    + ex.ToString() );
+
+          //  Debug.WriteLine( ex );
+          //}
         }
-        //catch( Exception ex )
-        //{
-        //  //uiApp.Application.WriteJournalComment
-
-        //  Debug.Print(
-        //    "Room Editor: an error occurred "
-        //    + "executing the OnIdling event:\r\n"
-        //    + ex.ToString() );
-
-        //  Debug.WriteLine( ex );
-        //}
       }
     }
 

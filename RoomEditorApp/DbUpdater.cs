@@ -56,8 +56,11 @@ namespace RoomEditorApp
 
     public DbUpdater( Document doc )
     {
-      _doc = doc;
-      _creapp = doc.Application.Create;
+      using( JtTimer pt = new JtTimer( "DbUpdater ctor" ) )
+      {
+        _doc = doc;
+        _creapp = doc.Application.Create;
+      }
     }
 
     /// <summary>
@@ -160,63 +163,66 @@ namespace RoomEditorApp
     /// </summary>
     public void UpdateBim()
     {
-      // Retrieve all room unique ids in model:
-
-      FilteredElementCollector rooms
-        = new FilteredElementCollector( _doc )
-          .OfClass( typeof( SpatialElement ) )
-          .OfCategory( BuiltInCategory.OST_Rooms );
-
-      IEnumerable<string> roomUniqueIds
-        = rooms.Select<Element, string>(
-          e => e.UniqueId );
-
-      // Convert to a dictionary for faster lookup:
-
-      _roomUniqueIdDict
-        = new Dictionary<string, int>(
-          roomUniqueIds.Count() );
-
-      foreach( string s in roomUniqueIds )
+      using( JtTimer pt = new JtTimer( "UpdateBim" ) )
       {
-        _roomUniqueIdDict.Add( s, 1 );
-      }
+        // Retrieve all room unique ids in model:
 
-      //string ids = "?keys=[%22" + string.Join(
-      //  "%22,%22", roomUniqueIds ) + "%22]";
+        FilteredElementCollector rooms
+          = new FilteredElementCollector( _doc )
+            .OfClass( typeof( SpatialElement ) )
+            .OfCategory( BuiltInCategory.OST_Rooms );
 
-      // Retrieve all furniture transformations 
-      // after the last sequence number:
+        IEnumerable<string> roomUniqueIds
+          = rooms.Select<Element, string>(
+            e => e.UniqueId );
 
-      CouchDatabase db = new RoomEditorDb().Db;
+        // Convert to a dictionary for faster lookup:
 
-      ChangeOptions opt = new ChangeOptions();
+        _roomUniqueIdDict
+          = new Dictionary<string, int>(
+            roomUniqueIds.Count() );
 
-      opt.IncludeDocs = true;
-      opt.Since = LastSequence;
-      opt.View = "roomedit/map_room_to_furniture";
+        foreach( string s in roomUniqueIds )
+        {
+          _roomUniqueIdDict.Add( s, 1 );
+        }
 
-      // I tried to add a filter to this view, but 
-      // that is apparently not supported by the 
-      // CouchDB or DreamSeat GetChanges functionality.
-      //+ ids; // failed attempt to filter view by room id keys
+        //string ids = "?keys=[%22" + string.Join(
+        //  "%22,%22", roomUniqueIds ) + "%22]";
 
-      // Specify filter function defined in 
-      // design document to get updates
-      //opt.Filter = 
+        // Retrieve all furniture transformations 
+        // after the last sequence number:
 
-      CouchChanges<DbFurniture> changes
-        = db.GetChanges<DbFurniture>( opt );
+        CouchDatabase db = new RoomEditorDb().Db;
 
-      CouchChangeResult<DbFurniture>[] results
-        = changes.Results;
+        ChangeOptions opt = new ChangeOptions();
 
-      foreach( CouchChangeResult<DbFurniture> result
-        in results )
-      {
-        UpdateBimFurniture( result.Doc );
+        opt.IncludeDocs = true;
+        opt.Since = LastSequence;
+        opt.View = "roomedit/map_room_to_furniture";
 
-        LastSequence = result.Sequence;
+        // I tried to add a filter to this view, but 
+        // that is apparently not supported by the 
+        // CouchDB or DreamSeat GetChanges functionality.
+        //+ ids; // failed attempt to filter view by room id keys
+
+        // Specify filter function defined in 
+        // design document to get updates
+        //opt.Filter = 
+
+        CouchChanges<DbFurniture> changes
+          = db.GetChanges<DbFurniture>( opt );
+
+        CouchChangeResult<DbFurniture>[] results
+          = changes.Results;
+
+        foreach( CouchChangeResult<DbFurniture> result
+          in results )
+        {
+          UpdateBimFurniture( result.Doc );
+
+          LastSequence = result.Sequence;
+        }
       }
     }
   }

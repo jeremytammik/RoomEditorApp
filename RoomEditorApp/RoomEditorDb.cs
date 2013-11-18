@@ -21,13 +21,16 @@ namespace RoomEditorApp
 
     public RoomEditorDb()
     {
-      if( null == _client )
+      using( JtTimer pt = new JtTimer( "RoomEditorDb ctor" ) )
       {
-        _client = new CouchClient( _url_local, 5984 );
-      }
-      if( null == _db )
-      {
-        _db = _client.GetDatabase( _database_name, true );
+        if( null == _client )
+        {
+          _client = new CouchClient( _url_local, 5984 );
+        }
+        if( null == _db )
+        {
+          _db = _client.GetDatabase( _database_name, true );
+        }
       }
     }
 
@@ -46,15 +49,18 @@ namespace RoomEditorApp
     {
       get
       {
-        ChangeOptions opt = new ChangeOptions();
+        using( JtTimer pt = new JtTimer( "LastSequenceNumber" ) )
+        {
+          ChangeOptions opt = new ChangeOptions();
 
-        CouchChanges<DbFurniture> changes
-          = _db.GetChanges<DbFurniture>( opt );
+          CouchChanges<DbFurniture> changes
+            = _db.GetChanges<DbFurniture>( opt );
 
-        CouchChangeResult<DbFurniture> r
-          = changes.Results.Last<CouchChangeResult<DbFurniture>>();
+          CouchChangeResult<DbFurniture> r
+            = changes.Results.Last<CouchChangeResult<DbFurniture>>();
 
-        return r.Sequence;
+          return r.Sequence;
+        }
       }
     }
   }

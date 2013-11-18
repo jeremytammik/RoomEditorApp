@@ -29,6 +29,11 @@ namespace RoomEditorApp
     const string _unsubscribe = "Unsubscribe";
 
     /// <summary>
+    /// Subscription debugging timer.
+    /// </summary>
+    static JtTimer _timer = null;
+
+    /// <summary>
     /// Store the Idling event handler when subscribed.
     /// </summary>
     static EventHandler<IdlingEventArgs> _handler = null;
@@ -192,8 +197,13 @@ namespace RoomEditorApp
     {
       get
       {
-        return _buttons[3].ItemText.Equals(
+        bool rc = _buttons[3].ItemText.Equals(
           _unsubscribe );
+
+        Debug.Assert( ( _handler != null ) == rc, 
+          "expected synchronised handler and button text" );
+
+        return rc;
       }
     }
 
@@ -210,6 +220,8 @@ namespace RoomEditorApp
         _uiapp.Idling -= _handler;
         _handler = null; 
         _buttons[3].ItemText = _subscribe;
+        _timer.Report( "Subscription timing" );
+        _timer = null;
         Debug.Print( "Unsubscribed." );
       }
       else
@@ -218,6 +230,7 @@ namespace RoomEditorApp
         _uiapp.Idling += handler;
         _handler = handler;
         _buttons[3].ItemText = _unsubscribe;
+        _timer = new JtTimer( "Subscription" );
         Debug.Print( "Subscribed." );
       }
     }
