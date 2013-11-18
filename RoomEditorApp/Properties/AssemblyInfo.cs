@@ -58,6 +58,7 @@ using System.Runtime.InteropServices;
 // 2013-10-30 - 2014.0.0.14 - added early history, documented external application implementation and cleaned up
 // 2013-10-31 - 2014.0.0.15 - debugging the less repsonsive Idling event management
 // 2013-11-18 - 2014.0.0.16 - fixed unsubscription as described in http://thebuildingcoder.typepad.com/blog/2013/11/singleton-application-versus-multiple-command-instances.html
+// 2013-11-18 - 2014.0.0.17 - added JtTimer, implemented LastSequenceNumberChanged, Idling event handling is now responsive and snappy
 //
-[assembly: AssemblyVersion( "2014.0.0.16" )]
-[assembly: AssemblyFileVersion( "2014.0.0.16" )]
+[assembly: AssemblyVersion( "2014.0.0.17" )]
+[assembly: AssemblyFileVersion( "2014.0.0.17" )]
