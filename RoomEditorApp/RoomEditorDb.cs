@@ -49,7 +49,7 @@ namespace RoomEditorApp
     {
       get
       {
-        using( JtTimer pt = new JtTimer( 
+        using( JtTimer pt = new JtTimer(
           "LastSequenceNumber" ) )
         {
           ChangeOptions opt = new ChangeOptions();
@@ -78,7 +78,7 @@ namespace RoomEditorApp
     /// </summary>
     public bool LastSequenceNumberChanged( int since )
     {
-      using( JtTimer pt = new JtTimer( 
+      using( JtTimer pt = new JtTimer(
         "LastSequenceNumberChanged" ) )
       {
         ChangeOptions opt = new ChangeOptions();

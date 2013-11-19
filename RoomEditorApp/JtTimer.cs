@@ -34,7 +34,7 @@ namespace RoomEditorApp
         public int Calls { get; set; }
       }
 
-      static Dictionary<string, Entry> _collection 
+      static Dictionary<string, Entry> _collection
         = new Dictionary<string, Entry>();
 
       /// <summary>
@@ -43,21 +43,21 @@ namespace RoomEditorApp
       /// <param name="value">value</param>
       /// <param name="totalTime">total time</param>
       /// <returns></returns>
-      static double GetPercent( 
-        double value, 
+      static double GetPercent(
+        double value,
         double totalTime )
       {
         return 0 == totalTime
           ? 0
           : Math.Round( value * 100 / totalTime, 2 );
       }
-      #endregion // Private internal data and helper methods
+      #endregion // Internal data and helper methods
 
       /// <summary>
       /// Add new duration for specified key.
       /// </summary>
-      public static void AddTime( 
-        string key, 
+      public static void AddTime(
+        string key,
         double duration )
       {
         Entry e;
@@ -83,10 +83,10 @@ namespace RoomEditorApp
       {
         // Set up text file path:
 
-        string strReportPath = Path.Combine( 
+        string strReportPath = Path.Combine(
           Path.GetTempPath(), "PerformanceReport.txt" );
 
-        FileStream fs = new FileStream( strReportPath, 
+        FileStream fs = new FileStream( strReportPath,
           FileMode.OpenOrCreate, FileAccess.Write );
 
         StreamWriter streamWriter = new StreamWriter( fs );
@@ -94,15 +94,15 @@ namespace RoomEditorApp
 
         // Sort output by percentage of total time used:
 
-        List<string> lines = new List<string>( 
+        List<string> lines = new List<string>(
           _collection.Count );
 
-        foreach( KeyValuePair<string, Entry> pair 
+        foreach( KeyValuePair<string, Entry> pair
           in _collection )
         {
           Entry e = pair.Value;
 
-          lines.Add( string.Format( 
+          lines.Add( string.Format(
             "{0,10:0.00}%{1,10:0.00}{2,8}   {3}",
             GetPercent( e.Time, totalTime ),
             Math.Round( e.Time, 2 ),
@@ -111,13 +111,13 @@ namespace RoomEditorApp
         }
         lines.Sort();
 
-        string header 
+        string header
           = " Percentage   Seconds   Calls   Process";
 
-        int n = Math.Max( header.Length, 
+        int n = Math.Max( header.Length,
           lines.Max<string>( x => x.Length ) );
 
-        if( null != description 
+        if( null != description
           && 0 < description.Length )
         {
           n = Math.Max( n, description.Length );
@@ -150,7 +150,7 @@ namespace RoomEditorApp
     double _duration = 0;
 
     /// <summary>
-    /// Performance timer
+    /// Performance timer constructor.
     /// </summary>
     /// <param name="what_are_we_testing_here">
     /// Key describing code to be timed</param>
@@ -175,7 +175,7 @@ namespace RoomEditorApp
     /// </summary>
     public void Report( string description )
     {
-      TimeRegistry.WriteResults( 
+      TimeRegistry.WriteResults(
         description, _duration );
     }
 
