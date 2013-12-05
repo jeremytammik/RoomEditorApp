@@ -145,9 +145,7 @@ namespace RoomEditorApp
         DbUpdater.SetLastSequence();
       }
 
-      App.ToggleSubscription(
-        //new EventHandler<IdlingEventArgs>
-          OnIdling );
+      App.ToggleSubscription( OnIdling );
 
       return Result.Succeeded;
     }

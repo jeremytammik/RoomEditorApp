@@ -29,7 +29,7 @@ namespace RoomEditorApp
     const string _unsubscribe = "Unsubscribe";
 
     /// <summary>
-    /// Subscription debugging timer.
+    /// Subscription debugging benchmark timer.
     /// </summary>
     static JtTimer _timer = null;
 
@@ -251,9 +251,7 @@ namespace RoomEditorApp
     {
       if( Subscribed )
       {
-        _uiapp.Idling
-          -= new EventHandler<IdlingEventArgs>(
-            ( sender, ea ) => { } );
+        _uiapp.Idling -= _handler;
       }
       return Result.Succeeded;
     }
