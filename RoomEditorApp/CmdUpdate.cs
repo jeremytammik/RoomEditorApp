@@ -96,7 +96,9 @@ namespace RoomEditorApp
       //  LastSequence = result.Sequence;
       //}
 
-      DbUpdater updater = new DbUpdater( doc );
+      //DbUpdater updater = new DbUpdater( doc );
+
+      DbUpdater updater = new DbUpdater( uiapp );
 
       updater.UpdateBim();
 

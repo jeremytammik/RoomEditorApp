@@ -16,6 +16,7 @@ namespace RoomEditorApp
   [Transaction( TransactionMode.ReadOnly )]
   class CmdSubscribe : IExternalCommand
   {
+    #region Obsolete Idling event handler replaced by external event
     /// <summary>
     /// How many Idling calls to wait before acting
     /// </summary>
@@ -52,9 +53,9 @@ namespace RoomEditorApp
         {
           if( 0 == ( _counter % _message_interval ) )
           {
-            Debug.Print( "{0} OnIdling called {1} times",
-              DateTime.Now.ToString( "HH:mm:ss.fff" ),
-              _counter );
+            Util.Log( string.Format(
+              "OnIdling called {0} times",
+              _counter ) );
           }
 
           // Have we waited long enough since the last attempt?
@@ -68,11 +69,10 @@ namespace RoomEditorApp
           if( rdb.LastSequenceNumberChanged(
             DbUpdater.LastSequence ) )
           {
-            UIApplication uiApp = sender as UIApplication;
-            Document doc = uiApp.ActiveUIDocument.Document;
+            UIApplication uiapp = sender as UIApplication;
+            Document doc = uiapp.ActiveUIDocument.Document;
 
-            Debug.Print( "Start furniture update: {0}",
-              DateTime.Now.ToString( "HH:mm:ss.fff" ) );
+            Util.Log( "furniture update begin" );
 
             //FilteredElementCollector rooms
             //  = new FilteredElementCollector( doc )
@@ -108,19 +108,18 @@ namespace RoomEditorApp
             //  CmdUpdate.LastSequence = result.Sequence;
             //}
 
-            DbUpdater updater = new DbUpdater( doc );
+            DbUpdater updater = new DbUpdater( uiapp );
 
             updater.UpdateBim();
 
-            Debug.Print( "End furniture update: {0}",
-              DateTime.Now.ToString( "HH:mm:ss.fff" ) );
+            Util.Log( "furniture update end" );
 
             //  _stopwatch = new Stopwatch();
             //  _stopwatch.Start();
             //}
             //catch( Exception ex )
             //{
-            //  //uiApp.Application.WriteJournalComment
+            //  //uiapp.Application.WriteJournalComment
 
             //  Debug.Print(
             //    "Room Editor: an error occurred "
@@ -133,6 +132,7 @@ namespace RoomEditorApp
         }
       }
     }
+    #endregion // Obsolete Idling event handler replaced by external event
 
     public Result Execute(
       ExternalCommandData commandData,
@@ -145,7 +145,10 @@ namespace RoomEditorApp
         DbUpdater.SetLastSequence();
       }
 
-      App.ToggleSubscription( OnIdling );
+      //App.ToggleSubscription( OnIdling );
+
+      DbUpdater.ToggleSubscription(
+        commandData.Application );
 
       return Result.Succeeded;
     }

@@ -36,7 +36,8 @@ namespace RoomEditorApp
     /// <summary>
     /// Store the Idling event handler when subscribed.
     /// </summary>
-    static EventHandler<IdlingEventArgs> _handler = null;
+    //static EventHandler<IdlingEventArgs> _handler = null;
+    static ExternalEvent _event = null;
 
     /// <summary>
     /// Executing assembly namespace
@@ -200,7 +201,7 @@ namespace RoomEditorApp
         bool rc = _buttons[3].ItemText.Equals(
           _unsubscribe );
 
-        Debug.Assert( ( _handler != null ) == rc, 
+        Debug.Assert( ( _event != null ) == rc, 
           "expected synchronised handler and button text" );
 
         return rc;
@@ -211,14 +212,15 @@ namespace RoomEditorApp
     /// Toggle on and off subscription to 
     /// automatic cloud updates.
     /// </summary>
-    public static void ToggleSubscription(
-      EventHandler<IdlingEventArgs> handler )
+    public static ExternalEvent ToggleSubscription(
+      IExternalEventHandler handler ) // EventHandler<IdlingEventArgs>
     {
       if( Subscribed )
       {
         Debug.Print( "Unsubscribing..." );
-        _uiapp.Idling -= _handler;
-        _handler = null; 
+        //_uiapp.Idling -= _handler; _handler = null; 
+        _event.Dispose();
+        _event = null;
         _buttons[3].ItemText = _subscribe;
         _timer.Stop();
         _timer.Report( "Subscription timing" );
@@ -228,12 +230,14 @@ namespace RoomEditorApp
       else
       {
         Debug.Print( "Subscribing..." );
-        _uiapp.Idling += handler;
-        _handler = handler;
+        //_uiapp.Idling += handler;
+        //_handler = handler;
+        _event = ExternalEvent.Create( handler );
         _buttons[3].ItemText = _unsubscribe;
         _timer = new JtTimer( "Subscription" );
         Debug.Print( "Subscribed." );
       }
+      return _event;
     }
 
     public Result OnStartup(
@@ -251,7 +255,8 @@ namespace RoomEditorApp
     {
       if( Subscribed )
       {
-        _uiapp.Idling -= _handler;
+        //_uiapp.Idling -= _handler;
+        _event.Dispose();
       }
       return Result.Succeeded;
     }

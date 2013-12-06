@@ -3,14 +3,17 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
+using Autodesk.Revit.ApplicationServices;
 using Autodesk.Revit.DB;
+using Autodesk.Revit.UI;
 using DreamSeat;
 #endregion
 
 namespace RoomEditorApp
 {
 
-  class DbUpdater
+  class DbUpdater : IExternalEventHandler
   {
     static public int LastSequence
     {
@@ -24,8 +27,8 @@ namespace RoomEditorApp
     /// </summary>
     static public int SetLastSequence()
     {
-      LastSequence
-        = new RoomEditorDb().LastSequenceNumber;
+      LastSequence = new RoomEditorDb()
+        .LastSequenceNumber;
 
       Util.InfoMsg( string.Format(
         "Last sequence number set to {0}."
@@ -38,13 +41,35 @@ namespace RoomEditorApp
     /// <summary>
     /// Current Revit project document.
     /// </summary>
-    Document _doc = null;
+    //Document _doc = null;
+
+    /// <summary>
+    /// Revit UI application.
+    /// </summary>
+    UIApplication _uiapp = null;
 
     /// <summary>
     /// Revit creation application for 
     /// generating transient geometry objects.
     /// </summary>
     Autodesk.Revit.Creation.Application _creapp = null;
+
+    /// <summary>
+    /// Delegate to raise a database modified event.
+    /// </summary>
+    //public delegate ExternalEventRequest EventRaiser();
+
+    /// <summary>
+    /// External event to raise event 
+    /// for pending database changes.
+    /// </summary>
+    static ExternalEvent _event = null;
+
+    /// <summary>
+    /// Separate thread running loop to
+    /// check for pending database changes.
+    /// </summary>
+    static Thread _thread = null;
 
     /// <summary>
     /// Store the unique ids of all room in this model
@@ -54,12 +79,13 @@ namespace RoomEditorApp
     /// </summary>
     Dictionary<string, int> _roomUniqueIdDict = null;
 
-    public DbUpdater( Document doc )
+    public DbUpdater( UIApplication uiapp )
     {
       using( JtTimer pt = new JtTimer( "DbUpdater ctor" ) )
       {
-        _doc = doc;
-        _creapp = doc.Application.Create;
+        //_doc = doc;
+        _uiapp = uiapp;
+        _creapp = _uiapp.Application.Create;
       }
     }
 
@@ -67,9 +93,11 @@ namespace RoomEditorApp
     /// Update a piece of furniture.
     /// Return true if anything was changed.
     /// </summary>
-    bool UpdateBimFurniture( 
+    bool UpdateBimFurniture(
       DbFurniture f )
     {
+      Document doc = _uiapp.ActiveUIDocument.Document;
+
       bool rc = false;
 
       if( !_roomUniqueIdDict.ContainsKey( f.RoomId ) )
@@ -82,7 +110,7 @@ namespace RoomEditorApp
         return rc;
       }
 
-      Element e = _doc.GetElement( f.Id );
+      Element e = doc.GetElement( f.Id );
 
       if( null == e )
       {
@@ -131,24 +159,24 @@ namespace RoomEditorApp
       if( .01 < translation.GetLength()
         || .01 < Math.Abs( rotation ) )
       {
-        using( Transaction tx = new Transaction( 
-          _doc ) )
+        using( Transaction tx = new Transaction(
+          doc ) )
         {
           tx.Start( "Update Furniture and "
             + "Equipmant Instance Placement" );
 
           if( .01 < translation.GetLength() )
           {
-            ElementTransformUtils.MoveElement( 
-              _doc, e.Id, translation );
+            ElementTransformUtils.MoveElement(
+              doc, e.Id, translation );
           }
           if( .01 < Math.Abs( rotation ) )
           {
-            Line axis = Line.CreateBound( lp.Point, 
+            Line axis = Line.CreateBound( lp.Point,
               lp.Point + XYZ.BasisZ );
 
-            ElementTransformUtils.RotateElement( 
-              _doc, e.Id, axis, rotation );
+            ElementTransformUtils.RotateElement(
+              doc, e.Id, axis, rotation );
           }
           tx.Commit();
           rc = true;
@@ -165,10 +193,12 @@ namespace RoomEditorApp
     {
       using( JtTimer pt = new JtTimer( "UpdateBim" ) )
       {
+        Document doc = _uiapp.ActiveUIDocument.Document;
+
         // Retrieve all room unique ids in model:
 
         FilteredElementCollector rooms
-          = new FilteredElementCollector( _doc )
+          = new FilteredElementCollector( doc )
             .OfClass( typeof( SpatialElement ) )
             .OfCategory( BuiltInCategory.OST_Rooms );
 
@@ -223,6 +253,134 @@ namespace RoomEditorApp
 
           LastSequence = result.Sequence;
         }
+      }
+    }
+
+    public void Execute( UIApplication a )
+    {
+      //Document doc = a.ActiveUIDocument.Document;
+
+      //Debug.Assert( doc.Title.Equals( _doc.Title ),
+      //  "oops ... different documents ... test this" );
+
+      UpdateBim();
+    }
+
+    public string GetName()
+    {
+      return string.Format(
+        "{0} DbUpdater", App.Caption );
+    }
+
+    /// <summary>
+    /// Count total number of checks for
+    /// database updates made so far.
+    /// </summary>
+    static int _nLoopCount = 0;
+
+    /// <summary>
+    /// Count total number of checks for
+    /// database updates made so far.
+    /// </summary>
+    static int _nCheckCount = 0;
+
+    /// <summary>
+    /// Count total number of database 
+    /// updates requested so far.
+    /// </summary>
+    static int _nUpdatesRequested = 0;
+
+    /// <summary>
+    /// Wait far a moment before requerying database.
+    /// </summary>
+    //static Stopwatch _stopwatch = null;
+
+    /// <summary>
+    /// Number of milliseconds to wait and relinquish
+    /// CPU control before next check for pending
+    /// database updates.
+    /// </summary>
+    const int _timeout = 100;
+
+    /// <summary>
+    /// Repeatedly check database status and raise 
+    /// external event when updates are pending.
+    /// Relinquish control and wait for timeout
+    /// period between each attempt. Run in a 
+    /// separate thread.
+    /// </summary>
+    static void CheckForPendingDatabaseChanges()
+    {
+      while( true )
+      {
+        ++_nLoopCount;
+
+        Debug.Assert( null != _event,
+        "expected non-null external event" );
+
+        if( _event.IsPending )
+        {
+          Util.Log( string.Format(
+            "CheckForPendingDatabaseChanges loop {0} - "
+            + "database update event is pending",
+            _nLoopCount ) );
+        }
+        else
+        {
+          using( JtTimer pt = new JtTimer(
+            "CheckForPendingDatabaseChanges" ) )
+          {
+            ++_nCheckCount;
+
+            Util.Log( string.Format(
+              "CheckForPendingDatabaseChanges loop {0} - "
+              + "check for changes {1}",
+              _nLoopCount, _nCheckCount ) );
+
+            RoomEditorDb rdb = new RoomEditorDb();
+
+            if( rdb.LastSequenceNumberChanged(
+              DbUpdater.LastSequence ) )
+            {
+              _event.Raise();
+
+              ++_nUpdatesRequested;
+
+              Util.Log( string.Format(
+                "database update pending event raised {0} times",
+                _nUpdatesRequested ) );
+            }
+          }
+        }
+
+        // Wait a moment and relinquish control before
+        // next check for pending database updates.
+
+        Thread.Sleep( _timeout );
+      }
+    }
+
+    public static void ToggleSubscription(
+      UIApplication uiapp )
+    {
+      _event = App.ToggleSubscription(
+        new DbUpdater( uiapp ) );
+
+      if( null == _event )
+      {
+        _thread.Abort();
+        _thread = null;
+      }
+      else
+      {
+        // Start new thread to regularly check 
+        // database status and raise external event
+        // when updates are pending.
+
+        _thread = new Thread(
+          CheckForPendingDatabaseChanges );
+
+        _thread.Start();
       }
     }
   }
