@@ -12,7 +12,6 @@ using DreamSeat;
 
 namespace RoomEditorApp
 {
-
   class DbUpdater : IExternalEventHandler
   {
     static public int LastSequence
@@ -191,6 +190,8 @@ namespace RoomEditorApp
     /// </summary>
     public void UpdateBim()
     {
+      Util.Log( "UpdateBim begin" );
+
       using( JtTimer pt = new JtTimer( "UpdateBim" ) )
       {
         Document doc = _uiapp.ActiveUIDocument.Document;
@@ -254,10 +255,21 @@ namespace RoomEditorApp
           LastSequence = result.Sequence;
         }
       }
+      Util.Log( "UpdateBim end" );
     }
 
+    /// <summary>
+    /// Execute method invoked by Revit via the 
+    /// external event as a reaction to a call 
+    /// to its Raise method.
+    /// </summary>
     public void Execute( UIApplication a )
     {
+      // As far as I can tell, the external event 
+      // should work fine even when switching between
+      // different documents. That, however, remains
+      // to be tested in more depth (or at all).
+
       //Document doc = a.ActiveUIDocument.Document;
 
       //Debug.Assert( doc.Title.Equals( _doc.Title ),
@@ -266,6 +278,10 @@ namespace RoomEditorApp
       UpdateBim();
     }
 
+    /// <summary>
+    /// Required IExternalEventHandler interface 
+    /// method returning a descriptive name.
+    /// </summary>
     public string GetName()
     {
       return string.Format(
@@ -300,7 +316,7 @@ namespace RoomEditorApp
     /// CPU control before next check for pending
     /// database updates.
     /// </summary>
-    const int _timeout = 100;
+    static int _timeout = 100;
 
     /// <summary>
     /// Repeatedly check database status and raise 
@@ -360,6 +376,14 @@ namespace RoomEditorApp
       }
     }
 
+    /// <summary>
+    /// Toggle subscription to automatic database 
+    /// updates. Forward the call to the external 
+    /// application that creates the external event,
+    /// store it and launch a separate thread checking 
+    /// for database updates. When changes are pending,
+    /// invoke the external event Raise method.
+    /// </summary>
     public static void ToggleSubscription(
       UIApplication uiapp )
     {
@@ -373,8 +397,8 @@ namespace RoomEditorApp
       }
       else
       {
-        // Start new thread to regularly check 
-        // database status and raise external event
+        // Start a new thread to regularly check the
+        // database status and raise the external event
         // when updates are pending.
 
         _thread = new Thread(

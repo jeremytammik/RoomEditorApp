@@ -37,6 +37,10 @@ namespace RoomEditorApp
     /// Store the Idling event handler when subscribed.
     /// </summary>
     //static EventHandler<IdlingEventArgs> _handler = null;
+
+    /// <summary>
+    /// Store the external event.
+    /// </summary>
     static ExternalEvent _event = null;
 
     /// <summary>
@@ -67,6 +71,7 @@ namespace RoomEditorApp
     /// </summary>
     static UIControlledApplication _uiapp;
 
+    #region Icon resource, bitmap image and ribbon panel stuff
     /// <summary>
     /// Return path to embedded resource icon
     /// </summary>
@@ -189,7 +194,9 @@ namespace RoomEditorApp
         _buttons[i] = splitBtn.AddPushButton( d );
       }
     }
+    #endregion // Icon resource, bitmap image and ribbon panel stuff
 
+    #region Idling subscription and external event creation
     /// <summary>
     /// Are we currently subscribed 
     /// to automatic cloud updates?
@@ -213,12 +220,14 @@ namespace RoomEditorApp
     /// automatic cloud updates.
     /// </summary>
     public static ExternalEvent ToggleSubscription(
-      IExternalEventHandler handler ) // EventHandler<IdlingEventArgs>
+      // EventHandler<IdlingEventArgs> handler
+      IExternalEventHandler handler ) 
     {
       if( Subscribed )
       {
         Debug.Print( "Unsubscribing..." );
-        //_uiapp.Idling -= _handler; _handler = null; 
+        //_uiapp.Idling -= _handler; 
+        //_handler = null; 
         _event.Dispose();
         _event = null;
         _buttons[3].ItemText = _subscribe;
@@ -239,6 +248,7 @@ namespace RoomEditorApp
       }
       return _event;
     }
+    #endregion // Idling subscription and external event creation
 
     public Result OnStartup(
       UIControlledApplication a )
