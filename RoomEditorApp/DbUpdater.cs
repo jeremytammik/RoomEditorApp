@@ -3,10 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading;
 using Autodesk.Revit.ApplicationServices;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
+using Autodesk.Windows;
 using DreamSeat;
 #endregion
 
@@ -52,11 +54,6 @@ namespace RoomEditorApp
     /// generating transient geometry objects.
     /// </summary>
     Autodesk.Revit.Creation.Application _creapp = null;
-
-    /// <summary>
-    /// Delegate to raise a database modified event.
-    /// </summary>
-    //public delegate ExternalEventRequest EventRaiser();
 
     /// <summary>
     /// External event to raise event 
@@ -318,6 +315,26 @@ namespace RoomEditorApp
     /// </summary>
     static int _timeout = 100;
 
+    // DLL imports from user32.dll to set focus to
+    // Revit to foce it to forward the external event
+    // Raise to actually call the external event 
+    // Execute.
+
+    /// <summary>
+    /// The GetForegroundWindow function returns a 
+    /// handle to the foreground window.
+    /// </summary>
+    [DllImport( "user32.dll" )]
+    static extern IntPtr GetForegroundWindow();
+
+    /// <summary>
+    /// Move the window associated with the passed 
+    /// handle to the front.
+    /// </summary>
+    [DllImport( "user32.dll" )]
+    static extern bool SetForegroundWindow(
+      IntPtr hWnd );
+
     /// <summary>
     /// Repeatedly check database status and raise 
     /// external event when updates are pending.
@@ -365,6 +382,48 @@ namespace RoomEditorApp
               Util.Log( string.Format(
                 "database update pending event raised {0} times",
                 _nUpdatesRequested ) );
+
+              #region Obsolete attempts that failed
+              // Move the mouse in case the user does 
+              // not. Otherwise, it may take a while 
+              // before Revit forwards the event Raise
+              // to the event handler Execute method.
+
+              // Just moving the mouse is not enough:
+
+              //System.Drawing.Point p = Cursor.Position;
+              //Cursor.Position = new System.Drawing
+              //  .Point( p.X + 1, p.Y );
+              //Cursor.Position = p;
+
+              // This did not work either:
+
+              //[DllImport( "user32.dll" )]
+              //static extern IntPtr SetFocus( 
+              //  IntPtr hwnd );
+
+              //IWin32Window revit_window
+              //  = new JtWindowHandle(
+              //    ComponentManager.ApplicationWindow );
+              //IntPtr hwnd = SetFocus( revit_window.Handle );
+              //IntPtr hwnd2 = SetFocus( hwnd );
+              //Debug.Print( "set to rvt {0} --> {1} --> {2}", 
+              //  revit_window.Handle, hwnd, hwnd2 );
+
+              // Try SendKeys?
+              #endregion // Obsolete attempts that failed
+
+              // Set focus to Revit for a moment.
+              // Otherwise, it may take a while before 
+              // Revit forwards the event Raise to the
+              // event handler Execute method.
+
+              IntPtr hBefore = GetForegroundWindow();
+
+              SetForegroundWindow(
+                ComponentManager.ApplicationWindow );
+
+              SetForegroundWindow( hBefore );
             }
           }
         }
