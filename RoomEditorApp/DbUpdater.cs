@@ -316,7 +316,7 @@ namespace RoomEditorApp
     static int _timeout = 100;
 
     // DLL imports from user32.dll to set focus to
-    // Revit to foce it to forward the external event
+    // Revit to force it to forward the external event
     // Raise to actually call the external event 
     // Execute.
 
