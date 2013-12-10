@@ -60,6 +60,7 @@ using System.Runtime.InteropServices;
 // 2013-11-18 - 2014.0.0.16 - fixed unsubscription as described in http://thebuildingcoder.typepad.com/blog/2013/11/singleton-application-versus-multiple-command-instances.html
 // 2013-11-18 - 2014.0.0.17 - added JtTimer, implemented LastSequenceNumberChanged, Idling event handling is now responsive and snappy
 // 2013-12-05 - 2014.0.0.18 - replaced Idling event by external event
+// 2013-12-10 - 2014.0.0.19 - set focus to Revit after raising external event to trigger immediate call to Execute method
 //
-[assembly: AssemblyVersion( "2014.0.0.18" )]
-[assembly: AssemblyFileVersion( "2014.0.0.18" )]
+[assembly: AssemblyVersion( "2014.0.0.19" )]
+[assembly: AssemblyFileVersion( "2014.0.0.19" )]
