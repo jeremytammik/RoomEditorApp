@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration( "" )]
 [assembly: AssemblyCompany( "Autodesk Inc." )]
 [assembly: AssemblyProduct( "Revit Room Editor Add-In" )]
-[assembly: AssemblyCopyright( "Copyright 2013 © Jeremy Tammik Autodesk Inc." )]
+[assembly: AssemblyCopyright( "Copyright 2013-2014 © Jeremy Tammik Autodesk Inc." )]
 [assembly: AssemblyTrademark( "" )]
 [assembly: AssemblyCulture( "" )]
 
@@ -61,6 +61,7 @@ using System.Runtime.InteropServices;
 // 2013-11-18 - 2014.0.0.17 - added JtTimer, implemented LastSequenceNumberChanged, Idling event handling is now responsive and snappy
 // 2013-12-05 - 2014.0.0.18 - replaced Idling event by external event
 // 2013-12-10 - 2014.0.0.19 - set focus to Revit after raising external event to trigger immediate call to Execute method
+// 2014-03-20 - 2014.0.0.20 - updated copyright notice to year 2014 in preparation for release 2
 //
-[assembly: AssemblyVersion( "2014.0.0.19" )]
-[assembly: AssemblyFileVersion( "2014.0.0.19" )]
+[assembly: AssemblyVersion( "2014.0.0.20" )]
+[assembly: AssemblyFileVersion( "2014.0.0.20" )]
