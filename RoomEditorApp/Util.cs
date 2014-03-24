@@ -173,7 +173,7 @@ namespace RoomEditorApp
       string instruction,
       string msg )
     {
-      Debug.Print( msg );
+      Debug.Print( "{0}: {1}", instruction, msg );
       TaskDialog dlg = new TaskDialog( App.Caption );
       dlg.MainInstruction = instruction;
       dlg.MainContent = msg;

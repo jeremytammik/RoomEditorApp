@@ -79,11 +79,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App.cs" />
+    <Compile Include="CategoryCollector.cs" />
     <Compile Include="CmdAbout.cs" />
     <Compile Include="CmdSubscribe.cs" />
     <Compile Include="CmdUpdate.cs" />
     <Compile Include="CmdUploadRooms.cs" />
-    <Compile Include="CmdUploadAll.cs" />
+    <Compile Include="CmdUploadAllRooms.cs" />
     <Compile Include="CmdUploadViews.cs" />
     <Compile Include="ContiguousCurveSorter.cs" />
     <Compile Include="DbModel.cs" />
@@ -117,6 +118,9 @@
     <None Include="RoomEditorApp.addin" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="FrmSelectCategories.resx">
+      <DependentUpon>FrmSelectCategories.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FrmSelectViews.resx">
       <DependentUpon>FrmSelectViews.cs</DependentUpon>
     </EmbeddedResource>

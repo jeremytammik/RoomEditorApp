@@ -144,7 +144,7 @@ namespace RoomEditorApp
       string[] classNameStem = new string[] {
         "UploadViews",
         "UploadRooms",
-        "UploadAll",
+        "UploadAllRooms",
         "Update",
         "Subscribe",
         "About"

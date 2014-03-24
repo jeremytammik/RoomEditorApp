@@ -63,6 +63,7 @@ using System.Runtime.InteropServices;
 // 2013-12-10 - 2014.0.0.19 - set focus to Revit after raising external event to trigger immediate call to Execute method
 // 2014-03-20 - 2014.0.0.20 - updated copyright notice to year 2014 in preparation for release 2
 // 2014-03-20 - 2014.0.2.1 - implemented CmdUploadViews and FrmSelectViews
+// 2014-03-24 - 2014.0.2.2 - implemented CategoryCollector and FrmSelectCategories
 //
-[assembly: AssemblyVersion( "2014.0.2.1" )]
-[assembly: AssemblyFileVersion( "2014.0.2.1" )]
+[assembly: AssemblyVersion( "2014.0.2.2" )]
+[assembly: AssemblyFileVersion( "2014.0.2.2" )]

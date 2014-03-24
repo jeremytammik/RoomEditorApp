@@ -20,8 +20,8 @@ namespace RoomEditorApp
     Document _doc;
 
     /// <summary>
-    /// Constructor initialises document
-    /// and nothing else.
+    /// Constructor initialises the Revit 
+    /// document and nothing else.
     /// </summary>
     /// <param name="doc"></param>
     public FrmSelectViews( Document doc )
@@ -48,13 +48,21 @@ namespace RoomEditorApp
 
       checkedListBox1.DataSource = views;
       checkedListBox1.DisplayMember = "Name";
+
+      // Set all entries to be initially checked.
+
+      int n = checkedListBox1.Items.Count;
+
+      for( int i = 0; i < n; ++i )
+      {
+        checkedListBox1.SetItemChecked( i, true );
+      }
     }
 
     /// <summary>
     /// Selected views are accessible after the 
     /// form has been successfully completed.
     /// </summary>
-    /// <returns></returns>
     public List<ViewPlan> GetSelectedViews()
     {
       return checkedListBox1.CheckedItems

@@ -9,6 +9,7 @@ using Autodesk.Revit.UI;
 using ComponentManager = Autodesk.Windows.ComponentManager;
 using IWin32Window = System.Windows.Forms.IWin32Window;
 using DialogResult = System.Windows.Forms.DialogResult;
+using System.Diagnostics;
 #endregion
 
 namespace RoomEditorApp
@@ -54,9 +55,41 @@ namespace RoomEditorApp
           views.Select<Element, string>(
             e => e.Name ) );
 
-        TaskDialog.Show( caption, list );
+        Util.InfoMsg2( caption, list );
 
-        //List<Category> categories = new List<Category>();
+        List<Category> categories 
+          = new List<Category>( 
+            new CategoryCollector( views ).Keys );
+
+        // Sort categories alphabetically by name
+        // to display them in selection form.
+
+        categories.Sort(
+          delegate( Category c1, Category c2 )
+          {
+            return string.Compare( c1.Name, c2.Name );
+          } );
+
+        FrmSelectCategories form2 
+          = new FrmSelectCategories( categories );
+
+        if( DialogResult.OK == form2.ShowDialog(
+          revit_window ) )
+        {
+          categories = form2.GetSelectedCategories();
+
+          n = categories.Count;
+
+          caption = string.Format(
+            "{0} Categor{1} Selected",
+            n, Util.PluralSuffixY( n ) );
+
+          list = string.Join( ", ",
+            categories.Select<Category, string>(
+              e => e.Name ) );
+
+          Util.InfoMsg2( caption, list );
+        }
       }
       return Result.Succeeded;
     }
