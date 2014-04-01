@@ -1,9 +1,9 @@
 ﻿#region Namespaces
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Autodesk.Revit.DB;
-using System.Diagnostics;
 #endregion
 
 namespace RoomEditorApp
@@ -20,12 +20,12 @@ namespace RoomEditorApp
     /// the same category. Without this, many, many,
     /// many duplicates.
     /// </summary>
-    class CategoryEqualityComparer 
+    class CategoryEqualityComparer
       : IEqualityComparer<Category>
     {
       public bool Equals( Category x, Category y )
       {
-        return x.Id.IntegerValue.Equals( 
+        return x.Id.IntegerValue.Equals(
           y.Id.IntegerValue );
       }
 
@@ -54,7 +54,7 @@ namespace RoomEditorApp
     /// </summary>
     int _nElementsWithCategorMaterialQuantities;
 
-    public CategoryCollector( IList<ViewPlan> views )
+    public CategoryCollector( ICollection<View> views )
       : base( new CategoryEqualityComparer() )
     {
       _nViews = views.Count;
@@ -63,13 +63,11 @@ namespace RoomEditorApp
 
       if( 0 < _nViews )
       {
-        Document doc = views[0].Document;
-
         FilteredElementCollector a;
-        
+
         foreach( View v in views )
         {
-          a = new FilteredElementCollector( doc, v.Id )
+          a = new FilteredElementCollector( v.Document, v.Id )
             .WhereElementIsViewIndependent();
 
           foreach( Element e in a )
@@ -95,7 +93,7 @@ namespace RoomEditorApp
 
             Category cat = e.Category;
 
-            if( null != cat 
+            if( null != cat
               && cat.HasMaterialQuantities )
             {
               ++_nElementsWithCategorMaterialQuantities;

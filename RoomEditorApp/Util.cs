@@ -40,6 +40,22 @@ namespace RoomEditorApp
       return (int) Math.Round( _radians_to_degrees * d,
         MidpointRounding.AwayFromZero );
     }
+
+    /// <summary>
+    /// Return true if the type b is either a 
+    /// subclass of OR equal to the base class itself.
+    /// IsSubclassOf returns false if the two types
+    /// are the same. It only returns true for true
+    /// non-equal subclasses.
+    /// </summary>
+    public static bool IsSameOrSubclassOf(
+      Type a,
+      Type b )
+    {
+      // http://stackoverflow.com/questions/2742276/in-c-how-do-i-check-if-a-type-is-a-subtype-or-the-type-of-an-object
+      
+      return a.IsSubclassOf( b ) || a == b;
+    }
     #endregion // Unit conversion
 
     #region Formatting

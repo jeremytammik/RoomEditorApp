@@ -9,6 +9,9 @@ using Form = System.Windows.Forms.Form;
 
 namespace RoomEditorApp
 {
+  /// <summary>
+  /// Interactive category selection form.
+  /// </summary>
   public partial class FrmSelectCategories : Form
   {
     IList<Category> _categories;
@@ -18,7 +21,7 @@ namespace RoomEditorApp
     /// with the given list of categories.
     /// </summary>
     /// <param name="categories"></param>
-    public FrmSelectCategories( 
+    public FrmSelectCategories(
       IList<Category> categories )
     {
       InitializeComponent();
@@ -31,8 +34,8 @@ namespace RoomEditorApp
     /// the list of categories passed in to 
     /// the constructor and check them all.
     /// </summary>
-    private void FrmSelectCategories_Load( 
-      object sender, 
+    private void FrmSelectCategories_Load(
+      object sender,
       EventArgs e )
     {
       checkedListBox1.DataSource = _categories;

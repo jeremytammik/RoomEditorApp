@@ -85,22 +85,23 @@
     <Compile Include="CmdUpdate.cs" />
     <Compile Include="CmdUploadRooms.cs" />
     <Compile Include="CmdUploadAllRooms.cs" />
-    <Compile Include="CmdUploadViews.cs" />
+    <Compile Include="CmdUploadSheets.cs" />
     <Compile Include="ContiguousCurveSorter.cs" />
     <Compile Include="DbModel.cs" />
     <Compile Include="DbUpdater.cs" />
     <Compile Include="DbUpload.cs" />
+    <Compile Include="ElementEqualityComparer.cs" />
     <Compile Include="FrmSelectCategories.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="FrmSelectCategories.Designer.cs">
       <DependentUpon>FrmSelectCategories.cs</DependentUpon>
     </Compile>
-    <Compile Include="FrmSelectViews.cs">
+    <Compile Include="FrmSelectSheets.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FrmSelectViews.Designer.cs">
-      <DependentUpon>FrmSelectViews.cs</DependentUpon>
+    <Compile Include="FrmSelectSheets.Designer.cs">
+      <DependentUpon>FrmSelectSheets.cs</DependentUpon>
     </Compile>
     <Compile Include="GeoSnoop.cs" />
     <Compile Include="JtBoundingBox2dInt.cs" />
@@ -121,8 +122,8 @@
     <EmbeddedResource Include="FrmSelectCategories.resx">
       <DependentUpon>FrmSelectCategories.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FrmSelectViews.resx">
-      <DependentUpon>FrmSelectViews.cs</DependentUpon>
+    <EmbeddedResource Include="FrmSelectSheets.resx">
+      <DependentUpon>FrmSelectSheets.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Icon\1Down.png" />
     <EmbeddedResource Include="Icon\1Down16.png" />

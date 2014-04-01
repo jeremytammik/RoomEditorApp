@@ -64,6 +64,7 @@ using System.Runtime.InteropServices;
 // 2014-03-20 - 2014.0.0.20 - updated copyright notice to year 2014 in preparation for release 2
 // 2014-03-20 - 2014.0.2.1 - implemented CmdUploadViews and FrmSelectViews
 // 2014-03-24 - 2014.0.2.2 - implemented CategoryCollector and FrmSelectCategories
+// 2014-04-01 - 2014.0.2.3 - switched from view selection to sheet selection, implemented FrmSelectSheets and CmdUploadSheets
 //
-[assembly: AssemblyVersion( "2014.0.2.2" )]
-[assembly: AssemblyFileVersion( "2014.0.2.2" )]
+[assembly: AssemblyVersion( "2014.0.2.3" )]
+[assembly: AssemblyFileVersion( "2014.0.2.3" )]
