@@ -18,24 +18,10 @@ namespace RoomEditorApp
         .FirstElement();
     }
 
-    /// <summary>
-    /// Upload model, level, room and furniture data 
-    /// to an IrisCouch hosted CouchDB data repository.
-    /// </summary>
-    static public void DbUploadRoom(
-      Room room,
-      List<Element> furniture,
-      JtLoops roomLoops,
-      Dictionary<string, JtLoop> furnitureLoops,
-      List<JtPlacement2dInt> furnitureInstances )
+    static DbModel GetDbModel(
+      CouchDatabase db,
+      Element projectInfo )
     {
-      CouchDatabase db = new RoomEditorDb().Db;
-
-      Document doc = room.Document;
-
-      Element projectInfo 
-        = GetProjectInfo( doc );
-
       string uid = projectInfo.UniqueId;
 
       DbModel dbModel;
@@ -68,9 +54,31 @@ namespace RoomEditorApp
         dbModel = db.CreateDocument<DbModel>( dbModel );
       }
 
+      return dbModel;
+    }
+
+    /// <summary>
+    /// Upload model, level, room and furniture data 
+    /// to an IrisCouch hosted CouchDB data repository.
+    /// </summary>
+    static public void DbUploadRoom(
+      Room room,
+      List<Element> furniture,
+      JtLoops roomLoops,
+      Dictionary<string, JtLoop> furnitureLoops,
+      List<JtPlacement2dInt> furnitureInstances )
+    {
+      CouchDatabase db = new RoomEditorDb().Db;
+
+      Document doc = room.Document;
+
+      Element projectInfo = GetProjectInfo( doc );
+
+      DbModel dbModel = GetDbModel( db, projectInfo );
+
       Element level = doc.GetElement( room.LevelId );
 
-      uid = level.UniqueId;
+      string uid = level.UniqueId;
 
       DbLevel dbLevel;
 
@@ -202,6 +210,22 @@ namespace RoomEditorApp
           dbf = db.CreateDocument<DbFurniture>( dbf );
         }
       }
+    }
+
+    /// <summary>
+    /// Upload model, sheet, views and bim element 
+    /// data to a CouchDB data repository.
+    /// </summary>
+    static public void DbUploadSheet(
+      ViewSheet sheet )
+    {
+      CouchDatabase db = new RoomEditorDb().Db;
+
+      Document doc = sheet.Document;
+
+      Element projectInfo = GetProjectInfo( doc );
+
+      DbModel dbModel = GetDbModel( db, projectInfo );
     }
   }
 }

@@ -617,7 +617,7 @@ namespace RoomEditorApp
       }
     }
 
-    public static void Upload(
+    public static void UploadRooms(
       Document doc,
       ICollection<ElementId> ids )
     {
@@ -774,7 +774,7 @@ namespace RoomEditorApp
           refs.Select<Reference, ElementId>(
             r => r.ElementId ) );
       }
-      Upload( doc, ids );
+      UploadRooms( doc, ids );
 
       DbUpdater.SetLastSequence();
 

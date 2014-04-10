@@ -14,6 +14,16 @@ namespace RoomEditorApp
   /// </summary>
   public partial class FrmSelectCategories : Form
   {
+    /// <summary>
+    /// Automatically accept and close immediately
+    /// with no need for user interaction to speed
+    /// up debugging process.
+    /// </summary>
+    //bool _auto_close;
+
+    /// <summary>
+    /// List of categories for user to select from.
+    /// </summary>
     IList<Category> _categories;
 
     /// <summary>
@@ -27,6 +37,7 @@ namespace RoomEditorApp
       InitializeComponent();
 
       _categories = categories;
+      //_auto_close = auto_close;
     }
 
     /// <summary>
@@ -49,6 +60,15 @@ namespace RoomEditorApp
       {
         checkedListBox1.SetItemChecked( i, true );
       }
+
+      // Automatically close the form with the accept
+      // button immediately to speed up debugging.
+      // This does not work, though:
+      //
+      //if( _auto_close )
+      //{
+      //  this.DialogResult = DialogResult.OK;
+      //}
     }
 
     /// <summary>

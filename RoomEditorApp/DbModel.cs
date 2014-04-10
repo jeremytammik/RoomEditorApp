@@ -20,6 +20,7 @@ namespace RoomEditorApp
     public string Name { get; set; }
   }
 
+  #region Model - Level - Room - Symbol - Furniture
   /// <summary>
   /// Current model, i.e. Revit project.
   /// </summary>
@@ -85,4 +86,71 @@ namespace RoomEditorApp
     public string SymbolId { get; set; }
     public string Transform { get; set; }
   }
+  #endregion // Model - Level - Room - Symbol - Furniture
+
+  #region Obj2 - Sheet - View - Part - Instance
+  /// <summary>
+  /// Base class for all second-generation Room Editor classes.
+  /// </summary>
+  class DbObj2 : DbObj
+  {
+    protected DbObj2()
+    {
+      Type = "obj2";
+    }
+    public Dictionary<string, string> Properties { get; set; }
+  }
+
+  /// <summary>
+  /// Sheet.
+  /// </summary>
+  class DbSheet : DbObj2
+  {
+    public DbSheet()
+    {
+      Type = "sheet";
+    }
+    public string ModelId { get; set; }
+  }
+
+  /// <summary>
+  /// View.
+  /// </summary>
+  class DbView : DbObj2
+  {
+    public DbView()
+    {
+      Type = "view";
+    }
+    public string SheetId { get; set; }
+  }
+
+  /// <summary>
+  /// Part of the building, cannot move.
+  /// A building part can appear in multiple views.
+  /// </summary>
+  class DbPart : DbObj2
+  {
+    public DbPart()
+    {
+      Type = "part";
+    }
+    public string [] ViewIds { get; set; }
+  }
+
+  /// <summary>
+  /// Family instance, defining placement, i.e.
+  /// transform, i.e. translation and rotation,
+  /// and referring to the symbol geometry.
+  /// </summary>
+  class DbInstance : DbPart
+  {
+    public DbInstance()
+    {
+      Type = "instance";
+    }
+    public string SymbolId { get; set; }
+    public string Transform { get; set; }
+  }
+  #endregion // Obj2 - Sheet - View - Part - Instance
 }

@@ -65,6 +65,7 @@ using System.Runtime.InteropServices;
 // 2014-03-20 - 2014.0.2.1 - implemented CmdUploadViews and FrmSelectViews
 // 2014-03-24 - 2014.0.2.2 - implemented CategoryCollector and FrmSelectCategories
 // 2014-04-01 - 2014.0.2.3 - switched from view selection to sheet selection, implemented FrmSelectSheets and CmdUploadSheets
+// 2014-04-10 - 2014.0.2.4 - implemented categoryFilter and UploadSheet method outline
 //
-[assembly: AssemblyVersion( "2014.0.2.3" )]
-[assembly: AssemblyFileVersion( "2014.0.2.3" )]
+[assembly: AssemblyVersion( "2014.0.2.4" )]
+[assembly: AssemblyFileVersion( "2014.0.2.4" )]

@@ -24,7 +24,7 @@ namespace RoomEditorApp
           .OfClass( typeof( SpatialElement ) )
           .OfCategory( BuiltInCategory.OST_Rooms );
 
-      CmdUploadRooms.Upload( doc, rooms.ToElementIds() );
+      CmdUploadRooms.UploadRooms( doc, rooms.ToElementIds() );
 
       DbUpdater.SetLastSequence();
 

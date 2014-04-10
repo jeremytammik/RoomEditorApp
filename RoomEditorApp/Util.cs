@@ -131,6 +131,47 @@ namespace RoomEditorApp
     }
 
     /// <summary>
+    /// Return a string for a 2D bounding box
+    /// formatted to two decimal places.
+    /// </summary>
+    public static string BoundingBoxString(
+      BoundingBoxUV b )
+    {
+      //UV d = b.Max - b.Min;
+
+      return string.Format( "({0},{1})",
+        PointString( b.Min ),
+        PointString( b.Max ) );
+    }
+
+    /// <summary>
+    /// Return a string for a 3D bounding box
+    /// formatted to two decimal places.
+    /// </summary>
+    public static string BoundingBoxString( 
+      BoundingBoxXYZ b )
+    {
+      //XYZ d = b.Max - b.Min;
+
+      return string.Format( "({0},{1})",
+        PointString( b.Min ),
+        PointString( b.Max ) );
+    }
+
+    /// <summary>
+    /// Return a string for an Outline
+    /// formatted to two decimal places.
+    /// </summary>
+    public static string OutlineString( Outline o )
+    {
+      //XYZ d = o.MaximumPoint - o.MinimumPoint;
+
+      return string.Format( "({0},{1})",
+        PointString( o.MinimumPoint ),
+        PointString( o.MaximumPoint ) );
+    }
+
+    /// <summary>
     /// Return a string describing the given element:
     /// .NET type name,
     /// category name,
@@ -187,13 +228,17 @@ namespace RoomEditorApp
     /// </summary>
     public static void InfoMsg2(
       string instruction,
-      string msg )
+      string msg,
+      bool prompt = true )
     {
       Debug.Print( "{0}: {1}", instruction, msg );
-      TaskDialog dlg = new TaskDialog( App.Caption );
-      dlg.MainInstruction = instruction;
-      dlg.MainContent = msg;
-      dlg.Show();
+      if( prompt )
+      {
+        TaskDialog dlg = new TaskDialog( App.Caption );
+        dlg.MainInstruction = instruction;
+        dlg.MainContent = msg;
+        dlg.Show();
+      }
     }
 
     /// <summary>
