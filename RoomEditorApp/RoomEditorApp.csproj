@@ -106,11 +106,14 @@
     <Compile Include="GeoSnoop.cs" />
     <Compile Include="JtBoundingBox2dInt.cs" />
     <Compile Include="JtBoundingBoxXyz.cs" />
+    <Compile Include="JtLoop.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="JtLoops.cs" />
     <Compile Include="JtPlacement2dInt.cs" />
     <Compile Include="JtTimer.cs" />
     <Compile Include="JtWindowHandle.cs" />
     <Compile Include="Point2dInt.cs" />
-    <Compile Include="Point2dIntLoop.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RoomEditorDb.cs" />
     <Compile Include="Util.cs" />
