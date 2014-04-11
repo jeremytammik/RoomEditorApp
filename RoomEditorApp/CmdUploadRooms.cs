@@ -407,6 +407,7 @@ namespace RoomEditorApp
       return nAdded;
     }
 
+    #region Obsolete GetPlanViewBoundaryLoopsMultiple
     /// <summary>
     /// Retrieve all plan view boundary loops from 
     /// all solids of given element. This initial 
@@ -465,6 +466,78 @@ namespace RoomEditorApp
       }
       return loops;
     }
+    #endregion // Obsolete GetPlanViewBoundaryLoopsMultiple
+
+    /// <summary>
+    /// Retrieve all plan view boundary loops from 
+    /// all solids of the given element geometry
+    /// united together.
+    /// </summary>
+    internal static JtLoops GetPlanViewBoundaryLoopsGeo(
+      Autodesk.Revit.Creation.Application creapp,
+      GeometryElement geo,
+      ref int nFailures )
+    {
+      Solid union = null;
+
+      Plane plane = new Plane( XYZ.BasisX,
+        XYZ.BasisY, XYZ.Zero );
+
+      foreach( GeometryObject obj in geo )
+      {
+        Solid solid = obj as Solid;
+
+        if( null != solid
+          && 0 < solid.Faces.Size )
+        {
+          // Some solids, e.g. in the standard 
+          // content 'Furniture Chair - Office' 
+          // cause an extrusion analyser failure,
+          // so skip adding those.
+
+          try
+          {
+            ExtrusionAnalyzer extrusionAnalyzer
+              = ExtrusionAnalyzer.Create(
+                solid, plane, XYZ.BasisZ );
+          }
+          catch( Autodesk.Revit.Exceptions
+            .InvalidOperationException )
+          {
+            solid = null;
+            ++nFailures;
+          }
+
+          if( null != solid )
+          {
+            if( null == union )
+            {
+              union = solid;
+            }
+            else
+            {
+              try
+              {
+                union = BooleanOperationsUtils
+                  .ExecuteBooleanOperation( union, solid,
+                    BooleanOperationsType.Union );
+              }
+              catch( Autodesk.Revit.Exceptions
+                .InvalidOperationException )
+              {
+                ++nFailures;
+              }
+            }
+          }
+        }
+      }
+
+      JtLoops loops = new JtLoops( 1 );
+
+      AddLoops( creapp, loops, union, ref nFailures );
+
+      return loops;
+    }
 
     /// <summary>
     /// Retrieve all plan view boundary loops from 
@@ -483,7 +556,7 @@ namespace RoomEditorApp
       Autodesk.Revit.Creation.Application creapp
         = e.Document.Application.Create;
 
-      JtLoops loops = new JtLoops( 1 );
+      JtLoops loops = null;
 
       Options opt = new Options();
 
@@ -512,62 +585,10 @@ namespace RoomEditorApp
           geo = geo.GetTransformed( t * r );
         }
 
-        Solid union = null;
-
-        Plane plane = new Plane( XYZ.BasisX,
-          XYZ.BasisY, XYZ.Zero );
-
-        foreach( GeometryObject obj in geo )
-        {
-          Solid solid = obj as Solid;
-
-          if( null != solid
-            && 0 < solid.Faces.Size )
-          {
-            // Some solids, e.g. in the standard 
-            // content 'Furniture Chair - Office' 
-            // cause an extrusion analyser failure,
-            // so skip adding those.
-
-            try
-            {
-              ExtrusionAnalyzer extrusionAnalyzer 
-                = ExtrusionAnalyzer.Create(
-                  solid, plane, XYZ.BasisZ );
-            }
-            catch( Autodesk.Revit.Exceptions
-              .InvalidOperationException )
-            {
-              solid = null;
-              ++nFailures;
-            }
-
-            if( null != solid )
-            {
-              if( null == union )
-              {
-                union = solid;
-              }
-              else
-              {
-                try
-                {
-                  union = BooleanOperationsUtils
-                    .ExecuteBooleanOperation( union, solid,
-                      BooleanOperationsType.Union );
-                }
-                catch( Autodesk.Revit.Exceptions
-                  .InvalidOperationException )
-                {
-                  ++nFailures;
-                }
-              }
-            }
-          }
-        }
-        AddLoops( creapp, loops, union, ref nFailures );
+        loops = GetPlanViewBoundaryLoopsGeo( 
+          creapp, geo, ref nFailures );
       }
-      if( 0 == loops.Count )
+      if( null == loops || 0 == loops.Count )
       {
         Debug.Print(
           "Unable to determine geometry for "

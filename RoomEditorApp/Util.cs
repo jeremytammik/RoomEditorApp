@@ -10,6 +10,27 @@ namespace RoomEditorApp
 {
   class Util
   {
+    #region Geometrical Comparison
+    const double _eps = 1.0e-9;
+
+    public static bool IsZero(
+      double a,
+      double tolerance )
+    {
+      return tolerance > Math.Abs( a );
+    }
+
+    public static bool IsZero( double a )
+    {
+      return IsZero( a, _eps );
+    }
+
+    public static bool IsEqual( double a, double b )
+    {
+      return IsZero( b - a );
+    }
+    #endregion // Geometrical Comparison
+
     #region Unit conversion
     const double _feet_to_mm = 25.4 * 12;
 
@@ -118,8 +139,8 @@ namespace RoomEditorApp
     }
 
     /// <summary>
-    /// Return a string for an XYZ point
-    /// or vector with its coordinates
+    /// Return a string for an XYZ 
+    /// point or vector with its coordinates
     /// formatted to two decimal places.
     /// </summary>
     public static string PointString( XYZ p )
@@ -128,6 +149,41 @@ namespace RoomEditorApp
         RealString( p.X ),
         RealString( p.Y ),
         RealString( p.Z ) );
+    }
+
+    /// <summary>
+    /// Return a string for the XY values of an XYZ 
+    /// point or vector with its coordinates
+    /// formatted to two decimal places.
+    /// </summary>
+    public static string PointString2d( XYZ p )
+    {
+      return string.Format( "({0},{1})",
+        RealString( p.X ),
+        RealString( p.Y ) );
+    }
+
+    /// <summary>
+    /// Return a string displaying the two XYZ 
+    /// endpoints of a geometry curve element.
+    /// </summary>
+    public static string CurveEndpointString( Curve c )
+    {
+      return string.Format( "({0},{1})",
+        PointString2d( c.GetEndPoint( 0 ) ),
+        PointString2d( c.GetEndPoint( 1 ) ) );
+    }
+
+    /// <summary>
+    /// Return a string displaying only the XY values
+    /// of the two XYZ endpoints of a geometry curve 
+    /// element.
+    /// </summary>
+    public static string CurveEndpointString2d( Curve c )
+    {
+      return string.Format( "({0},{1})",
+        PointString( c.GetEndPoint( 0 ) ),
+        PointString( c.GetEndPoint( 1 ) ) );
     }
 
     /// <summary>

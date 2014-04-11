@@ -118,9 +118,9 @@ namespace RoomEditorApp
     #endregion // Sheet and view transform
 
     /// <summary>
-    /// Upload given sheets and the views they contain 
+    /// Upload given sheet and the views it contains
     /// to the cloud repository, ignoring all elements
-    /// not belonging to one of the selected catgories.
+    /// not belonging to one of the selected categories.
     /// </summary>
     static void UploadSheet(
       ViewSheet sheet,
@@ -129,6 +129,9 @@ namespace RoomEditorApp
       bool list_ignored_elements = false;
 
       Document doc = sheet.Document;
+
+      Autodesk.Revit.Creation.Application creapp
+        = doc.Application.Create;
 
       Options opt = new Options();
 
@@ -188,7 +191,8 @@ namespace RoomEditorApp
             {
               if( list_ignored_elements )
               {
-                Debug.Print( "    ... ignored " + e.Name );
+                Debug.Print( "    ... ignored "
+                  + e.Name );
               }
               continue;
             }
@@ -231,7 +235,10 @@ namespace RoomEditorApp
             geo = geo.GetTransformed( t * r );
           }
 
-          Debug.Print( "    " + e.Name );
+          int nEmptySolids = 0;
+          int nNonEmptySolids = 0;
+          int nCurves = 0;
+          int nOther = 0;
 
           foreach( GeometryObject obj in geo )
           {
@@ -248,36 +255,108 @@ namespace RoomEditorApp
             Debug.Assert( obj.IsElementGeometry, "expected only element geometry" );
             //bool isElementGeometry = obj.IsElementGeometry;
 
-            // Do we need the graphics style?
-            // It might give us horrible things like
-            // colours etc.
-
-            ElementId id = obj.GraphicsStyleId;
-
-            //Debug.Print( "      " + obj.GetType().Name );
-
             Solid solid = obj as Solid;
 
-            if( null == solid )
+            if( null != solid )
             {
-              Debug.Print( "      " + obj.GetType().Name );
+              if( 0 < solid.Edges.Size )
+              {
+                ++nNonEmptySolids;
+              }
+              else
+              {
+                ++nEmptySolids;
+              }
+            }
+            else if( obj is Curve )
+            {
+              ++nCurves;
             }
             else
             {
-              int n = solid.Edges.Size;
+              ++nOther;
+            }
+          }
 
-              if( 0 < n )
+          Debug.Print( "    {0}: {1} non-emtpy solids, "
+            + "{2} empty, {3} curves, {4} other",
+            e.Name, nNonEmptySolids, nEmptySolids,
+            nCurves, nOther );
+
+          JtLoops loops = null;
+
+          if( 1 == nNonEmptySolids
+            && 0 == nEmptySolids + nCurves + nOther )
+          {
+            int nFailures = 0;
+
+            loops = CmdUploadRooms
+              .GetPlanViewBoundaryLoopsGeo(
+                creapp, geo, ref nFailures );
+          }
+          else
+          {
+            double z = double.MinValue;
+            bool first = true;
+
+            foreach( GeometryObject obj in geo )
+            {
+              // Do we need the graphics style?
+              // It might give us horrible things like
+              // colours etc.
+
+              ElementId id = obj.GraphicsStyleId;
+
+              //Debug.Print( "      " + obj.GetType().Name );
+
+              Solid solid = obj as Solid;
+
+              if( null == solid )
               {
-                Debug.Print(
-                  "      solid with {0} edges", n );
+                Debug.Assert( obj is Line, "expected only lines and solids" );
 
-                foreach( Edge edge in solid.Edges )
+                Curve c = obj as Curve;
+
+                if( first )
                 {
-                  Curve c = edge.AsCurve();
+                  z = c.GetEndPoint( 0 ).Z;
 
-                  Debug.Print( "        "
-                    + edge.GetType().Name + ": "
-                    + c.GetType().Name );
+                  Debug.Assert( Util.IsEqual( z, c.GetEndPoint( 1 ).Z ),
+                    "expected a plan view with all Z values equal" );
+
+                  first = false;
+                }
+                else
+                {
+                  Debug.Assert( Util.IsEqual( z, c.GetEndPoint( 0 ).Z ),
+                    "expected a plan view with all Z values equal" );
+
+                  Debug.Assert( Util.IsEqual( z, c.GetEndPoint( 1 ).Z ),
+                    "expected a plan view with all Z values equal" );
+                }
+
+                Debug.Print( "      {0} {1}",
+                  obj.GetType().Name,
+                  Util.CurveEndpointString( c ) );
+              }
+              else
+              {
+                int n = solid.Edges.Size;
+
+                if( 0 < n )
+                {
+                  Debug.Print(
+                    "      solid with {0} edges", n );
+
+                  foreach( Edge edge in solid.Edges )
+                  {
+                    Curve c = edge.AsCurve();
+
+                    Debug.Print( "        {0}: {1} {2}",
+                      edge.GetType().Name,
+                      c.GetType().Name,
+                      Util.CurveEndpointString( c ) );
+                  }
                 }
               }
             }

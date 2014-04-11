@@ -9,7 +9,7 @@ using System.Text;
 namespace RoomEditorApp
 {
   /// <summary>
-  /// A closed polygon boundary loop.
+  /// A closed or open polygon boundary loop.
   /// </summary>
   class JtLoop : List<Point2dInt>
   {
@@ -85,7 +85,7 @@ namespace RoomEditorApp
           string.Join( " ",
             this.Select<Point2dInt, string>(
               ( p, i ) => p.SvgPath( i ) ) )
-          + (Closed ? "Z" : "");
+          + ( Closed ? "Z" : "" );
       }
     }
   }
