@@ -68,6 +68,7 @@ using System.Runtime.InteropServices;
 // 2014-04-10 - 2014.0.2.4 - implemented categoryFilter and UploadSheet method outline
 // 2014-04-10 - 2014.0.2.5 - split Point2dIntLoop.cs module into JtLoop.cs and JtLoops.cs, added support for open or closed loop to JtLoop
 // 2014-04-10 - 2014.0.2.6 - examine geometry retrieved from floor plan views, refactored GetPlanViewBoundaryLoops, exposed GetPlanViewBoundaryLoopsGeo, ensure all geometry is either solid or curve, get JtLoops from solids, ensure curves are horizontal and co-planar
+// 2014-04-14 - 2015.0.2.6 - migrated to Revit 2015
 //
-[assembly: AssemblyVersion( "2014.0.2.6" )]
-[assembly: AssemblyFileVersion( "2014.0.2.6" )]
+[assembly: AssemblyVersion( "2015.0.2.6" )]
+[assembly: AssemblyFileVersion( "2015.0.2.6" )]
