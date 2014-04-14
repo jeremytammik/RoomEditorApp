@@ -153,6 +153,6 @@
     <Delete Files="$(AppData)\Autodesk\REVIT\Addins\2014\RoomEditorApp.dll" />
   </Target>
   <PropertyGroup>
-    <PostBuildEvent>copy "$(ProjectDir)RoomEditorApp.addin" "$(AppData)\Autodesk\REVIT\Addins\2014"</PostBuildEvent>
+    <PostBuildEvent>copy "$(ProjectDir)RoomEditorApp.addin" "$(AppData)\Autodesk\REVIT\Addins\2015"</PostBuildEvent>
   </PropertyGroup>
 </Project>
