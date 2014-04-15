@@ -101,16 +101,24 @@ namespace RoomEditorApp
         Viewport vp = doc.GetElement( id ) as Viewport;
         XYZ center = vp.GetBoxCenter();
         Outline outline = vp.GetBoxOutline();
-        XYZ diff = outline.MaximumPoint - outline.MinimumPoint;
+
+        XYZ diff = outline.MaximumPoint 
+          - outline.MinimumPoint;
+
         Debug.Print(
-          "viewport {0} for view {1} outline {2} diff {3} label outline {4}",
+          "viewport {0} for view {1} outline {2} "
+          + "diff {3} label outline {4}",
           vp.Id, vp.ViewId,
           Util.OutlineString( outline ),
           Util.PointString( diff ),
           Util.OutlineString( vp.GetLabelOutline() ) );
       }
 
-      foreach( View v in sheet.Views )
+      //foreach( View v in sheet.Views ) // 2014
+
+      foreach( View v in sheet.GetAllPlacedViews() // 2015
+        .Select<ElementId, View>( id =>
+          doc.GetElement( id ) as View ) )
       {
         GetViewTransform( v );
       }
@@ -157,7 +165,9 @@ namespace RoomEditorApp
 
       Debug.Print( sheet.Name );
 
-      foreach( ViewPlan v in sheet.Views
+      foreach( ViewPlan v in sheet.GetAllPlacedViews()
+        .Select<ElementId, View>( id => 
+          doc.GetElement( id ) as View ) 
         .OfType<ViewPlan>()
         .Where<ViewPlan>( v => IsFloorPlan( v ) ) )
       {
@@ -422,7 +432,9 @@ namespace RoomEditorApp
 
         foreach( ViewSheet sheet in sheets )
         {
-          foreach( View v in sheet.Views )
+          foreach( View v in sheet.GetAllPlacedViews()
+            .Select<ElementId, View>( id =>
+              doc.GetElement( id ) as View ) )
           {
             if( !views.ContainsKey( v ) )
             {

@@ -749,34 +749,27 @@ namespace RoomEditorApp
 
       // Iterate over all pre-selected rooms
 
-      List<ElementId> ids = null;
-
       Selection sel = uidoc.Selection;
 
-      if( 0 < sel.Elements.Size )
+      ICollection<ElementId> ids = sel.GetElementIds();
+
+      if( 0 < ids.Count )
       {
-        foreach( Element e in sel.Elements )
+        foreach( ElementId id in ids )
         {
-          if( !( e is Room ) )
+          if( !( doc.GetElement( id ) is Room ) )
           {
             Util.ErrorMsg( "Please pre-select only room"
               + " elements before running this command." );
             return Result.Failed;
           }
-
-          if( null == ids )
-          {
-            ids = new List<ElementId>( 1 );
-          }
-
-          ids.Add( e.Id );
         }
       }
 
       // If no rooms were pre-selected, 
       // prompt for post-selection
 
-      if( null == ids )
+      if( null == ids || 0 == ids.Count )
       {
         IList<Reference> refs = null;
 
