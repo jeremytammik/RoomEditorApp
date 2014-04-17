@@ -37,6 +37,20 @@ namespace RoomEditorApp
     }
 
     /// <summary>
+    /// Add a point array to the collection.
+    /// If the new point is identical to the last,
+    /// ignore it. This will automatically suppress
+    /// really small boundary segment fragments.
+    /// </summary>
+    public void Add( Point2dInt [] pts )
+    {
+      foreach( Point2dInt p in pts )
+      {
+        Add( p );
+      }
+    }
+
+    /// <summary>
     /// Display as a string.
     /// </summary>
     public override string ToString()

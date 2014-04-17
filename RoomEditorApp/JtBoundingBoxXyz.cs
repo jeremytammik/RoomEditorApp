@@ -125,5 +125,22 @@ namespace RoomEditorApp
     //    }
     //  }
     //}
+
+    /// <summary>
+    /// Return the four bounding box corners 
+    /// projected onto the XY plane.
+    /// </summary>
+    public UV[] XyCorners
+    {
+      get
+      {
+        return new UV[] {
+          new UV( xmin, ymin ),
+          new UV( xmax, ymin ),
+          new UV( xmax, ymax ),
+          new UV( xmin, ymax )
+        };
+      }
+    }
   }
 }

@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle( "Revit Room Editor Add-In" )]
-[assembly: AssemblyDescription( "Cloud based furniture and equipment editor" )]
+[assembly: AssemblyDescription( "Cloud-based simplified BIM viewer and editor" )]
 [assembly: AssemblyConfiguration( "" )]
 [assembly: AssemblyCompany( "Autodesk Inc." )]
 [assembly: AssemblyProduct( "Revit Room Editor Add-In" )]
@@ -70,6 +70,7 @@ using System.Runtime.InteropServices;
 // 2014-04-10 - 2014.0.2.6 - examine geometry retrieved from floor plan views, refactored GetPlanViewBoundaryLoops, exposed GetPlanViewBoundaryLoopsGeo, ensure all geometry is either solid or curve, get JtLoops from solids, ensure curves are horizontal and co-planar
 // 2014-04-14 - 2015.0.2.6 - migrated to Revit 2015
 // 2014-04-15 - 2015.0.2.7 - eliminated compiler warnings on deprecated API usage of Selection.Elements and ViewSheet.Views
+// 2014-04-16 - 2015.0.2.8 - implemented GetSheetViewportLoops
 //
-[assembly: AssemblyVersion( "2015.0.2.7" )]
-[assembly: AssemblyFileVersion( "2015.0.2.7" )]
+[assembly: AssemblyVersion( "2015.0.2.8" )]
+[assembly: AssemblyFileVersion( "2015.0.2.8" )]

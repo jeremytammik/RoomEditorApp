@@ -54,6 +54,74 @@ namespace RoomEditorApp
       return rc;
     }
 
+    #region Deteremine sheet and viewport size and location
+    static JtLoop GetLoop( Outline outline )
+    {
+      JtBoundingBox2dInt bb 
+        = new JtBoundingBox2dInt();
+
+      bb.ExpandToContain( 
+        new Point2dInt( outline.MinimumPoint ) );
+
+      bb.ExpandToContain( 
+        new Point2dInt( outline.MaximumPoint ) );
+
+      JtLoop loop = new JtLoop( 4 );
+
+      loop.Add( bb.Corners );
+
+      return loop;
+    }
+
+    static JtLoops GetSheetViewportLoops(
+      ViewSheet sheet )
+    {
+      Document doc = sheet.Document;
+
+      List<Viewport> viewports = sheet
+        .GetAllViewports()
+        .Select<ElementId,Viewport>( 
+          id => doc.GetElement( id ) as Viewport )
+        .ToList<Viewport>();
+
+      int n = viewports.Count;
+
+      JtLoops sheetViewportLoops = new JtLoops( n + 1 );
+
+      BoundingBoxXYZ bb = sheet.get_BoundingBox( null ); // (-100,-100),(100,100)
+
+      BoundingBoxUV bb2 = sheet.Outline; // (0,0), (2.76,1.95)
+
+      JtBoundingBox2dInt ibb = new JtBoundingBox2dInt(); // (0,0),(840,...)
+
+      ibb.ExpandToContain( new Point2dInt( bb2.Min ) );
+      ibb.ExpandToContain( new Point2dInt( bb2.Max ) );
+
+      JtLoop loop = new JtLoop( 4 );
+
+      //ibb.Corners.Select<Point2dInt,bool>( p => (outer.Add( p ), true) );
+
+      loop.Add( ibb.Corners );
+
+      //JtLoop loop = GetLoop( sheet.Outline );
+
+      sheetViewportLoops.Add( loop );
+
+      foreach( Viewport vp in viewports )
+      {
+        XYZ center = vp.GetBoxCenter();
+        Outline outline = vp.GetBoxOutline();
+        loop = new JtLoop( 4 );
+        ibb.Init();
+        ibb.ExpandToContain( new Point2dInt( outline.MinimumPoint ) );
+        ibb.ExpandToContain( new Point2dInt( outline.MaximumPoint ) );
+        loop.Add( ibb.Corners );
+        sheetViewportLoops.Add( loop );
+      }
+      return sheetViewportLoops;
+    }
+    #endregion // Deteremine sheet and viewport size and location
+
     #region Sheet and view transform
     static void GetViewTransform( View v )
     {
@@ -521,6 +589,20 @@ namespace RoomEditorApp
 
           foreach( ViewSheet sheet in sheets )
           {
+            JtLoops sheetViewportLoops 
+              = GetSheetViewportLoops( sheet );
+
+            string sheet_number = sheet.get_Parameter( 
+              BuiltInParameter.SHEET_NUMBER )
+                .AsString();
+
+            caption = string.Format(
+              "Sheet and Viewport Loops - {0} - {1}",
+              sheet_number, sheet.Name );
+
+            GeoSnoop.DisplayLoops( revit_window, 
+              caption, false, sheetViewportLoops );
+
             ListSheetAndViewTransforms( sheet );
             UploadSheet( sheet, categoryFilter );
           }

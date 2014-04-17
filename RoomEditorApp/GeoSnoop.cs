@@ -70,8 +70,8 @@ namespace RoomEditorApp
       string caption, 
       bool modal,
       JtLoops roomLoops,
-      Dictionary<string, JtLoop> furnitureLoops,
-      List<JtPlacement2dInt> furnitureInstances )
+      Dictionary<string, JtLoop> furnitureLoops = null,
+      List<JtPlacement2dInt> furnitureInstances = null )
     {
       JtBoundingBox2dInt bb = roomLoops.BoundingBox;
 
@@ -136,20 +136,23 @@ namespace RoomEditorApp
       DrawLoopsOnGraphics( graphics,
         roomLoops.GetGraphicsPathLines(), transform );
 
-      List<Point[]> loops = new List<Point[]>( 1 );
-      loops.Add( new Point[] { } );
-
-      foreach( JtPlacement2dInt i in furnitureInstances )
+      if( null != furnitureLoops )
       {
-        Point2dInt v = i.Translation;
-        Matrix placement = new Matrix();
-        placement.Rotate(i.Rotation);
-        placement.Translate(v.X, v.Y, MatrixOrder.Append);
-        placement.Multiply( transform, MatrixOrder.Append );
-        loops[0] = furnitureLoops[i.SymbolId]
-          .GetGraphicsPathLines();
+        List<Point[]> loops = new List<Point[]>( 1 );
+        loops.Add( new Point[] { } );
 
-        DrawLoopsOnGraphics( graphics, loops, placement );
+        foreach( JtPlacement2dInt i in furnitureInstances )
+        {
+          Point2dInt v = i.Translation;
+          Matrix placement = new Matrix();
+          placement.Rotate( i.Rotation );
+          placement.Translate( v.X, v.Y, MatrixOrder.Append );
+          placement.Multiply( transform, MatrixOrder.Append );
+          loops[0] = furnitureLoops[i.SymbolId]
+            .GetGraphicsPathLines();
+
+          DrawLoopsOnGraphics( graphics, loops, placement );
+        }
       }
 
       Form form = new Form();

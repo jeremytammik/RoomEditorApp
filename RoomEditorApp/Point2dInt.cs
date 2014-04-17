@@ -25,6 +25,16 @@ namespace RoomEditorApp
     }
 
     /// <summary>
+    /// Convert a 2D Revit UV to a 2D millimetre 
+    /// integer point by scaling from feet to mm.
+    /// </summary>
+    public Point2dInt( UV p )
+    {
+      X = Util.ConvertFeetToMillimetres( p.U );
+      Y = Util.ConvertFeetToMillimetres( p.V );
+    }
+
+    /// <summary>
     /// Convert a 3D Revit XYZ to a 2D millimetre 
     /// integer point by discarding the Z coordinate
     /// and scaling from feet to mm.

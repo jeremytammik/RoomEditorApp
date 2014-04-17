@@ -24,9 +24,17 @@ namespace RoomEditorApp
     int xmin, ymin, xmax, ymax;
 
     /// <summary>
-    /// Initialise to infinite values.
+    /// Initialise to infinite values, e.g. empty box.
     /// </summary>
     public JtBoundingBox2dInt()
+    {
+      Init();
+    }
+
+    /// <summary>
+    /// Initialise to infinite values, e.g. empty box.
+    /// </summary>
+    public void Init()
     {
       xmin = ymin = int.MaxValue;
       xmax = ymax = int.MinValue;
@@ -126,6 +134,22 @@ namespace RoomEditorApp
     //    }
     //  }
     //}
+
+    /// <summary>
+    /// Return the four bounding box corners.
+    /// </summary>
+    public Point2dInt[] Corners
+    {
+      get
+      {
+        return new Point2dInt[] {
+          Min,
+          new Point2dInt( xmax, ymin ),
+          Max,
+          new Point2dInt( xmin, ymax )
+        };
+      }
+    }
 
     /// <summary>
     /// Return the SVG viewBox 
