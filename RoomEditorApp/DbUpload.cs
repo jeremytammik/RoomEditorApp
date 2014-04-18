@@ -65,8 +65,7 @@ namespace RoomEditorApp
       Room room,
       List<Element> furniture,
       JtLoops roomLoops,
-      Dictionary<string, JtLoop> furnitureLoops,
-      List<JtPlacement2dInt> furnitureInstances )
+      Dictionary<string, JtLoop> furnitureLoops )
     {
       CouchDatabase db = new RoomEditorDb().Db;
 

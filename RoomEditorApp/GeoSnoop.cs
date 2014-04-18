@@ -63,15 +63,15 @@ namespace RoomEditorApp
     /// <param name="caption">Form caption</param>
     /// <param name="modal">Modal versus modeless</param>
     /// <param name="roomLoops">Room boundary loops</param>
-    /// <param name="furnitureLoops">Furniture symbol boundary loops</param>
-    /// <param name="furnitureInstances">Furniture instances</param>
+    /// <param name="geometryLoops">Family symbol and part geometry</param>
+    /// <param name="familyInstances">Family instances</param>
     public static void DisplayLoops(
       IWin32Window owner,
       string caption, 
       bool modal,
       JtLoops roomLoops,
-      Dictionary<string, JtLoop> furnitureLoops = null,
-      List<JtPlacement2dInt> furnitureInstances = null )
+      Dictionary<string, JtLoop> geometryLoop = null,
+      List<JtPlacement2dInt> familyInstances = null )
     {
       JtBoundingBox2dInt bb = roomLoops.BoundingBox;
 
@@ -136,19 +136,19 @@ namespace RoomEditorApp
       DrawLoopsOnGraphics( graphics,
         roomLoops.GetGraphicsPathLines(), transform );
 
-      if( null != furnitureLoops )
+      if( null != geometryLoop )
       {
         List<Point[]> loops = new List<Point[]>( 1 );
         loops.Add( new Point[] { } );
 
-        foreach( JtPlacement2dInt i in furnitureInstances )
+        foreach( JtPlacement2dInt i in familyInstances )
         {
           Point2dInt v = i.Translation;
           Matrix placement = new Matrix();
           placement.Rotate( i.Rotation );
           placement.Translate( v.X, v.Y, MatrixOrder.Append );
           placement.Multiply( transform, MatrixOrder.Append );
-          loops[0] = furnitureLoops[i.SymbolId]
+          loops[0] = geometryLoop[i.SymbolId]
             .GetGraphicsPathLines();
 
           DrawLoopsOnGraphics( graphics, loops, placement );

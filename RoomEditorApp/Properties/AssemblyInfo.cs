@@ -71,6 +71,7 @@ using System.Runtime.InteropServices;
 // 2014-04-14 - 2015.0.2.6 - migrated to Revit 2015
 // 2014-04-15 - 2015.0.2.7 - eliminated compiler warnings on deprecated API usage of Selection.Elements and ViewSheet.Views
 // 2014-04-16 - 2015.0.2.8 - implemented GetSheetViewportLoops
+// 2014-04-18 - 2015.0.2.9 - refactored and exposed CmdUploadRooms.GetLoop, implemented GetBimGraphics
 //
-[assembly: AssemblyVersion( "2015.0.2.8" )]
-[assembly: AssemblyFileVersion( "2015.0.2.8" )]
+[assembly: AssemblyVersion( "2015.0.2.9" )]
+[assembly: AssemblyFileVersion( "2015.0.2.9" )]

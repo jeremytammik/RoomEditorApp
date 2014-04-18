@@ -54,75 +54,7 @@ namespace RoomEditorApp
       return rc;
     }
 
-    #region Deteremine sheet and viewport size and location
-    static JtLoop GetLoop( Outline outline )
-    {
-      JtBoundingBox2dInt bb 
-        = new JtBoundingBox2dInt();
-
-      bb.ExpandToContain( 
-        new Point2dInt( outline.MinimumPoint ) );
-
-      bb.ExpandToContain( 
-        new Point2dInt( outline.MaximumPoint ) );
-
-      JtLoop loop = new JtLoop( 4 );
-
-      loop.Add( bb.Corners );
-
-      return loop;
-    }
-
-    static JtLoops GetSheetViewportLoops(
-      ViewSheet sheet )
-    {
-      Document doc = sheet.Document;
-
-      List<Viewport> viewports = sheet
-        .GetAllViewports()
-        .Select<ElementId,Viewport>( 
-          id => doc.GetElement( id ) as Viewport )
-        .ToList<Viewport>();
-
-      int n = viewports.Count;
-
-      JtLoops sheetViewportLoops = new JtLoops( n + 1 );
-
-      BoundingBoxXYZ bb = sheet.get_BoundingBox( null ); // (-100,-100),(100,100)
-
-      BoundingBoxUV bb2 = sheet.Outline; // (0,0), (2.76,1.95)
-
-      JtBoundingBox2dInt ibb = new JtBoundingBox2dInt(); // (0,0),(840,...)
-
-      ibb.ExpandToContain( new Point2dInt( bb2.Min ) );
-      ibb.ExpandToContain( new Point2dInt( bb2.Max ) );
-
-      JtLoop loop = new JtLoop( 4 );
-
-      //ibb.Corners.Select<Point2dInt,bool>( p => (outer.Add( p ), true) );
-
-      loop.Add( ibb.Corners );
-
-      //JtLoop loop = GetLoop( sheet.Outline );
-
-      sheetViewportLoops.Add( loop );
-
-      foreach( Viewport vp in viewports )
-      {
-        XYZ center = vp.GetBoxCenter();
-        Outline outline = vp.GetBoxOutline();
-        loop = new JtLoop( 4 );
-        ibb.Init();
-        ibb.ExpandToContain( new Point2dInt( outline.MinimumPoint ) );
-        ibb.ExpandToContain( new Point2dInt( outline.MaximumPoint ) );
-        loop.Add( ibb.Corners );
-        sheetViewportLoops.Add( loop );
-      }
-      return sheetViewportLoops;
-    }
-    #endregion // Deteremine sheet and viewport size and location
-
-    #region Sheet and view transform
+    #region Sheet and view transform - debugging code, currently not used
     static void GetViewTransform( View v )
     {
       XYZ origin = v.Origin;
@@ -170,7 +102,7 @@ namespace RoomEditorApp
         XYZ center = vp.GetBoxCenter();
         Outline outline = vp.GetBoxOutline();
 
-        XYZ diff = outline.MaximumPoint 
+        XYZ diff = outline.MaximumPoint
           - outline.MinimumPoint;
 
         Debug.Print(
@@ -191,16 +123,110 @@ namespace RoomEditorApp
         GetViewTransform( v );
       }
     }
-    #endregion // Sheet and view transform
+    #endregion // Sheet and view transform - debugging code, currently not used
+
+    #region Determine sheet and viewport size and location
+    //static JtLoop GetLoop( Outline outline )
+    //{
+    //  JtBoundingBox2dInt bb 
+    //    = new JtBoundingBox2dInt();
+
+    //  bb.ExpandToContain( 
+    //    new Point2dInt( outline.MinimumPoint ) );
+
+    //  bb.ExpandToContain( 
+    //    new Point2dInt( outline.MaximumPoint ) );
+
+    //  JtLoop loop = new JtLoop( 4 );
+
+    //  loop.Add( bb.Corners );
+
+    //  return loop;
+    //}
 
     /// <summary>
-    /// Upload given sheet and the views it contains
-    /// to the cloud repository, ignoring all elements
-    /// not belonging to one of the selected categories.
+    /// Return polygon loops representing the size 
+    /// and location of given sheet and the viewports 
+    /// it contains.
     /// </summary>
-    static void UploadSheet(
+    static JtLoops GetSheetViewportLoops(
+      ViewSheet sheet )
+    {
+      Document doc = sheet.Document;
+
+      List<Viewport> viewports = sheet
+        .GetAllViewports()
+        .Select<ElementId, Viewport>(
+          id => doc.GetElement( id ) as Viewport )
+        .ToList<Viewport>();
+
+      int n = viewports.Count;
+
+      JtLoops sheetViewportLoops = new JtLoops( n + 1 );
+
+      //BoundingBoxXYZ bb = sheet.get_BoundingBox( null ); // (-100,-100),(100,100)
+
+      BoundingBoxUV bb = sheet.Outline; // (0,0), (2.76,1.95)
+
+      JtBoundingBox2dInt ibb = new JtBoundingBox2dInt(); // (0,0),(840,...)
+
+      ibb.ExpandToContain( new Point2dInt( bb.Min ) );
+      ibb.ExpandToContain( new Point2dInt( bb.Max ) );
+
+      JtLoop loop = new JtLoop( 4 );
+
+      //ibb.Corners.Select<Point2dInt,bool>( p => (outer.Add( p ), true) );
+
+      loop.Add( ibb.Corners );
+
+      //JtLoop loop = GetLoop( sheet.Outline );
+
+      sheetViewportLoops.Add( loop );
+
+      foreach( Viewport vp in viewports )
+      {
+        XYZ center = vp.GetBoxCenter();
+        Outline outline = vp.GetBoxOutline();
+
+        ibb.Init();
+
+        ibb.ExpandToContain(
+          new Point2dInt( outline.MinimumPoint ) );
+
+        ibb.ExpandToContain(
+          new Point2dInt( outline.MaximumPoint ) );
+
+        loop = new JtLoop( 4 );
+
+        loop.Add( ibb.Corners );
+
+        sheetViewportLoops.Add( loop );
+      }
+      return sheetViewportLoops;
+    }
+    #endregion // Determine sheet and viewport size and location
+
+    #region Determine visible elements, their graphics and placements
+    /// <summary>
+    /// Determine the visible elements belonging to the 
+    /// specified categories in the views displayed by
+    /// the given sheet and return their graphics and 
+    /// instance placements.
+    /// Ignore all but the first geometry loop retrieved.
+    /// </summary>
+    /// <param name="sheet">The view sheet</param>
+    /// <param name="categoryFilter">The desired categoires</param>
+    /// <param name="parts">Return the non-instance parts</param>
+    /// <param name="instances">Return the family instances</param>
+    /// <param name="graphics">Return the instance and part graphics</param>
+    /// <param name="placements">Return the instance placements</param>
+    static void GetBimGraphics(
       ViewSheet sheet,
-      ElementFilter categoryFilter )
+      ElementFilter categoryFilter,
+      List<Element> parts,
+      List<Element> instances,
+      Dictionary<string, JtLoop> symbolGeometry,
+      List<JtPlacement2dInt> familyInstances )
     {
       bool list_ignored_elements = false;
 
@@ -210,16 +236,6 @@ namespace RoomEditorApp
         = doc.Application.Create;
 
       Options opt = new Options();
-
-      // Map symbol UniqueId to symbol geometry
-
-      Dictionary<string, JtLoop> symbolGeometry
-        = new Dictionary<string, JtLoop>();
-
-      // List of instances referring to symbols
-
-      List<JtPlacement2dInt> familyInstances
-        = new List<JtPlacement2dInt>();
 
       // There is no need and no possibility to set 
       // the detail level when retrieving view geometry.
@@ -234,8 +250,8 @@ namespace RoomEditorApp
       Debug.Print( sheet.Name );
 
       foreach( ViewPlan v in sheet.GetAllPlacedViews()
-        .Select<ElementId, View>( id => 
-          doc.GetElement( id ) as View ) 
+        .Select<ElementId, View>( id =>
+          doc.GetElement( id ) as View )
         .OfType<ViewPlan>()
         .Where<ViewPlan>( v => IsFloorPlan( v ) ) )
       {
@@ -291,10 +307,6 @@ namespace RoomEditorApp
               }
               continue;
             }
-
-            // Replace this later to add real geometry.
-
-            symbolGeometry.Add( uid, null );
 
             // Retrieve family instance geometry 
             // transformed back to symbol definition
@@ -391,6 +403,9 @@ namespace RoomEditorApp
 
               if( null == solid )
               {
+                #region Debug code to ensure horizontal co-planar curves
+#if DEBUG
+
                 Debug.Assert( obj is Line, "expected only lines and solids" );
 
                 Curve c = obj as Curve;
@@ -416,9 +431,52 @@ namespace RoomEditorApp
                 Debug.Print( "      {0} {1}",
                   obj.GetType().Name,
                   Util.CurveEndpointString( c ) );
+#endif // DEBUG
+                #endregion // Debug code to ensure horizontal co-planar curves
+              }
+              else if( 1 == solid.Faces.Size )
+              {
+                Debug.Print(
+                  "      solid with 1 face" );
+
+                foreach( Face face in solid.Faces )
+                {
+                  #region Debug code to print out face edges
+#if DEBUG
+                  foreach( EdgeArray loop in
+                    face.EdgeLoops )
+                  {
+                    foreach( Edge edge in loop )
+                    {
+                      // This returns the curves already
+                      // correctly oriented:
+
+                      Curve c = edge
+                        .AsCurveFollowingFace( face );
+
+                      Debug.Print( "        {0}: {1} {2}",
+                        edge.GetType().Name,
+                        c.GetType().Name,
+                        Util.CurveEndpointString( c ) );
+                    }
+                  }
+#endif // DEBUG
+                  #endregion // Debug code to print out face edges
+
+                  if( null == loops )
+                  {
+                    loops = new JtLoops( 1 );
+                  }
+                  loops.Add( CmdUploadRooms.GetLoop(
+                    creapp, face ) );
+                }
               }
               else
               {
+                #region Debug code for exceptional cases
+#if DEBUG
+                Debug.Assert( 1 >= solid.Faces.Size, "expected at most one visible face in plan view for my simple solids" );
+
                 int n = solid.Edges.Size;
 
                 if( 0 < n )
@@ -426,9 +484,46 @@ namespace RoomEditorApp
                   Debug.Print(
                     "      solid with {0} edges", n );
 
+                  Face[] face2 = new Face[] { null, null };
+                  Face face = null;
+
                   foreach( Edge edge in solid.Edges )
                   {
+                    if( null == face2[0] )
+                    {
+                      face2[0] = edge.GetFace( 0 );
+                      face2[1] = edge.GetFace( 1 );
+                    }
+                    else if( null == face )
+                    {
+                      if( face2.Contains<Face>( edge.GetFace( 0 ) ) )
+                      {
+                        face = edge.GetFace( 0 );
+                      }
+                      else if( face2.Contains<Face>( edge.GetFace( 1 ) ) )
+                      {
+                        face = edge.GetFace( 1 );
+                      }
+                      else
+                      {
+                        Debug.Assert( false,
+                          "expected all edges to belong to one face" );
+                      }
+                    }
+                    else
+                    {
+                      Debug.Assert( face == edge.GetFace( 0 )
+                        || face == edge.GetFace( 1 ),
+                        "expected all edges to belong to one face" );
+                    }
+
                     Curve c = edge.AsCurve();
+
+                    // This returns the curves already
+                    // correctly oriented:
+
+                    //Curve curve = e.AsCurveFollowingFace(
+                    //  face );
 
                     Debug.Print( "        {0}: {1} {2}",
                       edge.GetType().Name,
@@ -436,13 +531,47 @@ namespace RoomEditorApp
                       Util.CurveEndpointString( c ) );
                   }
                 }
+#endif // DEBUG
+                #endregion // Debug code for exceptional cases
               }
+            }
+          }
+
+          // Save the part or instance and 
+          // the geometry retrieved for it.
+          // This is where we drop all geometry but
+          // the first loop.
+
+          if( null != loops )
+          {
+            if( null == f )
+            {
+              parts.Add( e );
+              symbolGeometry.Add( e.UniqueId, loops[0] );
+            }
+            else
+            {
+              instances.Add( f );
+              symbolGeometry.Add( f.Symbol.UniqueId, loops[0] );
             }
           }
         }
       }
     }
+    #endregion // Determine visible elements, their graphics and placements
 
+    /// <summary>
+    /// Upload given sheet and the views it contains
+    /// to the cloud repository, ignoring all elements
+    /// not belonging to one of the selected categories.
+    /// </summary>
+    static void UploadSheet(
+      ViewSheet sheet,
+      ElementFilter categoryFilter )
+    {
+    }
+
+    #region External command mainline Execute method
     public Result Execute(
       ExternalCommandData commandData,
       ref string message,
@@ -589,10 +718,54 @@ namespace RoomEditorApp
 
           foreach( ViewSheet sheet in sheets )
           {
-            JtLoops sheetViewportLoops 
+            // This is currently not used for anything.
+
+            ListSheetAndViewTransforms( sheet );
+
+            // Determine the polygon loops representing 
+            // the size and location of given sheet and 
+            // the viewports it contains and display a
+            // dynamically generated Windows preview 
+            // form.
+
+            JtLoops sheetViewportLoops
               = GetSheetViewportLoops( sheet );
 
-            string sheet_number = sheet.get_Parameter( 
+            // Determine graphics for family instances,
+            // their symbols and other BIM parts.
+
+            List<Element> parts = new List<Element>();
+            List<Element> instances = new List<Element>();
+
+            // Map symbol or part UniqueId to its 
+            // graphics.
+
+            Dictionary<string, JtLoop> graphics
+              = new Dictionary<string, JtLoop>();
+
+            // List of instance placements
+
+            List<JtPlacement2dInt> placements
+              = new List<JtPlacement2dInt>();
+
+            GetBimGraphics( sheet, categoryFilter,
+              parts, instances, graphics, placements );
+
+            // Display sheet and viewports with the 
+            // geometry retrieve in a temporary GeoSNoop 
+            // form generated on the fly for debugging 
+            // purposes.
+
+            List<JtPlacement2dInt> allPlacements
+              = new List<JtPlacement2dInt>( placements );
+
+            foreach( Element e in parts )
+            {
+              allPlacements.Add( new JtPlacement2dInt( 
+                e.UniqueId ) );
+            }
+
+            string sheet_number = sheet.get_Parameter(
               BuiltInParameter.SHEET_NUMBER )
                 .AsString();
 
@@ -600,15 +773,18 @@ namespace RoomEditorApp
               "Sheet and Viewport Loops - {0} - {1}",
               sheet_number, sheet.Name );
 
-            GeoSnoop.DisplayLoops( revit_window, 
-              caption, false, sheetViewportLoops );
+            GeoSnoop.DisplayLoops( revit_window,
+              caption, false, sheetViewportLoops, 
+              graphics, allPlacements );
 
-            ListSheetAndViewTransforms( sheet );
+            // Upload data to the cloud database.
+
             UploadSheet( sheet, categoryFilter );
           }
         }
       }
       return Result.Succeeded;
     }
+    #endregion // External command mainline Execute method
   }
 }

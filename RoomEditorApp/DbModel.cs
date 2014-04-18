@@ -111,6 +111,8 @@ namespace RoomEditorApp
       Type = "sheet";
     }
     public string ModelId { get; set; }
+    public int Width { get; set; }
+    public int Height { get; set; }
   }
 
   /// <summary>
@@ -123,11 +125,17 @@ namespace RoomEditorApp
       Type = "view";
     }
     public string SheetId { get; set; }
+    public int X { get; set; }
+    public int Y { get; set; }
+    public int Width { get; set; }
+    public int Height { get; set; }
+    public string ViewBox { get; set; }
   }
 
   /// <summary>
   /// Part of the building, cannot move.
   /// A building part can appear in multiple views.
+  /// It has its own graphical representation.
   /// </summary>
   class DbPart : DbObj2
   {
@@ -136,6 +144,7 @@ namespace RoomEditorApp
       Type = "part";
     }
     public string [] ViewIds { get; set; }
+    public string Loops { get; set; }
   }
 
   /// <summary>

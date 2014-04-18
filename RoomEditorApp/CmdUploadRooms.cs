@@ -56,6 +56,7 @@ namespace RoomEditorApp
     /// </summary>
     const double _quarter_inch = 1.0 / (12 * 4);
 
+    #region Get room boundary loops
     /// <summary>
     /// Retrieve the room plan view boundary 
     /// polygon loops and convert to 2D integer-based.
@@ -150,7 +151,9 @@ namespace RoomEditorApp
     //Room Rooms <212639 Room 1> has 2 loops:
     //  0: (2753,3087), (-4446,3087), (-4446,587), (-746,587), (-746,-1212), (2753,-1212)
     //  1: (298,-112), (298,587), (1698,587), (1698,-112)
+    #endregion // Get room boundary loops
 
+    #region Get furniture contained in given room
     /// <summary>
     /// Return the element ids of all furniture and 
     /// equipment family instances contained in the 
@@ -210,6 +213,168 @@ namespace RoomEditorApp
       }
       return a;
     }
+    #endregion // Get furniture contained in given room
+
+    /// <summary>
+    /// Return a closed loop of integer-based points
+    /// scaled to millimetres from a given Revit model
+    /// face in feet.
+    /// </summary>
+    internal static JtLoop GetLoop(
+      Autodesk.Revit.Creation.Application creapp,
+      Face face )
+    {
+      JtLoop loop = null;
+
+      foreach( EdgeArray a in face.EdgeLoops )
+      {
+        int nEdges = a.Size;
+
+        List<Curve> curves
+          = new List<Curve>( nEdges );
+
+        XYZ p0 = null; // loop start point
+        XYZ p; // edge start point
+        XYZ q = null; // edge end point
+
+        // Test ValidateCurveLoops
+
+        //CurveLoop loopIfc = new CurveLoop();
+
+        foreach( Edge e in a )
+        {
+          // This requires post-processing using
+          // SortCurvesContiguous:
+
+          Curve curve = e.AsCurve();
+
+          if( _debug_output )
+          {
+            p = curve.GetEndPoint( 0 );
+            q = curve.GetEndPoint( 1 );
+            Debug.Print( "{0} --> {1}",
+              Util.PointString( p ),
+              Util.PointString( q ) );
+          }
+
+          // This returns the curves already
+          // correctly oriented:
+
+          curve = e.AsCurveFollowingFace(
+            face );
+
+          if( _debug_output )
+          {
+            p = curve.GetEndPoint( 0 );
+            q = curve.GetEndPoint( 1 );
+            Debug.Print( "{0} --> {1} following face",
+              Util.PointString( p ),
+              Util.PointString( q ) );
+          }
+
+          curves.Add( curve );
+
+          // Throws an exception saying "This curve 
+          // will make the loop not contiguous. 
+          // Parameter name: pCurve"
+
+          //loopIfc.Append( curve );
+        }
+
+        // We never reach this point:
+
+        //List<CurveLoop> loopsIfc 
+        //  = new List<CurveLoop>( 1 );
+
+        //loopsIfc.Add( loopIfc );
+
+        //IList<CurveLoop> loopsIfcOut = ExporterIFCUtils
+        //  .ValidateCurveLoops( loopsIfc, XYZ.BasisZ );
+
+        // This is no longer needed if we use 
+        // AsCurveFollowingFace instead of AsCurve:
+
+        CurveUtils.SortCurvesContiguous(
+          creapp, curves, _debug_output );
+
+        q = null;
+
+        loop = new JtLoop( nEdges );
+
+        foreach( Curve curve in curves )
+        {
+          // Todo: handle non-linear curve.
+          // Especially: if two long lines have a 
+          // short arc in between them, skip the arc
+          // and extend both lines.
+
+          p = curve.GetEndPoint( 0 );
+
+          Debug.Assert( null == q
+            || q.IsAlmostEqualTo( p, 1e-04 ),
+            string.Format(
+              "expected last endpoint to equal current start point, not distance {0}",
+              ( null == q ? 0 : p.DistanceTo( q ) ) ) );
+
+          q = curve.GetEndPoint( 1 );
+
+          if( _debug_output )
+          {
+            Debug.Print( "{0} --> {1}",
+              Util.PointString( p ),
+              Util.PointString( q ) );
+          }
+
+          if( null == p0 )
+          {
+            p0 = p; // save loop start point
+          }
+
+          int n = -1;
+
+          if( _tessellate_curves
+            && _min_tessellation_curve_length_in_feet
+              < q.DistanceTo( p ) )
+          {
+            IList<XYZ> pts = curve.Tessellate();
+            n = pts.Count;
+
+            Debug.Assert( 1 < n, "expected at least two points" );
+            Debug.Assert( p.IsAlmostEqualTo( pts[0] ), "expected tessellation start equal curve start point" );
+            Debug.Assert( q.IsAlmostEqualTo( pts[n - 1] ), "expected tessellation end equal curve end point" );
+
+            if( 2 == n )
+            {
+              n = -1; // this is a straight line
+            }
+            else
+            {
+              --n; // skip last point
+
+              for( int i = 0; i < n; ++i )
+              {
+                loop.Add( new Point2dInt( pts[i] ) );
+              }
+            }
+          }
+
+          // If tessellation is disabled,
+          // or curve is too short to tessellate,
+          // or has only two tessellation points,
+          // just add the start point:
+
+          if( -1 == n )
+          {
+            loop.Add( new Point2dInt( p ) );
+          }
+        }
+        Debug.Assert( q.IsAlmostEqualTo( p0, 1e-05 ),
+          string.Format(
+            "expected last endpoint to equal current start point, not distance {0}",
+            p0.DistanceTo( q ) ) );
+      }
+      return loop;
+    }
 
     /// <summary>
     /// Add all plan view boundary loops from 
@@ -252,157 +417,9 @@ namespace RoomEditorApp
         Face face = extrusionAnalyzer
           .GetExtrusionBase();
 
-        foreach( EdgeArray a in face.EdgeLoops )
-        {
-          int nEdges = a.Size;
+        loops.Add( GetLoop( creapp, face ) );
 
-          List<Curve> curves 
-            = new List<Curve>( nEdges );
-
-          XYZ p0 = null; // loop start point
-          XYZ p; // edge start point
-          XYZ q = null; // edge end point
-
-          // Test ValidateCurveLoops
-
-          //CurveLoop loopIfc = new CurveLoop();
-
-          foreach( Edge e in a )
-          {
-            // This requires post-processing using
-            // SortCurvesContiguous:
-
-            Curve curve = e.AsCurve();
-
-            if( _debug_output )
-            {
-              p = curve.GetEndPoint( 0 );
-              q = curve.GetEndPoint( 1 );
-              Debug.Print( "{0} --> {1}",
-                Util.PointString( p ),
-                Util.PointString( q ) );
-            }
-
-            // This returns the curves already
-            // correctly oriented:
-
-            curve = e.AsCurveFollowingFace( 
-              face );
-
-            if( _debug_output )
-            {
-              p = curve.GetEndPoint( 0 );
-              q = curve.GetEndPoint( 1 );
-              Debug.Print( "{0} --> {1} following face",
-                Util.PointString( p ),
-                Util.PointString( q ) );
-            }
-
-            curves.Add( curve );
-
-            // Throws an exception saying "This curve 
-            // will make the loop not contiguous. 
-            // Parameter name: pCurve"
-
-            //loopIfc.Append( curve );
-          }
-
-          // We never reach this point:
-
-          //List<CurveLoop> loopsIfc 
-          //  = new List<CurveLoop>( 1 );
-
-          //loopsIfc.Add( loopIfc );
-
-          //IList<CurveLoop> loopsIfcOut = ExporterIFCUtils
-          //  .ValidateCurveLoops( loopsIfc, XYZ.BasisZ );
-
-          // This is no longer needed if we use 
-          // AsCurveFollowingFace instead of AsCurve:
-
-          CurveUtils.SortCurvesContiguous( 
-            creapp, curves, _debug_output );
-
-          q = null;
-
-          JtLoop loop = new JtLoop( nEdges );
-
-          foreach( Curve curve in curves )
-          {
-            // Todo: handle non-linear curve.
-            // Especially: if two long lines have a 
-            // short arc in between them, skip the arc
-            // and extend both lines.
-
-            p = curve.GetEndPoint( 0 );
-
-            Debug.Assert( null == q 
-              || q.IsAlmostEqualTo( p, 1e-04 ),
-              string.Format( 
-                "expected last endpoint to equal current start point, not distance {0}", 
-                (null == q ? 0 : p.DistanceTo( q ))  ) );
-
-            q = curve.GetEndPoint( 1 );
-
-            if( _debug_output )
-            {
-              Debug.Print( "{0} --> {1}",
-                Util.PointString( p ),
-                Util.PointString( q ) );
-            }
-
-            if( null == p0 )
-            {
-              p0 = p; // save loop start point
-            }
-
-            int n = -1;
-
-            if( _tessellate_curves
-              && _min_tessellation_curve_length_in_feet
-                < q.DistanceTo( p ) )
-            {
-              IList<XYZ> pts = curve.Tessellate();
-              n = pts.Count;
-
-              Debug.Assert( 1 < n, "expected at least two points" );
-              Debug.Assert( p.IsAlmostEqualTo( pts[0] ), "expected tessellation start equal curve start point" );
-              Debug.Assert( q.IsAlmostEqualTo( pts[n-1] ), "expected tessellation end equal curve end point" );
-
-              if( 2 == n )
-              {
-                n = -1; // this is a straight line
-              }
-              else
-              {
-                --n; // skip last point
-                
-                for( int i = 0; i < n; ++i )
-                {
-                  loop.Add( new Point2dInt( pts[i] ) );
-                }
-              }
-            }
-
-            // If tessellation is disabled,
-            // or curve is too short to tessellate,
-            // or has only two tessellation points,
-            // just add the start point:
-
-            if( -1 == n )
-            {
-              loop.Add( new Point2dInt( p ) );
-            }
-          }
-          Debug.Assert( q.IsAlmostEqualTo( p0, 1e-05 ),
-            string.Format( 
-              "expected last endpoint to equal current start point, not distance {0}", 
-              p0.DistanceTo( q ) ) );
-
-          loops.Add( loop );
-
-          ++nAdded;
-        }
+        ++nAdded;
       }
       return nAdded;
     }
@@ -638,98 +655,93 @@ namespace RoomEditorApp
       }
     }
 
-    public static void UploadRooms(
+    /// <summary>
+    /// Upload the selected rooms and the furniture 
+    /// they contain to the cloud database.
+    /// </summary>
+    public static void UploadRoom(
       Document doc,
-      ICollection<ElementId> ids )
+      Room room )
     {
-      foreach( ElementId id in ids )
+      BoundingBoxXYZ bb = room.get_BoundingBox( null );
+
+      if( null == bb )
       {
-        Element e = doc.GetElement( id );
+        Util.ErrorMsg( string.Format( "Skipping room {0} "
+          + "because it has no bounding box.",
+          Util.ElementDescription( room ) ) );
 
-        Debug.Assert( e is Room,
-          "expected rooms only" );
-
-        Room room = e as Room;
-
-        BoundingBoxXYZ bb = room.get_BoundingBox( null );
-
-        if( null == bb )
-        {
-          Util.ErrorMsg( string.Format( "Skipping room {0} "
-            + "because it has no bounding box.",
-            Util.ElementDescription( room ) ) );
-
-          continue;
-        }
-
-        JtLoops roomLoops = GetRoomLoops( room );
-
-        ListLoops( room, roomLoops );
-
-        List<Element> furniture
-          = GetFurniture( room );
-
-        // Map symbol UniqueId to symbol loop
-
-        Dictionary<string, JtLoop> furnitureLoops
-          = new Dictionary<string, JtLoop>();
-
-        // List of instances referring to symbols
-
-        List<JtPlacement2dInt> furnitureInstances
-          = new List<JtPlacement2dInt>(
-            furniture.Count );
-
-        int nFailures;
-
-        foreach( FamilyInstance f in furniture )
-        {
-          FamilySymbol s = f.Symbol;
-
-          string uid = s.UniqueId;
-
-          if( !furnitureLoops.ContainsKey( uid ) )
-          {
-            nFailures = 0;
-
-            JtLoops loops = GetPlanViewBoundaryLoops(
-              f, ref nFailures );
-
-            if( 0 < nFailures )
-            {
-              Debug.Print( "{0}: {1} extrusion analyser failure{2}",
-                Util.ElementDescription( f ), nFailures,
-                Util.PluralSuffix( nFailures ) );
-            }
-            ListLoops( f, loops );
-
-            if( 0 < loops.Count )
-            {
-              // Assume first loop is outer one
-
-              furnitureLoops.Add( uid, loops[0] );
-            }
-          }
-          furnitureInstances.Add(
-            new JtPlacement2dInt( f ) );
-        }
-        IWin32Window revit_window
-          = new JtWindowHandle(
-            ComponentManager.ApplicationWindow );
-
-        string caption = doc.Title
-          + " : " + doc.GetElement( room.LevelId ).Name
-          + " : " + room.Name;
-
-        GeoSnoop.DisplayLoops( revit_window,
-          caption, false, roomLoops,
-          furnitureLoops, furnitureInstances );
-
-        DbUpload.DbUploadRoom( room, furniture, roomLoops,
-          furnitureLoops, furnitureInstances );
+        return;
       }
+
+      JtLoops roomLoops = GetRoomLoops( room );
+
+      ListLoops( room, roomLoops );
+
+      List<Element> furniture
+        = GetFurniture( room );
+
+      // Map symbol UniqueId to symbol loop
+
+      Dictionary<string, JtLoop> furnitureLoops
+        = new Dictionary<string, JtLoop>();
+
+      // List of instances referring to symbols
+
+      List<JtPlacement2dInt> furnitureInstances
+        = new List<JtPlacement2dInt>(
+          furniture.Count );
+
+      int nFailures;
+
+      foreach( FamilyInstance f in furniture )
+      {
+        FamilySymbol s = f.Symbol;
+
+        string uid = s.UniqueId;
+
+        if( !furnitureLoops.ContainsKey( uid ) )
+        {
+          nFailures = 0;
+
+          JtLoops loops = GetPlanViewBoundaryLoops(
+            f, ref nFailures );
+
+          if( 0 < nFailures )
+          {
+            Debug.Print( "{0}: {1} extrusion analyser failure{2}",
+              Util.ElementDescription( f ), nFailures,
+              Util.PluralSuffix( nFailures ) );
+          }
+          ListLoops( f, loops );
+
+          if( 0 < loops.Count )
+          {
+            // Assume first loop is outer one
+
+            furnitureLoops.Add( uid, loops[0] );
+          }
+        }
+        furnitureInstances.Add(
+          new JtPlacement2dInt( f ) );
+      }
+      IWin32Window revit_window
+        = new JtWindowHandle(
+          ComponentManager.ApplicationWindow );
+
+      string caption = doc.Title
+        + " : " + doc.GetElement( room.LevelId ).Name
+        + " : " + room.Name;
+
+      GeoSnoop.DisplayLoops( revit_window,
+        caption, false, roomLoops,
+        furnitureLoops, furnitureInstances );
+
+      DbUpload.DbUploadRoom( room, furniture, 
+        roomLoops, furnitureLoops );
     }
 
+    #region External command mainline Execute method
     public Result Execute(
       ExternalCommandData commandData,
       ref string message,
@@ -788,11 +800,19 @@ namespace RoomEditorApp
           refs.Select<Reference, ElementId>(
             r => r.ElementId ) );
       }
-      UploadRooms( doc, ids );
+
+      // Upload selected rooms to cloud database
+
+      foreach( ElementId id in ids )
+      {
+        UploadRoom( doc, 
+          doc.GetElement( id ) as Room );
+      }
 
       DbUpdater.SetLastSequence();
 
       return Result.Succeeded;
     }
+    #endregion // External command mainline Execute method
   }
 }

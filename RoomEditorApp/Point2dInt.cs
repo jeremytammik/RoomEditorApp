@@ -14,9 +14,8 @@ namespace RoomEditorApp
     public int Y { get; set; }
 
     /// <summary>
-    /// Convert a 3D Revit XYZ to a 2D millimetre 
-    /// integer point by discarding the Z coordinate
-    /// and scaling from feet to mm.
+    /// Initialise a 2D millimetre integer 
+    /// point to the given values.
     /// </summary>
     public Point2dInt( int x, int y )
     {

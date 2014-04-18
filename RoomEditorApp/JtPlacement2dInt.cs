@@ -42,6 +42,19 @@ namespace RoomEditorApp
     }
 
     /// <summary>
+    /// Create a dummy placement for a non-instance 
+    /// part, i.e. a nomral BIM element with a given 
+    /// unique id, just for GeoSnoop graphical 
+    /// debugging purposes.
+    /// </summary>
+    public JtPlacement2dInt( string uidPart )
+    {
+      Translation = new Point2dInt( 0, 0 );
+      Rotation = 0;
+      SymbolId = uidPart;
+    }
+
+    /// <summary>
     /// Return an SVG transform,
     /// either for native SVG or Raphael.
     /// </summary>

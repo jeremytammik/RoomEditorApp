@@ -2,6 +2,7 @@
 using Autodesk.Revit.ApplicationServices;
 using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
+using Autodesk.Revit.DB.Architecture;
 using Autodesk.Revit.UI;
 #endregion
 
@@ -24,7 +25,10 @@ namespace RoomEditorApp
           .OfClass( typeof( SpatialElement ) )
           .OfCategory( BuiltInCategory.OST_Rooms );
 
-      CmdUploadRooms.UploadRooms( doc, rooms.ToElementIds() );
+      foreach( Room room in rooms )
+      {
+        CmdUploadRooms.UploadRoom( doc, room );
+      }
 
       DbUpdater.SetLastSequence();
 
