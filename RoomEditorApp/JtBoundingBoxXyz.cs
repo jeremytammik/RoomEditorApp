@@ -6,6 +6,7 @@ using Autodesk.Revit.DB;
 
 namespace RoomEditorApp
 {
+#if NEED_BOUNDING_BOX_XYZ
   /// <summary>
   /// A bounding box for a collection of XYZ instances.
   /// The components of a tuple are read-only and cannot 
@@ -143,4 +144,5 @@ namespace RoomEditorApp
       }
     }
   }
+#endif // NEED_BOUNDING_BOX_XYZ
 }

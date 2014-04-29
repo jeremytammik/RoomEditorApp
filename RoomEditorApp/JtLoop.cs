@@ -51,6 +51,24 @@ namespace RoomEditorApp
     }
 
     /// <summary>
+    /// Return a bounding box 
+    /// containing this loop.
+    /// </summary>
+    public JtBoundingBox2dInt BoundingBox
+    {
+      get
+      {
+        JtBoundingBox2dInt bb = new JtBoundingBox2dInt();
+
+        foreach( Point2dInt p in this )
+        {
+          bb.ExpandToContain( p );
+        }
+        return bb;
+      }
+    }
+
+    /// <summary>
     /// Display as a string.
     /// </summary>
     public override string ToString()

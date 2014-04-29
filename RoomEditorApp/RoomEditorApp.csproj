@@ -119,6 +119,7 @@
     <Compile Include="Point2dInt.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RoomEditorDb.cs" />
+    <Compile Include="SheetModelCollections.cs" />
     <Compile Include="Util.cs" />
   </ItemGroup>
   <ItemGroup>

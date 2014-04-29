@@ -33,7 +33,7 @@ namespace RoomEditorApp
     }
 
     /// <summary>
-    /// Instantiate a new bounding box 
+    /// Return a bounding box 
     /// containing these loops.
     /// </summary>
     public JtBoundingBox2dInt BoundingBox

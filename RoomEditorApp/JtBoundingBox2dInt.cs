@@ -120,6 +120,16 @@ namespace RoomEditorApp
       if( p.Y > ymax ) { ymax = p.Y; }
     }
 
+    /// <summary>
+    /// Expand bounding box to contain 
+    /// the given other bounding box.
+    /// </summary>
+    public void ExpandToContain( JtBoundingBox2dInt b )
+    {
+      ExpandToContain( b.Min );
+      ExpandToContain( b.Max );
+    }
+
     ///// <summary>
     ///// Instantiate a new bounding box containing
     ///// the given loops.
@@ -149,6 +159,14 @@ namespace RoomEditorApp
           new Point2dInt( xmin, ymax )
         };
       }
+    }
+
+    /// <summary>
+    /// Display as a string.
+    /// </summary>
+    public override string ToString()
+    {
+      return string.Format( "({0},{1})", Min, Max );
     }
 
     /// <summary>

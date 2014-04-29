@@ -6,6 +6,7 @@ using Autodesk.Revit.ApplicationServices;
 using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
+using Bitmap = System.Drawing.Bitmap;
 using ComponentManager = Autodesk.Windows.ComponentManager;
 using IWin32Window = System.Windows.Forms.IWin32Window;
 using DialogResult = System.Windows.Forms.DialogResult;
@@ -39,6 +40,9 @@ namespace RoomEditorApp
       }
     }
     #endregion // JtViewSet - not used
+
+    #region Data - Obj - Symbol - Instance - Part - Collections
+    #endregion // Data - Obj - Symbol - Instance - Part - Collections
 
     static bool IsFloorPlan( View v )
     {
@@ -150,6 +154,7 @@ namespace RoomEditorApp
     /// it contains.
     /// </summary>
     static JtLoops GetSheetViewportLoops(
+      SheetModelCollections modelCollections,
       ViewSheet sheet )
     {
       Document doc = sheet.Document;
@@ -161,6 +166,9 @@ namespace RoomEditorApp
         .ToList<Viewport>();
 
       int n = viewports.Count;
+
+      modelCollections.ViewsInSheet[sheet.Id] 
+        = new List<ViewData>( n );
 
       JtLoops sheetViewportLoops = new JtLoops( n + 1 );
 
@@ -201,6 +209,13 @@ namespace RoomEditorApp
         loop.Add( ibb.Corners );
 
         sheetViewportLoops.Add( loop );
+
+        ViewData d = new ViewData();
+        d.Id = vp.ViewId;
+        d.ViewportBoundingBox = loop.BoundingBox;
+
+        modelCollections.ViewsInSheet[sheet.Id].Add( 
+          d );
       }
       return sheetViewportLoops;
     }
@@ -221,12 +236,9 @@ namespace RoomEditorApp
     /// <param name="graphics">Return the instance and part graphics</param>
     /// <param name="placements">Return the instance placements</param>
     static void GetBimGraphics(
+      SheetModelCollections modelCollections,
       ViewSheet sheet,
-      ElementFilter categoryFilter,
-      List<Element> parts,
-      List<Element> instances,
-      Dictionary<string, JtLoop> symbolGeometry,
-      List<JtPlacement2dInt> familyInstances )
+      ElementFilter categoryFilter )
     {
       bool list_ignored_elements = false;
 
@@ -257,7 +269,16 @@ namespace RoomEditorApp
       {
         Debug.Print( "  " + v.Name );
 
+        //modelCollections.ViewsInSheet[sheet.Id].Add(
+        //  v.Id );
+
+        modelCollections.BimelsInViews.Add( 
+          v.Id, new List<ObjData>() );
+
         opt.View = v;
+
+        JtBoundingBox2dInt bimelBb 
+          = new JtBoundingBox2dInt();
 
         FilteredElementCollector els
           = new FilteredElementCollector( doc, v.Id )
@@ -291,20 +312,52 @@ namespace RoomEditorApp
               continue;
             }
 
-            familyInstances.Add(
-              new JtPlacement2dInt( f ) );
+            //familyInstances.Add(
+            //  new JtPlacement2dInt( f ) );
+
+            //DbInstance dbi = new DbInstance();
+            //dbi.Id = f.UniqueId;
+            //dbi.Description = Util.ElementDescription( 
+            //  f );
+            //dbi.Name = f.Name;
+            //dbi.ViewIds = new string[] { v.UniqueId };
+            //dbi.SymbolId = f.Symbol.UniqueId;
+            //dbi.Transform = new JtPlacement2dInt( f )
+            //  .SvgTransform;
 
             FamilySymbol s = f.Symbol;
 
-            string uid = s.UniqueId;
+            //string uid = s.UniqueId;
 
-            if( symbolGeometry.ContainsKey( uid ) )
+            if( modelCollections.Symbols.ContainsKey( s.Id ) )
             {
               if( list_ignored_elements )
               {
-                Debug.Print( "    ... already handled "
+                Debug.Print( "    ... symbol already handled "
                   + e.Name + " --> " + s.Name );
               }
+
+              // Symbol already defined, just add instance
+
+              JtPlacement2dInt placement 
+                = new JtPlacement2dInt( f );
+
+              // Expand bounding box around all BIM 
+              // elements, ignoring the size of the 
+              // actual geometry, assuming is is small
+              // in comparison and the insertion point
+              // lies within it.
+
+              bimelBb.ExpandToContain( 
+                placement.Translation );
+
+              InstanceData d = new InstanceData();
+              d.Id = f.Id;
+              d.Symbol = f.Symbol.Id;
+              d.Placement = placement;
+
+              modelCollections.BimelsInViews[v.Id].Add( d );
+
               continue;
             }
 
@@ -474,7 +527,7 @@ namespace RoomEditorApp
               else
               {
                 #region Debug code for exceptional cases
-#if DEBUG
+#if DEBUG_2
                 Debug.Assert( 1 >= solid.Faces.Size, "expected at most one visible face in plan view for my simple solids" );
 
                 int n = solid.Edges.Size;
@@ -544,30 +597,73 @@ namespace RoomEditorApp
 
           if( null != loops )
           {
+            GeomData gd = new GeomData();
+            gd.Loop = loops[0];
+
             if( null == f )
             {
-              parts.Add( e );
-              symbolGeometry.Add( e.UniqueId, loops[0] );
+              // Add part with absolute geometry
+
+              gd.Id = e.Id;
+
+              modelCollections.BimelsInViews[v.Id].Add( 
+                gd );
+
+              // Expand bounding box around all BIM 
+              // elements.
+
+              bimelBb.ExpandToContain( 
+                gd.Loop.BoundingBox );
             }
             else
             {
-              instances.Add( f );
-              symbolGeometry.Add( f.Symbol.UniqueId, loops[0] );
+              // Define symbol and add instance
+
+              JtPlacement2dInt placement
+                = new JtPlacement2dInt( f );
+
+              InstanceData id = new InstanceData();
+              id.Id = f.Id;
+              id.Symbol = f.Symbol.Id;
+              id.Placement = placement;
+
+              modelCollections.BimelsInViews[v.Id].Add( 
+                id );
+
+              gd.Id = f.Symbol.Id;
+
+              modelCollections.Symbols.Add( 
+                f.Symbol.Id,  gd );
+
+              // Expand bounding box around all BIM 
+              // elements.
+
+              JtBoundingBox2dInt bb = gd.Loop.BoundingBox;
+              Point2dInt vtrans = placement.Translation;
+              bimelBb.ExpandToContain( bb.Min + vtrans );
+              bimelBb.ExpandToContain( bb.Max + vtrans );
             }
           }
         }
+
+        // Set up BIM bounding box for this view
+
+        modelCollections.ViewsInSheet[sheet.Id].Find( 
+          v2 => v2.Id.IntegerValue.Equals( 
+            v.Id.IntegerValue ) ).BimBoundingBox 
+              = bimelBb;
       }
     }
     #endregion // Determine visible elements, their graphics and placements
 
     /// <summary>
-    /// Upload given sheet and the views it contains
-    /// to the cloud repository, ignoring all elements
-    /// not belonging to one of the selected categories.
+    /// Upload the given sheet, views it contains and
+    /// their BIM elements to the cloud repository.
     /// </summary>
     static void UploadSheet(
       ViewSheet sheet,
-      ElementFilter categoryFilter )
+      JtLoops sheetViewportLoops,
+      SheetModelCollections modelCollections )
     {
     }
 
@@ -716,54 +812,16 @@ namespace RoomEditorApp
                 c => new ElementCategoryFilter( c.Id ) )
               .ToList<ElementFilter>() );
 
+          // Instantiate a container for all
+          // cloud data repository content.
+
+          SheetModelCollections modelCollections 
+            = new SheetModelCollections( 
+              DbUpload.GetProjectInfo( doc ).Id );
+
           foreach( ViewSheet sheet in sheets )
           {
-            // This is currently not used for anything.
-
-            ListSheetAndViewTransforms( sheet );
-
-            // Determine the polygon loops representing 
-            // the size and location of given sheet and 
-            // the viewports it contains and display a
-            // dynamically generated Windows preview 
-            // form.
-
-            JtLoops sheetViewportLoops
-              = GetSheetViewportLoops( sheet );
-
-            // Determine graphics for family instances,
-            // their symbols and other BIM parts.
-
-            List<Element> parts = new List<Element>();
-            List<Element> instances = new List<Element>();
-
-            // Map symbol or part UniqueId to its 
-            // graphics.
-
-            Dictionary<string, JtLoop> graphics
-              = new Dictionary<string, JtLoop>();
-
-            // List of instance placements
-
-            List<JtPlacement2dInt> placements
-              = new List<JtPlacement2dInt>();
-
-            GetBimGraphics( sheet, categoryFilter,
-              parts, instances, graphics, placements );
-
-            // Display sheet and viewports with the 
-            // geometry retrieve in a temporary GeoSNoop 
-            // form generated on the fly for debugging 
-            // purposes.
-
-            List<JtPlacement2dInt> allPlacements
-              = new List<JtPlacement2dInt>( placements );
-
-            foreach( Element e in parts )
-            {
-              allPlacements.Add( new JtPlacement2dInt( 
-                e.UniqueId ) );
-            }
+            // Define preview form caption.
 
             string sheet_number = sheet.get_Parameter(
               BuiltInParameter.SHEET_NUMBER )
@@ -773,13 +831,46 @@ namespace RoomEditorApp
               "Sheet and Viewport Loops - {0} - {1}",
               sheet_number, sheet.Name );
 
-            GeoSnoop.DisplayLoops( revit_window,
-              caption, false, sheetViewportLoops, 
-              graphics, allPlacements );
+            // This is currently not used for anything.
+
+            ListSheetAndViewTransforms( sheet );
+
+            // Determine the polygon loops representing 
+            // the size and location of given sheet and 
+            // the viewports it contains.
+
+            JtLoops sheetViewportLoops 
+              = GetSheetViewportLoops( 
+                modelCollections, sheet );
+
+            // Test using the original DisplayRoom code.
+            //Bitmap bmp1 = GeoSnoop.DisplayRoom( 
+            //  sheetViewportLoops, null, null );
+            //GeoSnoop.DisplayImageInForm( revit_window,
+            //  caption, false, bmp1 );
+
+            // Determine graphics for family instances,
+            // their symbols and other BIM parts.
+
+            GetBimGraphics( modelCollections, 
+              sheet, categoryFilter );
+
+            // Display sheet and viewports with the 
+            // geometry retrieved in a temporary GeoSnoop 
+            // form generated on the fly for debugging 
+            // purposes.
+
+            Bitmap bmp = GeoSnoop.DisplaySheet( 
+              sheet.Id, sheetViewportLoops, 
+              modelCollections );
+
+            GeoSnoop.DisplayImageInForm( 
+              revit_window, caption, false, bmp );
 
             // Upload data to the cloud database.
 
-            UploadSheet( sheet, categoryFilter );
+            UploadSheet( sheet, sheetViewportLoops, 
+              modelCollections );
           }
         }
       }

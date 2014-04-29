@@ -10,6 +10,7 @@ using Autodesk.Revit.DB.Architecture;
 using Autodesk.Revit.DB.IFC;
 using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
+using Bitmap = System.Drawing.Bitmap;
 using BoundarySegment = Autodesk.Revit.DB.BoundarySegment;
 using ComponentManager = Autodesk.Windows.ComponentManager;
 using IWin32Window = System.Windows.Forms.IWin32Window;
@@ -733,9 +734,11 @@ namespace RoomEditorApp
         + " : " + doc.GetElement( room.LevelId ).Name
         + " : " + room.Name;
 
-      GeoSnoop.DisplayLoops( revit_window,
-        caption, false, roomLoops,
+      Bitmap bmp = GeoSnoop.DisplayRoom( roomLoops,
         furnitureLoops, furnitureInstances );
+
+      GeoSnoop.DisplayImageInForm( revit_window,
+        caption, false, bmp );
 
       DbUpload.DbUploadRoom( room, furniture, 
         roomLoops, furnitureLoops );

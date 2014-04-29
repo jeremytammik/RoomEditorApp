@@ -135,7 +135,8 @@ namespace RoomEditorApp
   /// <summary>
   /// Part of the building, cannot move.
   /// A building part can appear in multiple views.
-  /// It has its own graphical representation.
+  /// It has its own graphical representation in 
+  /// absolute global coordinates hence no placement.
   /// </summary>
   class DbPart : DbObj2
   {
@@ -152,7 +153,7 @@ namespace RoomEditorApp
   /// transform, i.e. translation and rotation,
   /// and referring to the symbol geometry.
   /// </summary>
-  class DbInstance : DbPart
+  class DbInstance : DbObj2
   {
     public DbInstance()
     {

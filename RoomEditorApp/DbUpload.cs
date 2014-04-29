@@ -11,7 +11,7 @@ namespace RoomEditorApp
 {
   class DbUpload
   {
-    static Element GetProjectInfo( Document doc )
+    public static Element GetProjectInfo( Document doc )
     {
       return new FilteredElementCollector( doc )
         .OfClass( typeof( ProjectInfo ) )

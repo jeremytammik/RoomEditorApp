@@ -78,27 +78,27 @@ namespace RoomEditorApp
       return string.Format( "({0},{1})", X, Y );
     }
 
-      /// <summary>
-      /// Return a string suitable for use in an SVG 
-      /// path. For index i == 0, prefix with 'M', for
-      /// i == 1 with 'L', and otherwise with nothing.
-      /// </summary>
-      public string SvgPath( int i )
-      {
-        return string.Format( "{0}{1} {2}",
-          ( 0 == i ? "M" : ( 1 == i ? "L" : "" ) ), 
-          X, Util.SvgFlipY( Y ) );
-      }
+    /// <summary>
+    /// Return a string suitable for use in an SVG 
+    /// path. For index i == 0, prefix with 'M', for
+    /// i == 1 with 'L', and otherwise with nothing.
+    /// </summary>
+    public string SvgPath( int i )
+    {
+      return string.Format( "{0}{1} {2}",
+        ( 0 == i ? "M" : ( 1 == i ? "L" : "" ) ),
+        X, Util.SvgFlipY( Y ) );
+    }
 
     /// <summary>
     /// Add two points, i.e. treat one of 
     /// them as a translation vector.
     /// </summary>
-    public static Point2dInt operator+( 
-      Point2dInt a, 
+    public static Point2dInt operator +(
+      Point2dInt a,
       Point2dInt b )
     {
-      return new Point2dInt( 
+      return new Point2dInt(
         a.X + b.X, a.Y + b.Y );
     }
   }
