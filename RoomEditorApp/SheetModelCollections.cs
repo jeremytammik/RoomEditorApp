@@ -1,6 +1,8 @@
-﻿using System;
+﻿#region Namespaces
+using System;
 using System.Collections.Generic;
 using Autodesk.Revit.DB;
+#endregion
 
 namespace RoomEditorApp
 {
@@ -40,8 +42,8 @@ namespace RoomEditorApp
   }
 
   /// <summary>
-  /// Family instance defining placement 
-  /// and referring to symbol.
+  /// Family instance defining placement and referring 
+  /// to symbol. Can live in several views.
   /// </summary>
   class InstanceData : ObjData
   {

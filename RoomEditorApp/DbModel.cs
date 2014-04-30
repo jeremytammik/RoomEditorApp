@@ -7,7 +7,7 @@ using DreamSeat;
 namespace RoomEditorApp
 {
   /// <summary>
-  /// Base class for all Jeremy Room Editor classes.
+  /// Base class for all Room Editor database classes.
   /// </summary>
   class DbObj : CouchDocument
   {
@@ -102,7 +102,7 @@ namespace RoomEditorApp
   }
 
   /// <summary>
-  /// Sheet.
+  /// Sheet. Lives in a model. Contains views.
   /// </summary>
   class DbSheet : DbObj2
   {
@@ -116,7 +116,7 @@ namespace RoomEditorApp
   }
 
   /// <summary>
-  /// View.
+  /// View. Lives on a sheet. Displays BIM elements.
   /// </summary>
   class DbView : DbObj2
   {
@@ -145,7 +145,7 @@ namespace RoomEditorApp
       Type = "part";
     }
     public string [] ViewIds { get; set; }
-    public string Loops { get; set; }
+    public string Loop { get; set; }
   }
 
   /// <summary>
@@ -159,6 +159,7 @@ namespace RoomEditorApp
     {
       Type = "instance";
     }
+    public string[] ViewIds { get; set; }
     public string SymbolId { get; set; }
     public string Transform { get; set; }
   }

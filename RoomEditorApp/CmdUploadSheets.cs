@@ -41,9 +41,10 @@ namespace RoomEditorApp
     }
     #endregion // JtViewSet - not used
 
-    #region Data - Obj - Symbol - Instance - Part - Collections
-    #endregion // Data - Obj - Symbol - Instance - Part - Collections
-
+    /// <summary>
+    /// Predicate to determine whether 
+    /// the given view is a floor plan.
+    /// </summary>
     static bool IsFloorPlan( View v )
     {
       bool rc = ViewType.FloorPlan == v.ViewType;
@@ -118,9 +119,7 @@ namespace RoomEditorApp
           Util.OutlineString( vp.GetLabelOutline() ) );
       }
 
-      //foreach( View v in sheet.Views ) // 2014
-
-      foreach( View v in sheet.GetAllPlacedViews() // 2015
+      foreach( View v in sheet.GetAllPlacedViews()
         .Select<ElementId, View>( id =>
           doc.GetElement( id ) as View ) )
       {
@@ -130,28 +129,10 @@ namespace RoomEditorApp
     #endregion // Sheet and view transform - debugging code, currently not used
 
     #region Determine sheet and viewport size and location
-    //static JtLoop GetLoop( Outline outline )
-    //{
-    //  JtBoundingBox2dInt bb 
-    //    = new JtBoundingBox2dInt();
-
-    //  bb.ExpandToContain( 
-    //    new Point2dInt( outline.MinimumPoint ) );
-
-    //  bb.ExpandToContain( 
-    //    new Point2dInt( outline.MaximumPoint ) );
-
-    //  JtLoop loop = new JtLoop( 4 );
-
-    //  loop.Add( bb.Corners );
-
-    //  return loop;
-    //}
-
     /// <summary>
     /// Return polygon loops representing the size 
-    /// and location of given sheet and the viewports 
-    /// it contains.
+    /// and location of given sheet and all the 
+    /// viewports it contains, regardless of type.
     /// </summary>
     static JtLoops GetSheetViewportLoops(
       SheetModelCollections modelCollections,
@@ -172,28 +153,23 @@ namespace RoomEditorApp
 
       JtLoops sheetViewportLoops = new JtLoops( n + 1 );
 
-      //BoundingBoxXYZ bb = sheet.get_BoundingBox( null ); // (-100,-100),(100,100)
+      // sheet.get_BoundingBox( null ) returns (-100,-100),(100,100)
 
-      BoundingBoxUV bb = sheet.Outline; // (0,0), (2.76,1.95)
+      BoundingBoxUV bb = sheet.Outline; // model coordinates (0,0), (2.76,1.95)
 
-      JtBoundingBox2dInt ibb = new JtBoundingBox2dInt(); // (0,0),(840,...)
+      JtBoundingBox2dInt ibb = new JtBoundingBox2dInt(); // millimeters (0,0),(840,...)
 
       ibb.ExpandToContain( new Point2dInt( bb.Min ) );
       ibb.ExpandToContain( new Point2dInt( bb.Max ) );
 
-      JtLoop loop = new JtLoop( 4 );
-
-      //ibb.Corners.Select<Point2dInt,bool>( p => (outer.Add( p ), true) );
-
-      loop.Add( ibb.Corners );
-
-      //JtLoop loop = GetLoop( sheet.Outline );
+      JtLoop loop = new JtLoop( ibb.Corners );
 
       sheetViewportLoops.Add( loop );
 
       foreach( Viewport vp in viewports )
       {
-        XYZ center = vp.GetBoxCenter();
+        XYZ center = vp.GetBoxCenter(); // not used
+
         Outline outline = vp.GetBoxOutline();
 
         ibb.Init();
@@ -204,9 +180,7 @@ namespace RoomEditorApp
         ibb.ExpandToContain(
           new Point2dInt( outline.MaximumPoint ) );
 
-        loop = new JtLoop( 4 );
-
-        loop.Add( ibb.Corners );
+        loop = new JtLoop( ibb.Corners );
 
         sheetViewportLoops.Add( loop );
 
@@ -229,12 +203,9 @@ namespace RoomEditorApp
     /// instance placements.
     /// Ignore all but the first geometry loop retrieved.
     /// </summary>
+    /// <param name="modelCollections">Data container</param>
     /// <param name="sheet">The view sheet</param>
-    /// <param name="categoryFilter">The desired categoires</param>
-    /// <param name="parts">Return the non-instance parts</param>
-    /// <param name="instances">Return the family instances</param>
-    /// <param name="graphics">Return the instance and part graphics</param>
-    /// <param name="placements">Return the instance placements</param>
+    /// <param name="categoryFilter">The desired categories</param>
     static void GetBimGraphics(
       SheetModelCollections modelCollections,
       ViewSheet sheet,
@@ -269,9 +240,6 @@ namespace RoomEditorApp
       {
         Debug.Print( "  " + v.Name );
 
-        //modelCollections.ViewsInSheet[sheet.Id].Add(
-        //  v.Id );
-
         modelCollections.BimelsInViews.Add( 
           v.Id, new List<ObjData>() );
 
@@ -286,96 +254,94 @@ namespace RoomEditorApp
 
         foreach( Element e in els )
         {
-          //Debug.Print( "  " + e.Name );
-
           GeometryElement geo = e.get_Geometry( opt );
-
-          // Call GetTransformed on family instance geo.
-          // This converts it from GeometryInstance to ?
 
           FamilyInstance f = e as FamilyInstance;
 
           if( null != f )
           {
-            Location loc = e.Location;
-
-            // Simply ignore family instances that
-            // have no valid location, e.g. panel.
-
-            if( null == loc )
-            {
-              if( list_ignored_elements )
-              {
-                Debug.Print( "    ... ignored "
-                  + e.Name );
-              }
-              continue;
-            }
-
-            //familyInstances.Add(
-            //  new JtPlacement2dInt( f ) );
-
-            //DbInstance dbi = new DbInstance();
-            //dbi.Id = f.UniqueId;
-            //dbi.Description = Util.ElementDescription( 
-            //  f );
-            //dbi.Name = f.Name;
-            //dbi.ViewIds = new string[] { v.UniqueId };
-            //dbi.SymbolId = f.Symbol.UniqueId;
-            //dbi.Transform = new JtPlacement2dInt( f )
-            //  .SvgTransform;
-
-            FamilySymbol s = f.Symbol;
-
-            //string uid = s.UniqueId;
-
-            if( modelCollections.Symbols.ContainsKey( s.Id ) )
-            {
-              if( list_ignored_elements )
-              {
-                Debug.Print( "    ... symbol already handled "
-                  + e.Name + " --> " + s.Name );
-              }
-
-              // Symbol already defined, just add instance
-
-              JtPlacement2dInt placement 
-                = new JtPlacement2dInt( f );
-
-              // Expand bounding box around all BIM 
-              // elements, ignoring the size of the 
-              // actual geometry, assuming is is small
-              // in comparison and the insertion point
-              // lies within it.
-
-              bimelBb.ExpandToContain( 
-                placement.Translation );
-
-              InstanceData d = new InstanceData();
-              d.Id = f.Id;
-              d.Symbol = f.Symbol.Id;
-              d.Placement = placement;
-
-              modelCollections.BimelsInViews[v.Id].Add( d );
-
-              continue;
-            }
-
-            // Retrieve family instance geometry 
-            // transformed back to symbol definition
-            // coordinate space by inverting the 
-            // family instance placement transformation
-
             LocationPoint lp = e.Location
               as LocationPoint;
 
-            Transform t = Transform.CreateTranslation(
-              -lp.Point );
+            // Simply ignore family instances that
+            // have no location point or no location at 
+            // all, e.g. panel.
+            // No, we should not ignore them, but 
+            // treat tham as non-transformable parts.
 
-            Transform r = Transform.CreateRotationAtPoint(
-              XYZ.BasisZ, -lp.Rotation, lp.Point );
+            if( null == lp )
+            {
+              if( list_ignored_elements )
+              {
+                Debug.Print( string.Format( 
+                  "    ...  {0} has no location",
+                  e.Name ) );
+              }
+              f = null;
 
-            geo = geo.GetTransformed( t * r );
+              geo = geo.GetTransformed( 
+                Transform.Identity );
+            }
+            else
+            {
+              //DbInstance dbi = new DbInstance();
+              //dbi.Id = f.UniqueId;
+              //dbi.Description = Util.ElementDescription( 
+              //  f );
+              //dbi.Name = f.Name;
+              //dbi.ViewIds = new string[] { v.UniqueId };
+              //dbi.SymbolId = f.Symbol.UniqueId;
+              //dbi.Transform = new JtPlacement2dInt( f )
+              //  .SvgTransform;
+
+              FamilySymbol s = f.Symbol;
+
+              if( modelCollections.Symbols.ContainsKey( s.Id ) )
+              {
+                if( list_ignored_elements )
+                {
+                  Debug.Print( "    ... symbol already handled "
+                    + e.Name + " --> " + s.Name );
+                }
+
+                // Symbol already defined, just add instance
+
+                JtPlacement2dInt placement 
+                  = new JtPlacement2dInt( f );
+
+                // Expand bounding box around all BIM 
+                // elements, ignoring the size of the 
+                // actual geometry, assuming is is small
+                // in comparison and the insertion point
+                // lies within it.
+
+                bimelBb.ExpandToContain( 
+                  placement.Translation );
+
+                InstanceData d = new InstanceData();
+                d.Id = f.Id;
+                d.Symbol = f.Symbol.Id;
+                d.Placement = placement;
+
+                modelCollections.BimelsInViews[v.Id]
+                  .Add( d );
+
+                continue;
+              }
+
+              // Retrieve family instance geometry 
+              // transformed back to symbol definition
+              // coordinate space by inverting the 
+              // family instance placement transformation
+
+              Transform t = Transform.CreateTranslation(
+                -lp.Point );
+
+              Transform r = Transform.CreateRotationAtPoint(
+                XYZ.BasisZ, -lp.Rotation, lp.Point );
+
+              geo = geo.GetTransformed( t * r );
+            }
           }
 
           int nEmptySolids = 0;
@@ -709,13 +675,8 @@ namespace RoomEditorApp
           sheets.Select<Element, string>(
             e => e.Name ) ) + ".";
 
-        // Determine all views displayed 
+        // Determine all floor plan views displayed 
         // in the selected sheets.
-
-        //JtViewSet views = sheets
-        //  .Aggregate<ViewSheet, JtViewSet>(
-        //    new JtViewSet(),
-        //    ( a, v ) => a.AddViews( v.Views ) );
 
         Dictionary<View, int> views
           = new Dictionary<View, int>(

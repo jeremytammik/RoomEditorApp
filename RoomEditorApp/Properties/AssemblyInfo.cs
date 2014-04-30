@@ -72,7 +72,8 @@ using System.Runtime.InteropServices;
 // 2014-04-15 - 2015.0.2.7 - eliminated compiler warnings on deprecated API usage of Selection.Elements and ViewSheet.Views
 // 2014-04-16 - 2015.0.2.8 - implemented GetSheetViewportLoops
 // 2014-04-18 - 2015.0.2.9 - refactored and exposed CmdUploadRooms.GetLoop, implemented GetBimGraphics
-// 2014-04-19 - 2015.0.2.10 - renamed DisplayLoops to DisplayRoom, refactored to split off DisplayImageInForm as a separate method, implemented DisplaySheet, SheetModelCollections
+// 2014-04-29 - 2015.0.2.10 - renamed DisplayLoops to DisplayRoom, refactored to split off DisplayImageInForm as a separate method, implemented SheetModelCollections and GeoSnoop.DisplaySheet
+// 2014-04-30 - 2015.0.2.11 - 
 //
-[assembly: AssemblyVersion( "2015.0.2.10" )]
-[assembly: AssemblyFileVersion( "2015.0.2.10" )]
+[assembly: AssemblyVersion( "2015.0.2.11" )]
+[assembly: AssemblyFileVersion( "2015.0.2.11" )]

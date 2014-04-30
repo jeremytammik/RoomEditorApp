@@ -15,10 +15,24 @@ namespace RoomEditorApp
   {
     public bool Closed { get; set; }
 
+    /// <summary>
+    /// Instantiate with a pre-initialised capacity.
+    /// </summary>
     public JtLoop( int capacity )
       : base( capacity )
     {
       Closed = true;
+    }
+
+    /// <summary>
+    /// Instantiate from an array of points.
+    /// </summary>
+    public JtLoop( Point2dInt[] pts )
+      : base( pts.Length )
+    {
+      Closed = true;
+
+      Add( pts );
     }
 
     /// <summary>
@@ -42,7 +56,7 @@ namespace RoomEditorApp
     /// ignore it. This will automatically suppress
     /// really small boundary segment fragments.
     /// </summary>
-    public void Add( Point2dInt [] pts )
+    public void Add( Point2dInt[] pts )
     {
       foreach( Point2dInt p in pts )
       {
