@@ -73,7 +73,7 @@ using System.Runtime.InteropServices;
 // 2014-04-16 - 2015.0.2.8 - implemented GetSheetViewportLoops
 // 2014-04-18 - 2015.0.2.9 - refactored and exposed CmdUploadRooms.GetLoop, implemented GetBimGraphics
 // 2014-04-29 - 2015.0.2.10 - renamed DisplayLoops to DisplayRoom, refactored to split off DisplayImageInForm as a separate method, implemented SheetModelCollections and GeoSnoop.DisplaySheet
-// 2014-04-30 - 2015.0.2.11 - 
+// 2014-04-30 - 2015.0.2.11 - code cleanup, treat family instance with no location point as non-transformable part; this enables curtain walls
 //
 [assembly: AssemblyVersion( "2015.0.2.11" )]
 [assembly: AssemblyFileVersion( "2015.0.2.11" )]
