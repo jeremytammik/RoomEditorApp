@@ -212,11 +212,13 @@ namespace RoomEditorApp
     }
 
     /// <summary>
-    /// Upload model, sheet, views and bim element 
-    /// data to a CouchDB data repository.
+    /// Upload model, sheet, views it contains and
+    /// their BIM elements to a CouchDB data repository.
     /// </summary>
     static public void DbUploadSheet(
-      ViewSheet sheet )
+      ViewSheet sheet,
+      JtLoops sheetViewportLoops,
+      SheetModelCollections modelCollections )
     {
       CouchDatabase db = new RoomEditorDb().Db;
 
@@ -225,6 +227,17 @@ namespace RoomEditorApp
       Element projectInfo = GetProjectInfo( doc );
 
       DbModel dbModel = GetDbModel( db, projectInfo );
+
+      //DbInstance dbi = new DbInstance();
+      //dbi.Id = f.UniqueId;
+      //dbi.Description = Util.ElementDescription( 
+      //  f );
+      //dbi.Name = f.Name;
+      //dbi.ViewIds = new string[] { v.UniqueId };
+      //dbi.SymbolId = f.Symbol.UniqueId;
+      //dbi.Transform = new JtPlacement2dInt( f )
+      //  .SvgTransform;
+
     }
   }
 }

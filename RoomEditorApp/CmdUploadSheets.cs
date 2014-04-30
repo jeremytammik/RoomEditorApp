@@ -284,16 +284,6 @@ namespace RoomEditorApp
             }
             else
             {
-              //DbInstance dbi = new DbInstance();
-              //dbi.Id = f.UniqueId;
-              //dbi.Description = Util.ElementDescription( 
-              //  f );
-              //dbi.Name = f.Name;
-              //dbi.ViewIds = new string[] { v.UniqueId };
-              //dbi.SymbolId = f.Symbol.UniqueId;
-              //dbi.Transform = new JtPlacement2dInt( f )
-              //  .SvgTransform;
-
               FamilySymbol s = f.Symbol;
 
               if( modelCollections.Symbols.ContainsKey( s.Id ) )
@@ -622,17 +612,6 @@ namespace RoomEditorApp
     }
     #endregion // Determine visible elements, their graphics and placements
 
-    /// <summary>
-    /// Upload the given sheet, views it contains and
-    /// their BIM elements to the cloud repository.
-    /// </summary>
-    static void UploadSheet(
-      ViewSheet sheet,
-      JtLoops sheetViewportLoops,
-      SheetModelCollections modelCollections )
-    {
-    }
-
     #region External command mainline Execute method
     public Result Execute(
       ExternalCommandData commandData,
@@ -804,12 +783,6 @@ namespace RoomEditorApp
               = GetSheetViewportLoops( 
                 modelCollections, sheet );
 
-            // Test using the original DisplayRoom code.
-            //Bitmap bmp1 = GeoSnoop.DisplayRoom( 
-            //  sheetViewportLoops, null, null );
-            //GeoSnoop.DisplayImageInForm( revit_window,
-            //  caption, false, bmp1 );
-
             // Determine graphics for family instances,
             // their symbols and other BIM parts.
 
@@ -830,8 +803,8 @@ namespace RoomEditorApp
 
             // Upload data to the cloud database.
 
-            UploadSheet( sheet, sheetViewportLoops, 
-              modelCollections );
+            DbUpload.DbUploadSheet( sheet, 
+              sheetViewportLoops, modelCollections );
           }
         }
       }
