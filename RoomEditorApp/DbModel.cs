@@ -11,9 +11,10 @@ namespace RoomEditorApp
   /// </summary>
   class DbObj : CouchDocument
   {
-    protected DbObj()
+    protected DbObj( string uid )
     {
       Type = "obj";
+      Id = uid;
     }
     public string Type { get; protected set; }
     public string Description { get; set; }
@@ -26,7 +27,7 @@ namespace RoomEditorApp
   /// </summary>
   class DbModel : DbObj
   {
-    public DbModel()
+    public DbModel( string uid ) : base( uid )
     {
       Type = "model";
     }
@@ -37,7 +38,7 @@ namespace RoomEditorApp
   /// </summary>
   class DbLevel : DbObj
   {
-    public DbLevel()
+    public DbLevel( string uid ) : base( uid )
     {
       Type = "level";
     }
@@ -49,7 +50,7 @@ namespace RoomEditorApp
   /// </summary>
   class DbRoom : DbObj
   {
-    public DbRoom()
+    public DbRoom( string uid ) : base( uid )
     {
       Type = "room";
     }
@@ -64,7 +65,7 @@ namespace RoomEditorApp
   /// </summary>
   class DbSymbol : DbObj
   {
-    public DbSymbol()
+    public DbSymbol( string uid ) : base( uid )
     {
       Type = "symbol";
     }
@@ -78,7 +79,7 @@ namespace RoomEditorApp
   /// </summary>
   class DbFurniture : DbObj
   {
-    public DbFurniture()
+    public DbFurniture( string uid ) : base( uid )
     {
       Type = "furniture";
     }
@@ -89,24 +90,24 @@ namespace RoomEditorApp
   #endregion // Model - Level - Room - Symbol - Furniture
 
   #region Obj2 - Sheet - View - Part - Instance
-  /// <summary>
-  /// Base class for all second-generation Room Editor classes.
-  /// </summary>
-  class DbObj2 : DbObj
-  {
-    protected DbObj2()
-    {
-      Type = "obj2";
-    }
-    public Dictionary<string, string> Properties { get; set; }
-  }
+  ///// <summary>
+  ///// Base class for all second-generation Room Editor classes.
+  ///// </summary>
+  //class DbObj2 : DbObj
+  //{
+  //  protected DbObj2( string uid ) : base( uid )
+  //  {
+  //    Type = "obj2";
+  //  }
+  //  public Dictionary<string, string> Properties { get; set; }
+  //}
 
   /// <summary>
   /// Sheet. Lives in a model. Contains views.
   /// </summary>
-  class DbSheet : DbObj2
+  class DbSheet : DbObj
   {
-    public DbSheet()
+    public DbSheet( string uid ) : base( uid )
     {
       Type = "sheet";
     }
@@ -118,9 +119,9 @@ namespace RoomEditorApp
   /// <summary>
   /// View. Lives on a sheet. Displays BIM elements.
   /// </summary>
-  class DbView : DbObj2
+  class DbView : DbObj
   {
-    public DbView()
+    public DbView( string uid ) : base( uid )
     {
       Type = "view";
     }
@@ -129,7 +130,26 @@ namespace RoomEditorApp
     public int Y { get; set; }
     public int Width { get; set; }
     public int Height { get; set; }
-    public string ViewBox { get; set; }
+    public int BimX { get; set; }
+    public int BimY { get; set; }
+    public int BimWidth { get; set; }
+    public int BimHeight { get; set; }
+    //public string ViewBox { get; set; }
+  }
+
+  /// <summary>
+  /// BIM element, either part or instance.
+  /// A BIM element can appear in multiple views.
+  /// </summary>
+  class DbBimel : DbObj
+  {
+    public DbBimel( string uid ) : base( uid )
+    {
+      Type = "bimel";
+      ViewIds = new List<string>();
+    }
+    public Dictionary<string, string> Properties { get; set; }
+    public List<string> ViewIds { get; set; }
   }
 
   /// <summary>
@@ -138,13 +158,12 @@ namespace RoomEditorApp
   /// It has its own graphical representation in 
   /// absolute global coordinates hence no placement.
   /// </summary>
-  class DbPart : DbObj2
+  class DbPart : DbBimel
   {
-    public DbPart()
+    public DbPart( string uid ) : base( uid )
     {
       Type = "part";
     }
-    public string [] ViewIds { get; set; }
     public string Loop { get; set; }
   }
 
@@ -153,13 +172,12 @@ namespace RoomEditorApp
   /// transform, i.e. translation and rotation,
   /// and referring to the symbol geometry.
   /// </summary>
-  class DbInstance : DbObj2
+  class DbInstance : DbBimel
   {
-    public DbInstance()
+    public DbInstance( string uid ) : base( uid )
     {
       Type = "instance";
     }
-    public string[] ViewIds { get; set; }
     public string SymbolId { get; set; }
     public string Transform { get; set; }
   }

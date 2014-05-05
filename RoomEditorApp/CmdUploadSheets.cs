@@ -347,7 +347,9 @@ namespace RoomEditorApp
             // This was true before calling GetTransformed.
             //Debug.Assert( ( obj is GeometryInstance ) == ( e is FamilyInstance ), "expected all family instances to have geometry instance" ); 
 
-            Debug.Assert( obj is Solid || obj is Line, "expected only solids and lines after calling GetTransformed on instances" );
+            Debug.Assert( obj is Solid || obj is Line || obj is Arc, "expected only solids, lines and arcs after calling GetTransformed on instances" );
+
+            // Todo: handle arcs, e.g. tessellate
 
             Debug.Assert( Visibility.Visible == obj.Visibility, "expected only visible geometry objects" );
 
@@ -414,8 +416,7 @@ namespace RoomEditorApp
               {
                 #region Debug code to ensure horizontal co-planar curves
 #if DEBUG
-
-                Debug.Assert( obj is Line, "expected only lines and solids" );
+                Debug.Assert( obj is Line || obj is Arc, "expected only lines and arcs here" );
 
                 Curve c = obj as Curve;
 
@@ -763,13 +764,8 @@ namespace RoomEditorApp
           {
             // Define preview form caption.
 
-            string sheet_number = sheet.get_Parameter(
-              BuiltInParameter.SHEET_NUMBER )
-                .AsString();
-
-            caption = string.Format(
-              "Sheet and Viewport Loops - {0} - {1}",
-              sheet_number, sheet.Name );
+            caption = "Sheet and Viewport Loops - " 
+              + Util.SheetDescription( sheet );
 
             // This is currently not used for anything.
 
@@ -808,6 +804,8 @@ namespace RoomEditorApp
           }
         }
       }
+      DbUpdater.SetLastSequence();
+
       return Result.Succeeded;
     }
     #endregion // External command mainline Execute method

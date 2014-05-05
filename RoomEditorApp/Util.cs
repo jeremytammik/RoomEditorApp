@@ -267,6 +267,22 @@ namespace RoomEditorApp
         typeName, categoryName, familyName,
         symbolName, e.Id.IntegerValue, e.Name );
     }
+
+    /// <summary>
+    /// Return a string describing the given sheet:
+    /// sheet number and name.
+    /// </summary>
+    public static string SheetDescription(
+      Element e )
+    {
+      string sheet_number = e.get_Parameter(
+        BuiltInParameter.SHEET_NUMBER )
+          .AsString();
+
+      return string.Format( "{0} - {1}",
+        sheet_number, e.Name );
+    }
+
     #endregion // Formatting
 
     #region Messages

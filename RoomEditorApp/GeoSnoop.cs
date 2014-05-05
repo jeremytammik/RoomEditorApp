@@ -18,6 +18,7 @@ namespace RoomEditorApp
   /// </summary>
   class GeoSnoop
   {
+    #region Constants
     /// <summary>
     /// Width of the form to generate.
     /// </summary>
@@ -44,7 +45,9 @@ namespace RoomEditorApp
     /// BIM elements and viewport edge.
     /// </summary>
     const int _margin2 = 10;
+    #endregion // Constants
 
+    #region Pen
     /// <summary>
     /// Our one and only pen. 
     /// </summary>
@@ -64,7 +67,9 @@ namespace RoomEditorApp
         return _pen;
       }
     }
+    #endregion // Pen
 
+    #region DrawLoopsOnGraphics
     /// <summary>
     /// Draw loops on graphics with the specified
     /// transform and graphics attributes.
@@ -85,7 +90,9 @@ namespace RoomEditorApp
         graphics.DrawPath( Pen, path );
       }
     }
+    #endregion // DrawLoopsOnGraphics
 
+    #region DisplayRoom
     /// <summary>
     /// Display room and furniture in a temporary form
     /// generated on the fly.
@@ -181,7 +188,9 @@ namespace RoomEditorApp
       }
       return bmp;
     }
+    #endregion // DisplayRoom
 
+    #region DisplaySheet
     /// <summary>
     /// Display sheet, the views it contains, the BIM 
     /// parts and  family instances they display in a 
@@ -266,8 +275,8 @@ namespace RoomEditorApp
           continue;
         }
 
-        // Determine transform from model space to
-        // the viewport associated with this view.
+        // Determine transform from model space in mm
+        // to the viewport associated with this view.
 
         bbFrom = view.BimBoundingBox;
         bbTo = view.ViewportBoundingBox;
@@ -340,7 +349,9 @@ namespace RoomEditorApp
       }
       return bmp;
     }
+    #endregion // DisplaySheet
 
+    #region DisplayImageInForm
     /// <summary>
     /// Generate a form on the fly and display the 
     /// given bitmap image in it in a picture box.
@@ -380,5 +391,6 @@ namespace RoomEditorApp
         form.Show( owner );
       }
     }
+    #endregion // DisplayImageInForm
   }
 }

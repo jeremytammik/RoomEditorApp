@@ -42,6 +42,33 @@ namespace RoomEditorApp
       }
     }
 
+    public TDocument GetOrCreate<TDocument>(
+      ref bool pre_existing,
+      string uid ) where TDocument : DbObj
+    {
+      //return _db.GetDocument<TDocument>( uid );
+
+      TDocument doc;
+
+      if( _db.DocumentExists( uid ) )
+      {
+        pre_existing = true;
+
+        doc = _db.GetDocument<TDocument>( uid );
+
+        Debug.Assert(
+          doc.Id.Equals( uid ),
+          "expected equal ids" );
+      }
+      else
+      {
+        pre_existing = false;
+        doc = (TDocument) Activator.CreateInstance(
+          typeof( TDocument ), uid );
+      }
+      return doc;
+    }
+
     /// <summary>
     /// Return the last sequence number.
     /// </summary>
