@@ -1,5 +1,6 @@
 ﻿#region Namespaces
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows.Forms;
 using Autodesk.Revit.DB;
@@ -226,7 +227,9 @@ namespace RoomEditorApp
         PointString( o.MinimumPoint ),
         PointString( o.MaximumPoint ) );
     }
+    #endregion // Formatting
 
+    #region Element properties
     /// <summary>
     /// Return a string describing the given element:
     /// .NET type name,
@@ -283,7 +286,45 @@ namespace RoomEditorApp
         sheet_number, e.Name );
     }
 
-    #endregion // Formatting
+    /// <summary>
+    /// Return a dictionary of all the given 
+    /// element parameter names and values.
+    /// </summary>
+    public static Dictionary<string, string> 
+      GetElementProperties(
+        Element e )
+    {
+      IList<Parameter> parameters
+        = e.GetOrderedParameters();
+
+      Dictionary<string, string> a
+        = new Dictionary<string, string>(
+          parameters.Count );
+
+      bool modifiable;
+      StorageType st;
+      string s;
+
+      foreach( Parameter p in parameters )
+      {
+        st = p.StorageType;
+
+        modifiable = !( p.IsReadOnly )
+          // && p.UserModifiable // ignore this
+          && ((StorageType.Integer == st) 
+            || (StorageType.String == st));
+
+        s = string.Format( "{0} {1}",
+          ( modifiable ? "w" : "r" ),
+          ( StorageType.String == st
+            ? p.AsString()
+            : p.AsValueString() ) );
+
+        a.Add( p.Definition.Name, s );
+      }
+      return a;
+    }
+    #endregion // Element properties
 
     #region Messages
     /// <summary>

@@ -410,9 +410,7 @@ namespace RoomEditorApp
           JtUidSet uids = new JtUidSet( dbBimel.ViewIds );
           uids.Add( view.UniqueId );
           dbBimel.ViewIds = uids.Uids;
-
-          // Todo:
-          //GetElementProperties( dbBimel.Properties, e );
+          dbBimel.Properties = Util.GetElementProperties( e );
 
           if( null != inst )
           {
