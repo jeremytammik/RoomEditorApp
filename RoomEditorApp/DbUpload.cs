@@ -191,6 +191,7 @@ namespace RoomEditorApp
           dbf.Description = Util.ElementDescription( f );
           dbf.Name = f.Name;
           dbf.RoomId = room.UniqueId;
+          dbf.Properties = Util.GetElementProperties( f );
           dbf.SymbolId = f.Symbol.UniqueId;
           dbf.Transform = new JtPlacement2dInt( f )
             .SvgTransform;
@@ -204,6 +205,7 @@ namespace RoomEditorApp
           dbf.Description = Util.ElementDescription( f );
           dbf.Name = f.Name;
           dbf.RoomId = room.UniqueId;
+          dbf.Properties = Util.GetElementProperties( f );
           dbf.SymbolId = f.Symbol.UniqueId;
           dbf.Transform = new JtPlacement2dInt( f )
             .SvgTransform;

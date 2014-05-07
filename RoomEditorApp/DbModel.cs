@@ -84,6 +84,7 @@ namespace RoomEditorApp
       Type = "furniture";
     }
     public string RoomId { get; set; }
+    public Dictionary<string, string> Properties { get; set; }
     public string SymbolId { get; set; }
     public string Transform { get; set; }
   }

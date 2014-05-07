@@ -132,6 +132,7 @@ namespace RoomEditorApp
       // Convert SVG transform from string to int
       // to XYZ point and rotation in radians 
       // including flipping of Y coordinates.
+      // Todo: check for property changes as well.
 
       string svgTransform = f.Transform;
 

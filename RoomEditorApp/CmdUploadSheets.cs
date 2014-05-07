@@ -653,7 +653,7 @@ namespace RoomEditorApp
 
         string msg = string.Join( ", ",
           sheets.Select<Element, string>(
-            e => e.Name ) ) + ".";
+            e => Util.SheetDescription( e ) ) ) + ".";
 
         // Determine all floor plan views displayed 
         // in the selected sheets.
@@ -802,10 +802,9 @@ namespace RoomEditorApp
             DbUpload.DbUploadSheet( sheet, 
               sheetViewportLoops, modelCollections );
           }
+          DbUpdater.SetLastSequence();
         }
       }
-      DbUpdater.SetLastSequence();
-
       return Result.Succeeded;
     }
     #endregion // External command mainline Execute method

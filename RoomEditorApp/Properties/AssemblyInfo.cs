@@ -76,6 +76,7 @@ using System.Runtime.InteropServices;
 // 2014-04-30 - 2015.0.2.11 - code cleanup, treat family instance with no location point as non-transformable part; this enables curtain walls
 // 2014-05-05 - 2015.0.2.12 - completed initial upload of sheets to cloud repository
 // 2014-05-05 - 2015.0.2.13 - implemented Util.GetElementProperties and upload of element properties
+// 2014-05-07 - 2015.0.2.14 - added properties to version 1 furniture documents as well
 //
-[assembly: AssemblyVersion( "2015.0.2.13" )]
-[assembly: AssemblyFileVersion( "2015.0.2.13" )]
+[assembly: AssemblyVersion( "2015.0.2.14" )]
+[assembly: AssemblyFileVersion( "2015.0.2.14" )]
