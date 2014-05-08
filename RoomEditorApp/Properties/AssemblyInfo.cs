@@ -78,5 +78,5 @@ using System.Runtime.InteropServices;
 // 2014-05-05 - 2015.0.2.13 - implemented Util.GetElementProperties and upload of element properties
 // 2014-05-07 - 2015.0.2.14 - added properties to version 1 furniture documents as well
 //
-[assembly: AssemblyVersion( "2015.0.2.14" )]
-[assembly: AssemblyFileVersion( "2015.0.2.14" )]
+[assembly: AssemblyVersion( "2015.0.2.15" )]
+[assembly: AssemblyFileVersion( "2015.0.2.15" )]
