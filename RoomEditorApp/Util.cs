@@ -82,6 +82,16 @@ namespace RoomEditorApp
 
     #region Formatting
     /// <summary>
+    /// Uncapitalise string, i.e. 
+    /// lowercase its first character.
+    /// </summary>
+    public static string Uncapitalise( string s )
+    {
+      return Char.ToLowerInvariant( s[0] ) 
+        + s.Substring( 1 );
+    }
+
+    /// <summary>
     /// Return an English plural suffix for the given
     /// number of items, i.e. 's' for zero or more
     /// than one, and nothing for exactly one.
@@ -290,6 +300,20 @@ namespace RoomEditorApp
     /// Return a dictionary of all the given 
     /// element parameter names and values.
     /// </summary>
+    public static bool IsModifiable( Parameter p )
+    {
+      StorageType st = p.StorageType;
+
+      return !( p.IsReadOnly )
+        // && p.UserModifiable // ignore this
+        && ( ( StorageType.Integer == st )
+          || ( StorageType.String == st ) );
+    }
+
+    /// <summary>
+    /// Return a dictionary of all the given 
+    /// element parameter names and values.
+    /// </summary>
     public static Dictionary<string, string> 
       GetElementProperties(
         Element e )
@@ -301,7 +325,6 @@ namespace RoomEditorApp
         = new Dictionary<string, string>(
           parameters.Count );
 
-      bool modifiable;
       StorageType st;
       string s;
 
@@ -309,16 +332,11 @@ namespace RoomEditorApp
       {
         st = p.StorageType;
 
-        modifiable = !( p.IsReadOnly )
-          // && p.UserModifiable // ignore this
-          && ((StorageType.Integer == st) 
-            || (StorageType.String == st));
-
         s = string.Format( "{0} {1}",
-          ( modifiable ? "w" : "r" ),
+          ( IsModifiable( p ) ? "w" : "r" ),
           ( StorageType.String == st
             ? p.AsString()
-            : p.AsValueString() ) );
+            : p.AsInteger().ToString() ) );
 
         a.Add( p.Definition.Name, s );
       }

@@ -132,7 +132,6 @@ namespace RoomEditorApp
       // Convert SVG transform from string to int
       // to XYZ point and rotation in radians 
       // including flipping of Y coordinates.
-      // Todo: check for property changes as well.
 
       string svgTransform = f.Transform;
 
@@ -148,13 +147,65 @@ namespace RoomEditorApp
         Util.ConvertMillimetresToFeet( Util.SvgFlipY( trxy[2] ) ),
         0.0 );
 
+      // Check for modified transform
+
       LocationPoint lp = e.Location as LocationPoint;
 
       XYZ translation = p - lp.Point;
       double rotation = r - lp.Rotation;
 
-      if( .01 < translation.GetLength()
-        || .01 < Math.Abs( rotation ) )
+      bool modifiedTransform = ( 0.01 < translation.GetLength() )
+        || ( 0.01 < Math.Abs( rotation ) );
+
+      // Check for modified properties
+
+      List<string> modifiedPropertyKeys = new List<string>();
+
+      Dictionary<string, string> dbdict 
+        = f.Properties;
+
+      Dictionary<string, string> eldict 
+        = Util.GetElementProperties( e );
+
+      Debug.Assert( dbdict.Count == eldict.Count,
+        "expected equal dictionary length" );
+
+      string key_db; // JavaScript lowercases first char
+
+      foreach( string key in eldict.Keys )
+      {
+        Parameter pa = e.LookupParameter( key );
+
+        Debug.Assert( null != pa, "expected valid parameter" );
+
+        if( Util.IsModifiable( pa ) )
+        {
+          key_db = Util.Uncapitalise( key );
+
+          Debug.Assert( dbdict.ContainsKey( key_db ),
+            "expected same keys in Revit model and cloud database" );
+
+          if( StorageType.String == pa.StorageType )
+          {
+            if( !pa.AsString().Equals( dbdict[key_db] ) )
+            {
+              modifiedPropertyKeys.Add( key );
+            }
+          }
+          else
+          {
+            Debug.Assert( StorageType.Integer == pa.StorageType,
+              "expected only string and integer parameters" );
+
+            if( !pa.AsInteger().ToString().Equals( dbdict[key_db] ) )
+            {
+              modifiedPropertyKeys.Add( key );
+            }
+          }
+        }
+      }
+
+      if( modifiedTransform || 0 < modifiedPropertyKeys.Count )
       {
         using( Transaction tx = new Transaction(
           doc ) )
@@ -174,6 +225,28 @@ namespace RoomEditorApp
 
             ElementTransformUtils.RotateElement(
               doc, e.Id, axis, rotation );
+          }
+          foreach( string key in modifiedPropertyKeys )
+          {
+            Parameter pa = e.LookupParameter( key );
+
+            key_db = Util.Uncapitalise( key );
+
+            if( StorageType.String == pa.StorageType )
+            {
+              pa.Set( dbdict[key_db] );
+            }
+            else
+            {
+              try
+              {
+                int i = int.Parse( dbdict[key_db] );
+                pa.Set( i );
+              }
+              catch( System.FormatException )
+              {
+              }
+            }
           }
           tx.Commit();
           rc = true;
