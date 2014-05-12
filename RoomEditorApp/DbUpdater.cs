@@ -171,6 +171,8 @@ namespace RoomEditorApp
         "expected equal dictionary length" );
 
       string key_db; // JavaScript lowercases first char
+      string val_db; // remove prepended "r " or "w "
+      string val_el;
 
       foreach( string key in eldict.Keys )
       {
@@ -185,22 +187,23 @@ namespace RoomEditorApp
           Debug.Assert( dbdict.ContainsKey( key_db ),
             "expected same keys in Revit model and cloud database" );
 
+          val_db = dbdict[key_db].Substring( 2 );
+
           if( StorageType.String == pa.StorageType )
           {
-            if( !pa.AsString().Equals( dbdict[key_db] ) )
-            {
-              modifiedPropertyKeys.Add( key );
-            }
+            val_el = pa.AsString() ?? string.Empty;
           }
           else
           {
             Debug.Assert( StorageType.Integer == pa.StorageType,
               "expected only string and integer parameters" );
 
-            if( !pa.AsInteger().ToString().Equals( dbdict[key_db] ) )
-            {
-              modifiedPropertyKeys.Add( key );
-            }
+            val_el = pa.AsInteger().ToString();
+          }
+
+          if( !val_el.Equals( val_db ) )
+          {
+            modifiedPropertyKeys.Add( key );
           }
         }
       }
@@ -231,16 +234,17 @@ namespace RoomEditorApp
             Parameter pa = e.LookupParameter( key );
 
             key_db = Util.Uncapitalise( key );
+            val_db = dbdict[key_db].Substring( 2 );
 
             if( StorageType.String == pa.StorageType )
             {
-              pa.Set( dbdict[key_db] );
+              pa.Set( val_db );
             }
             else
             {
               try
               {
-                int i = int.Parse( dbdict[key_db] );
+                int i = int.Parse( val_db );
                 pa.Set( i );
               }
               catch( System.FormatException )
