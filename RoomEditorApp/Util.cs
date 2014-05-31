@@ -111,6 +111,31 @@ namespace RoomEditorApp
     }
 
     /// <summary>
+    /// Return an English pluralised string for the 
+    /// given thing or things. If the thing ends with
+    /// 'y', the plural ends with 'ies', e.g. 
+    /// (2, 'chair') -- '2 chairs'
+    /// (2, 'property') -- '2 properties'
+    /// (2, 'furniture item') -- '2 furniture items'
+    /// If in doubt, 'thing item' or 'thing entry' is
+    /// normally a pretty safe bet.
+    /// </summary>
+    public static string PluralString( 
+      int n, 
+      string thing )
+    {
+      if( 1 == n ) { return "1 " + thing; }
+
+      int i = thing.Length - 1;
+      char cy = thing[i];
+      string s = 'y' == cy
+        ? thing.Substring( 0, i ) + PluralSuffixY( n )
+        : thing + PluralSuffix( n );
+
+      return n.ToString() + " " + s;
+    }
+
+    /// <summary>
     /// Return a dot (full stop) for zero
     /// or a colon for more than zero.
     /// </summary>

@@ -642,9 +642,9 @@ namespace RoomEditorApp
     {
       int nLoops = loops.Count;
 
-      Debug.Print( "{0} has {1} loop{2}{3}",
-        Util.ElementDescription( e ), nLoops,
-        Util.PluralSuffix( nLoops ),
+      Debug.Print( "{0} has {1}{2}",
+        Util.ElementDescription( e ),
+        Util.PluralString( nLoops, "loop" ),
         Util.DotOrColon( nLoops ) );
 
       int i = 0;
@@ -710,9 +710,10 @@ namespace RoomEditorApp
 
           if( 0 < nFailures )
           {
-            Debug.Print( "{0}: {1} extrusion analyser failure{2}",
-              Util.ElementDescription( f ), nFailures,
-              Util.PluralSuffix( nFailures ) );
+            Debug.Print( "{0}: {1}",
+              Util.ElementDescription( f ), 
+              Util.PluralString( nFailures, 
+                "extrusion analyser failure" ) );
           }
           ListLoops( f, loops );
 

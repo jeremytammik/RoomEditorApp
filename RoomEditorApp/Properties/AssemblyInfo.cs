@@ -78,6 +78,8 @@ using System.Runtime.InteropServices;
 // 2014-05-05 - 2015.0.2.13 - implemented Util.GetElementProperties and upload of element properties
 // 2014-05-07 - 2015.0.2.14 - added properties to version 1 furniture documents as well
 // 2014-05-08 - 2015.0.2.15 - update Revit model with modified element properties from cloud database
+// 2014-05-12 - 2015.0.2.16 - minor fixes updating BIM element properties from cloud database
+// 2014-05-23 - 2015.0.2.17 - version used for tech summit 2014 pre-recording; implemented PluralString and replaced all calls to PluralSuffix
 //
-[assembly: AssemblyVersion( "2015.0.2.15" )]
-[assembly: AssemblyFileVersion( "2015.0.2.15" )]
+[assembly: AssemblyVersion( "2015.0.2.17" )]
+[assembly: AssemblyFileVersion( "2015.0.2.17" )]

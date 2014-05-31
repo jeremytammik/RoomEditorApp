@@ -107,12 +107,11 @@ namespace RoomEditorApp
           }
         }
       }
-      Debug.Print( "Selected {0} categor{1} from "
-        + "{2} view{3} displaying {4} element{5}, "
-        + "{6} with HasMaterialQuantities=true",
-        Count, Util.PluralSuffixY( Count ),
-        _nViews, Util.PluralSuffix( _nViews ),
-        _nElements, Util.PluralSuffix( _nElements ),
+      Debug.Print( "Selected {0} from {1} displaying "
+        + "{2}, {3} with HasMaterialQuantities=true",
+        Util.PluralString( Count, "category" ),
+        Util.PluralString( _nViews, "view" ),
+        Util.PluralString( _nElements, "element" ),
         _nElementsWithCategorMaterialQuantities );
     }
   }

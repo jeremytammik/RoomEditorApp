@@ -647,9 +647,8 @@ namespace RoomEditorApp
 
         int n = sheets.Count;
 
-        string caption = string.Format(
-          "{0} Sheet{1} Selected",
-          n, Util.PluralSuffix( n ) );
+        string caption = Util.PluralString( 
+          n, "Sheet" ) + " Selected";
 
         string msg = string.Join( ", ",
           sheets.Select<Element, string>(
@@ -689,9 +688,10 @@ namespace RoomEditorApp
         n = views.Count;
 
         msg += string.Format(
-          " {0} view{1} including {2} floor plan{3}: ",
-          n, Util.PluralSuffix( n ), nFloorPlans,
-          Util.PluralSuffix( nFloorPlans ) );
+          " {0} including {1}: ",
+          Util.PluralString( n, "view" ),
+          Util.PluralString( nFloorPlans, 
+            "floor plan" ) );
 
         msg += string.Join( ", ",
           views.Keys.Select<Element, string>(
@@ -727,9 +727,8 @@ namespace RoomEditorApp
 
           n = categories.Count;
 
-          caption = string.Format(
-            "{0} Categor{1} Selected",
-            n, Util.PluralSuffixY( n ) );
+          caption = Util.PluralString( n, "Category" )
+            + " Selected";
 
           msg = string.Join( ", ",
             categories.Select<Category, string>(
