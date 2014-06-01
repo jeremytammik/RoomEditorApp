@@ -75,7 +75,7 @@ namespace RoomEditorApp
       Type b )
     {
       // http://stackoverflow.com/questions/2742276/in-c-how-do-i-check-if-a-type-is-a-subtype-or-the-type-of-an-object
-      
+
       return a.IsSubclassOf( b ) || a == b;
     }
     #endregion // Unit conversion
@@ -87,7 +87,7 @@ namespace RoomEditorApp
     /// </summary>
     public static string Uncapitalise( string s )
     {
-      return Char.ToLowerInvariant( s[0] ) 
+      return Char.ToLowerInvariant( s[0] )
         + s.Substring( 1 );
     }
 
@@ -110,30 +110,35 @@ namespace RoomEditorApp
       return 1 == n ? "y" : "ies";
     }
 
-    /// <summary>
-    /// Return an English pluralised string for the 
-    /// given thing or things. If the thing ends with
-    /// 'y', the plural ends with 'ies', e.g. 
-    /// (2, 'chair') -- '2 chairs'
-    /// (2, 'property') -- '2 properties'
-    /// (2, 'furniture item') -- '2 furniture items'
-    /// If in doubt, 'thing item' or 'thing entry' is
-    /// normally a pretty safe bet.
-    /// </summary>
-    public static string PluralString( 
-      int n, 
-      string thing )
+  /// <summary>
+  /// Return an English pluralised string for the 
+  /// given thing or things. If the thing ends with
+  /// 'y', the plural is assumes to end with 'ies', 
+  /// e.g. 
+  /// (2, 'chair') -- '2 chairs'
+  /// (2, 'property') -- '2 properties'
+  /// (2, 'furniture item') -- '2 furniture items'
+  /// If in doubt, appending 'item' or 'entry' to 
+  /// the thing description is normally a pretty 
+  /// safe bet. Replaces calls to PluralSuffix 
+  /// and PluralSuffixY.
+  /// </summary>
+  public static string PluralString(
+    int n,
+    string thing )
+  {
+    if( 1 == n )
     {
-      if( 1 == n ) { return "1 " + thing; }
-
-      int i = thing.Length - 1;
-      char cy = thing[i];
-      string s = 'y' == cy
-        ? thing.Substring( 0, i ) + PluralSuffixY( n )
-        : thing + PluralSuffix( n );
-
-      return n.ToString() + " " + s;
+      return "1 " + thing;
     }
+
+    int i = thing.Length - 1;
+    char cy = thing[i];
+
+    return n.ToString() + " " + ( ( 'y' == cy )
+      ? thing.Substring( 0, i ) + "ies"
+      : thing + "s" );
+  }
 
     /// <summary>
     /// Return a dot (full stop) for zero
@@ -240,7 +245,7 @@ namespace RoomEditorApp
     /// Return a string for a 3D bounding box
     /// formatted to two decimal places.
     /// </summary>
-    public static string BoundingBoxString( 
+    public static string BoundingBoxString(
       BoundingBoxXYZ b )
     {
       //XYZ d = b.Max - b.Min;
@@ -339,7 +344,7 @@ namespace RoomEditorApp
     /// Return a dictionary of all the given 
     /// element parameter names and values.
     /// </summary>
-    public static Dictionary<string, string> 
+    public static Dictionary<string, string>
       GetElementProperties(
         Element e )
     {

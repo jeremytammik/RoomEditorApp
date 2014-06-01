@@ -80,6 +80,7 @@ using System.Runtime.InteropServices;
 // 2014-05-08 - 2015.0.2.15 - update Revit model with modified element properties from cloud database
 // 2014-05-12 - 2015.0.2.16 - minor fixes updating BIM element properties from cloud database
 // 2014-05-31 - 2015.0.2.17 - version used for tech summit 2014 pre-recording; implemented PluralString and replaced all calls to PluralSuffix
+// 2014-06-01 - 2015.0.2.18 - minor edits for blog post
 //
 [assembly: AssemblyVersion( "2015.0.2.18" )]
 [assembly: AssemblyFileVersion( "2015.0.2.18" )]
