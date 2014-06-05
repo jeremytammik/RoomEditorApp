@@ -209,7 +209,7 @@ namespace RoomEditorApp
     {
       get
       {
-        bool rc = _buttons[3].ItemText.Equals(
+        bool rc = _buttons[4].ItemText.Equals(
           _unsubscribe );
 
         Debug.Assert( ( _event != null ) == rc, 
