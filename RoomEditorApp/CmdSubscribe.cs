@@ -145,8 +145,6 @@ namespace RoomEditorApp
         DbUpdater.SetLastSequence();
       }
 
-      //App.ToggleSubscription( OnIdling );
-
       DbUpdater.ToggleSubscription(
         commandData.Application );
 

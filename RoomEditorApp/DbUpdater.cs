@@ -422,7 +422,7 @@ namespace RoomEditorApp
     /// </summary>
     static void CheckForPendingDatabaseChanges()
     {
-      while( true )
+      while( null != _event )
       {
         ++_nLoopCount;
 
@@ -524,6 +524,8 @@ namespace RoomEditorApp
     public static void ToggleSubscription(
       UIApplication uiapp )
     {
+      // Todo: stop thread first!
+
       _event = App.ToggleSubscription(
         new DbUpdater( uiapp ) );
 

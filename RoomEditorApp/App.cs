@@ -65,6 +65,8 @@ namespace RoomEditorApp
     /// </summary>
     static RibbonItem[] _buttons;
 
+    static int _subscribeButtonIndex = 4;
+
     /// <summary>
     /// Our one and only Revit-provided 
     /// UIControlledApplication instance.
@@ -209,8 +211,8 @@ namespace RoomEditorApp
     {
       get
       {
-        bool rc = _buttons[4].ItemText.Equals(
-          _unsubscribe );
+        bool rc = _buttons[_subscribeButtonIndex]
+          .ItemText.Equals( _unsubscribe );
 
         Debug.Assert( ( _event != null ) == rc, 
           "expected synchronised handler and button text" );
@@ -234,7 +236,10 @@ namespace RoomEditorApp
         //_handler = null; 
         _event.Dispose();
         _event = null;
-        _buttons[3].ItemText = _subscribe;
+
+        _buttons[_subscribeButtonIndex].ItemText 
+          = _subscribe;
+
         _timer.Stop();
         _timer.Report( "Subscription timing" );
         _timer = null;
@@ -246,7 +251,10 @@ namespace RoomEditorApp
         //_uiapp.Idling += handler;
         //_handler = handler;
         _event = ExternalEvent.Create( handler );
-        _buttons[3].ItemText = _unsubscribe;
+
+        _buttons[_subscribeButtonIndex].ItemText 
+          = _unsubscribe;
+
         _timer = new JtTimer( "Subscription" );
         Debug.Print( "Subscribed." );
       }
