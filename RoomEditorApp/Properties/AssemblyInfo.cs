@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration( "" )]
 [assembly: AssemblyCompany( "Autodesk Inc." )]
 [assembly: AssemblyProduct( "Revit Room Editor Add-In" )]
-[assembly: AssemblyCopyright( "Copyright 2013-2014 © Jeremy Tammik Autodesk Inc." )]
+[assembly: AssemblyCopyright( "Copyright 2013-2015 © Jeremy Tammik Autodesk Inc." )]
 [assembly: AssemblyTrademark( "" )]
 [assembly: AssemblyCulture( "" )]
 
@@ -83,6 +83,7 @@ using System.Runtime.InteropServices;
 // 2014-06-01 - 2015.0.2.18 - minor edits for blog post
 // 2014-06-05 - 2015.0.2.19 - edited Subscribed to accommodate additional button 3 changes to 4
 // 2014-06-05 - 2015.0.2.20 - implemented _subscribeButtonIndex in both Subscribed and ToggleSubscription, check for null event in CheckForPendingDatabaseChanges
+// 2014-07-21 - 2015.0.2.21 - break out of loop if external event _event is null
 //
-[assembly: AssemblyVersion( "2015.0.2.20" )]
-[assembly: AssemblyFileVersion( "2015.0.2.20" )]
+[assembly: AssemblyVersion( "2015.0.2.22" )]
+[assembly: AssemblyFileVersion( "2015.0.2.22" )]

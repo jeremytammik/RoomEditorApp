@@ -333,25 +333,28 @@ namespace RoomEditorApp
       Util.Log( "UpdateBim end" );
     }
 
-    /// <summary>
-    /// Execute method invoked by Revit via the 
-    /// external event as a reaction to a call 
-    /// to its Raise method.
-    /// </summary>
-    public void Execute( UIApplication a )
-    {
-      // As far as I can tell, the external event 
-      // should work fine even when switching between
-      // different documents. That, however, remains
-      // to be tested in more depth (or at all).
+  /// <summary>
+  /// Execute method invoked by Revit via the 
+  /// external event as a reaction to a call 
+  /// to its Raise method.
+  /// </summary>
+  public void Execute( UIApplication a )
+  {
+    // As far as I can tell, the external event 
+    // should work fine even when switching between
+    // different documents. That, however, remains
+    // to be tested in more depth (or at all).
 
-      //Document doc = a.ActiveUIDocument.Document;
+    //Document doc = a.ActiveUIDocument.Document;
 
-      //Debug.Assert( doc.Title.Equals( _doc.Title ),
-      //  "oops ... different documents ... test this" );
+    //Debug.Assert( doc.Title.Equals( _doc.Title ),
+    //  "oops ... different documents ... test this" );
 
-      UpdateBim();
-    }
+    //View view = a.ActiveUIDocument.ActiveView;
+    //Debug.Print( "Active view: " + view.Name );
+
+    UpdateBim();
+  }
 
     /// <summary>
     /// Required IExternalEventHandler interface 
@@ -428,6 +431,11 @@ namespace RoomEditorApp
 
         Debug.Assert( null != _event,
         "expected non-null external event" );
+
+        if( null != _event )
+        {
+          break;
+        }
 
         if( _event.IsPending )
         {
