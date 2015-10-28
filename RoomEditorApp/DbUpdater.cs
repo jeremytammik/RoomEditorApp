@@ -432,7 +432,7 @@ namespace RoomEditorApp
         Debug.Assert( null != _event,
         "expected non-null external event" );
 
-        if( null != _event )
+        if( null == _event )
         {
           break;
         }

@@ -86,6 +86,7 @@ using System.Runtime.InteropServices;
 // 2014-07-21 - 2015.0.2.21 - break out of loop if external event _event is null
 // 2015-10-28 - 2016.0.0.0 - flat migration from Revit 2015 to Revit 2016
 // 2015-10-28 - 2016.0.0.1 - implemented RoomEditorDb.Url property and Boolean _use_local_db toggle, successfully tested on http://localhost:5984/roomedit/_design/roomedit/index.html
+// 2015-10-28 - 2016.0.0.2 - fixed and tested subscription to database changes and auto-update via external event
 //
-[assembly: AssemblyVersion( "2016.0.0.1" )]
-[assembly: AssemblyFileVersion( "2016.0.0.1" )]
+[assembly: AssemblyVersion( "2016.0.0.2" )]
+[assembly: AssemblyFileVersion( "2016.0.0.2" )]
