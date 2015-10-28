@@ -12,6 +12,7 @@ namespace RoomEditorApp
 {
   class RoomEditorDb
   {
+    const bool _use_local_db = true;
     const string _url_web = "jt.iriscouch.com";
     const string _url_local = "localhost";
     const string _database_name = "roomedit";
@@ -19,13 +20,23 @@ namespace RoomEditorApp
     static CouchClient _client = null;
     static CouchDatabase _db = null;
 
+    static string Url
+    {
+      get
+      {
+        return _use_local_db
+          ? _url_local
+          : _url_web;
+      }
+    }
+
     public RoomEditorDb()
     {
       using( JtTimer pt = new JtTimer( "RoomEditorDb ctor" ) )
       {
         if( null == _client )
         {
-          _client = new CouchClient( _url_local, 5984 );
+          _client = new CouchClient( Url, 5984 );
         }
         if( null == _db )
         {

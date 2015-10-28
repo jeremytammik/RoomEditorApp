@@ -85,6 +85,7 @@ using System.Runtime.InteropServices;
 // 2014-06-05 - 2015.0.2.20 - implemented _subscribeButtonIndex in both Subscribed and ToggleSubscription, check for null event in CheckForPendingDatabaseChanges
 // 2014-07-21 - 2015.0.2.21 - break out of loop if external event _event is null
 // 2015-10-28 - 2016.0.0.0 - flat migration from Revit 2015 to Revit 2016
+// 2015-10-28 - 2016.0.0.1 - implemented RoomEditorDb.Url property and Boolean _use_local_db toggle
 //
 [assembly: AssemblyVersion( "2016.0.0.0" )]
 [assembly: AssemblyFileVersion( "2016.0.0.0" )]
