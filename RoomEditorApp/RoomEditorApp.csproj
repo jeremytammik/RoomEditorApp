@@ -45,8 +45,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AdWindows">
-      <HintPath>..\..\..\..\Program Files\Autodesk\Revit 2015\AdWindows.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\..\..\..\Program Files\Autodesk\Revit 2016\AdWindows.dll</HintPath>
     </Reference>
     <Reference Include="DreamSeat, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -58,16 +57,13 @@
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="RevitAPI">
-      <HintPath>..\..\..\..\Program Files\Autodesk\Revit 2015\RevitAPI.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\..\..\..\Program Files\Autodesk\Revit 2016\RevitAPI.dll</HintPath>
     </Reference>
     <Reference Include="RevitAPIIFC">
-      <HintPath>..\..\..\..\Program Files\Autodesk\Revit 2015\RevitAPIIFC.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\..\..\..\Program Files\Autodesk\Revit 2016\RevitAPIIFC.dll</HintPath>
     </Reference>
     <Reference Include="RevitAPIUI">
-      <HintPath>..\..\..\..\Program Files\Autodesk\Revit 2015\RevitAPIUI.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\..\..\..\Program Files\Autodesk\Revit 2016\RevitAPIUI.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Windows.Forms" />

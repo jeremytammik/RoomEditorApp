@@ -84,6 +84,7 @@ using System.Runtime.InteropServices;
 // 2014-06-05 - 2015.0.2.19 - edited Subscribed to accommodate additional button 3 changes to 4
 // 2014-06-05 - 2015.0.2.20 - implemented _subscribeButtonIndex in both Subscribed and ToggleSubscription, check for null event in CheckForPendingDatabaseChanges
 // 2014-07-21 - 2015.0.2.21 - break out of loop if external event _event is null
+// 2015-10-28 - 2016.0.0.0 - flat migration from Revit 2015 to Revit 2016
 //
-[assembly: AssemblyVersion( "2015.0.2.22" )]
-[assembly: AssemblyFileVersion( "2015.0.2.22" )]
+[assembly: AssemblyVersion( "2016.0.0.0" )]
+[assembly: AssemblyFileVersion( "2016.0.0.0" )]
