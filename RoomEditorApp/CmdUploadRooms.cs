@@ -99,14 +99,14 @@ namespace RoomEditorApp
           // short arc in between them, skip the arc
           // and extend both lines.
 
-          p = seg.Curve.GetEndPoint( 0 );
+          p = seg.GetCurve().GetEndPoint( 0 );
 
           jtloop.Add( new Point2dInt( p ) );
 
           Debug.Assert( null == q || q.IsAlmostEqualTo( p ),
             "expected last endpoint to equal current start point" );
 
-          q = seg.Curve.GetEndPoint( 1 );
+          q = seg.GetCurve().GetEndPoint( 1 );
 
           if( _debug_output )
           {
