@@ -59,7 +59,7 @@ namespace RoomEditorApp
     /// External event to raise event 
     /// for pending database changes.
     /// </summary>
-    static ExternalEvent _event = null;
+    //static ExternalEvent _event = null;
 
     /// <summary>
     /// Separate thread running loop to
@@ -425,19 +425,19 @@ namespace RoomEditorApp
     /// </summary>
     static void CheckForPendingDatabaseChanges()
     {
-      while( null != _event )
+      while( null != App.Event )
       {
         ++_nLoopCount;
 
-        Debug.Assert( null != _event,
-        "expected non-null external event" );
+        //Debug.Assert( null != _event,
+        //"expected non-null external event" );
 
-        if( null == _event )
-        {
-          break;
-        }
+        //if( null == _event )
+        //{
+        //  break;
+        //}
 
-        if( _event.IsPending )
+        if( App.Event.IsPending )
         {
           Util.Log( string.Format(
             "CheckForPendingDatabaseChanges loop {0} - "
@@ -461,7 +461,7 @@ namespace RoomEditorApp
             if( rdb.LastSequenceNumberChanged(
               DbUpdater.LastSequence ) )
             {
-              _event.Raise();
+              App.Event.Raise();
 
               ++_nUpdatesRequested;
 
@@ -534,15 +534,8 @@ namespace RoomEditorApp
     {
       // Todo: stop thread first!
 
-      _event = App.ToggleSubscription(
-        new DbUpdater( uiapp ) );
-
-      if( null == _event )
-      {
-        _thread.Abort();
-        _thread = null;
-      }
-      else
+      if( App.ToggleSubscription2( new DbUpdater( 
+        uiapp ) ) )
       {
         // Start a new thread to regularly check the
         // database status and raise the external event
@@ -552,6 +545,11 @@ namespace RoomEditorApp
           CheckForPendingDatabaseChanges );
 
         _thread.Start();
+      }
+      else
+      {
+        _thread.Abort();
+        _thread = null;
       }
     }
   }

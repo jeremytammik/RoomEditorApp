@@ -65,7 +65,7 @@ namespace RoomEditorApp
     /// </summary>
     static RibbonItem[] _buttons;
 
-    static int _subscribeButtonIndex = 4;
+    static int _subscribeButtonIndex = 3;
 
     /// <summary>
     /// Our one and only Revit-provided 
@@ -222,16 +222,21 @@ namespace RoomEditorApp
     }
 
     /// <summary>
-    /// Toggle on and off subscription to 
-    /// automatic cloud updates.
+    /// Toggle on and off subscription to automatic 
+    /// cloud updates. Return true when subscribed.
     /// </summary>
-    public static ExternalEvent ToggleSubscription(
+    public static bool ToggleSubscription2(
       // EventHandler<IdlingEventArgs> handler
       IExternalEventHandler handler ) 
     {
       if( Subscribed )
       {
         Debug.Print( "Unsubscribing..." );
+
+        _timer.Stop();
+        _timer.Report( "Subscription timing" );
+        _timer = null;
+
         //_uiapp.Idling -= _handler; 
         //_handler = null; 
         _event.Dispose();
@@ -240,9 +245,6 @@ namespace RoomEditorApp
         _buttons[_subscribeButtonIndex].ItemText 
           = _subscribe;
 
-        _timer.Stop();
-        _timer.Report( "Subscription timing" );
-        _timer = null;
         Debug.Print( "Unsubscribed." );
       }
       else
@@ -258,7 +260,15 @@ namespace RoomEditorApp
         _timer = new JtTimer( "Subscription" );
         Debug.Print( "Subscribed." );
       }
-      return _event;
+      return null != _event;
+    }
+
+    /// <summary>
+    /// Provide public read-only access to external event.
+    /// </summary>
+    public static ExternalEvent Event
+    {
+      get { return _event; }
     }
     #endregion // Idling subscription and external event creation
 

@@ -88,6 +88,8 @@ using System.Runtime.InteropServices;
 // 2015-10-28 - 2016.0.0.1 - implemented RoomEditorDb.Url property and Boolean _use_local_db toggle, successfully tested on http://localhost:5984/roomedit/_design/roomedit/index.html
 // 2015-10-28 - 2016.0.0.2 - fixed and tested subscription to database changes and auto-update via external event
 // 2015-11-06 - 2016.0.0.3 - removed the experimental upload sheets command
+// 2015-11-06 - 2016.0.0.4 - removed upload sheets command and looked at access violation using null _event when unsubscribing
+// 2015-11-06 - 2016.0.0.5 - implemented App.Event property and eliminated superfluous DbUpdater._event variable
 //
-[assembly: AssemblyVersion( "2016.0.0.3" )]
-[assembly: AssemblyFileVersion( "2016.0.0.3" )]
+[assembly: AssemblyVersion( "2016.0.0.5" )]
+[assembly: AssemblyFileVersion( "2016.0.0.5" )]
