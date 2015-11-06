@@ -126,7 +126,7 @@ namespace RoomEditorApp
       UIControlledApplication a )
     {
       string[] tooltip = new string[] {
-        "Upload selected sheets and categories to cloud.",
+        //"Upload selected sheets and categories to cloud.",
         "Upload selected rooms to cloud.",
         "Upload all rooms to cloud.",
         "Update furniture from the last cloud edit.",
@@ -135,7 +135,7 @@ namespace RoomEditorApp
       };
 
       string[] text = new string[] {
-        "Upload Sheets",
+        //"Upload Sheets",
         "Upload Rooms",
         "Upload All Rooms",
         "Update Furniture",
@@ -144,7 +144,7 @@ namespace RoomEditorApp
       };
 
       string[] classNameStem = new string[] {
-        "UploadSheets",
+        //"UploadSheets",
         "UploadRooms",
         "UploadAllRooms",
         "Update",
@@ -153,7 +153,7 @@ namespace RoomEditorApp
       };
 
       string[] iconName = new string[] {
-        "2Up",
+        //"2Up",
         "1Up",
         "2Up",
         "1Down",
