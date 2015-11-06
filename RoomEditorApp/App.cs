@@ -233,10 +233,6 @@ namespace RoomEditorApp
       {
         Debug.Print( "Unsubscribing..." );
 
-        _timer.Stop();
-        _timer.Report( "Subscription timing" );
-        _timer = null;
-
         //_uiapp.Idling -= _handler; 
         //_handler = null; 
         _event.Dispose();
@@ -244,6 +240,10 @@ namespace RoomEditorApp
 
         _buttons[_subscribeButtonIndex].ItemText 
           = _subscribe;
+
+        _timer.Stop();
+        _timer.Report( "Subscription timing" );
+        _timer = null;
 
         Debug.Print( "Unsubscribed." );
       }
