@@ -24,6 +24,30 @@ http://thebuildingcoder.typepad.com/blog/2014/03/selecting-visible-categories-fr
 -->
 
 
+## Installation
+
+RoomEditorApp is a Revit add-in.
+
+To install it, fork the repository, clone to your local system, load the solution file in Visual Studio, compile and install in the standard Revit add-in location, for example by copying the add-in manifest file and the .NET DLL assembly to `C:\Users\tammikj\AppData\Roaming\Autodesk\Revit\Addins\2016`.
+
+If you do not know what this means, please refer to the GitHub
+and [Revit programming getting started](http://thebuildingcoder.typepad.com/blog/about-the-author.html#2) guides.
+
+As said above, RoomEditorApp interacts with
+the [roomedit](https://github.com/jeremytammik/roomedit)
+[CouchDB](https://couchdb.apache.org) app.
+
+You can run that either locally, on your own system, or on the web, e.g., hosted by the CouchDB hosting
+site [Iris Couch](http://www.iriscouch.com).
+
+If you use the latter, you have no more to set up.
+
+In the former case, you need to install and
+run [Apache CouchDB](http://couchdb.apache.org) locally on your system.
+
+Good luck and habve fun!
+
+
 ## Author
 
 Jeremy Tammik,
