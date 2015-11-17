@@ -17,14 +17,8 @@ Here is a
 recent [summary and overview description](http://thebuildingcoder.typepad.com/blog/2015/11/connecting-desktop-and-cloud-room-editor-update.html#3) of
 this project.
 
-<!---
-http://thebuildingcoder.typepad.com/blog/2014/03/using-generic-collections-with-filters-and-forms.html
 
-http://thebuildingcoder.typepad.com/blog/2014/03/selecting-visible-categories-from-a-set-of-views.html
--->
-
-
-##Installation
+## Installation
 
 RoomEditorApp is a Revit add-in.
 
