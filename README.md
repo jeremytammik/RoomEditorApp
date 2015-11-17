@@ -34,8 +34,7 @@ If you do not know what this means, please refer to the GitHub
 and [Revit programming getting started](http://thebuildingcoder.typepad.com/blog/about-the-author.html#2) guides.
 
 As said above, RoomEditorApp interacts with
-the [roomedit](https://github.com/jeremytammik/roomedit)
-[CouchDB](https://couchdb.apache.org) app.
+the [roomedit](https://github.com/jeremytammik/roomedit) CouchDB app.
 
 You can run that either locally, on your own system, or on the web, e.g., hosted by the CouchDB hosting
 site [Iris Couch](http://www.iriscouch.com).
@@ -43,7 +42,8 @@ site [Iris Couch](http://www.iriscouch.com).
 If you use the latter, you have no more to set up.
 
 In the former case, you need to install and
-run [Apache CouchDB](http://couchdb.apache.org) locally on your system.
+run both [Apache CouchDB](http://couchdb.apache.org) and
+the roomedit app itself locally on your system.
 
 Good luck and habve fun!
 
