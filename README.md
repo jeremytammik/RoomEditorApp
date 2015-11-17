@@ -39,7 +39,9 @@ the [roomedit](https://github.com/jeremytammik/roomedit) CouchDB app.
 You can run that either locally, on your own system, or on the web, e.g., hosted by the CouchDB hosting
 site [Iris Couch](http://www.iriscouch.com).
 
-If you use the latter, you have no more to set up.
+The choice between these two options is made by the Boolean variable `RoomEditorDb._use_local_db`.
+
+If you use the web hosted system, i.e., `_use_local_db` is set to `false`, you have no more to set up.
 
 In the former case, you need to install and
 run both [Apache CouchDB](http://couchdb.apache.org) and
