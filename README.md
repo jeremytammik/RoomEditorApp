@@ -47,7 +47,7 @@ In the former case, you need to install and
 run both [Apache CouchDB](http://couchdb.apache.org) and
 the roomedit app itself locally on your system.
 
-Good luck and habve fun!
+Good luck and have fun!
 
 
 ## Author
