@@ -24,7 +24,7 @@ RoomEditorApp is a Revit add-in.
 
 To install it, fork the repository, clone to your local system, load the solution file in Visual Studio, compile and install in the standard Revit add-in location, for example by copying the add-in manifest file and the .NET DLL assembly to `C:\Users\tammikj\AppData\Roaming\Autodesk\Revit\Addins\2016`
 
-In order to build RoomEditorApp, you will first need to download and compile the [DreamSeat CouchDB wrapper library](https://github.com/vdaron/DreamSeat) and reference the its .NET assembly `DreamSeat.dll`. This will pull in these additional DLLs, which all need remain accessible to run the add-in:
+In order to build RoomEditorApp, you will first need to download and compile the [DreamSeat CouchDB wrapper library](https://github.com/vdaron/DreamSeat) and reference the its .NET assembly `DreamSeat.dll`. This will pull in these additional DLLs:
 
 - Autofac.dll
 - DreamSeat.dll
@@ -32,6 +32,9 @@ In order to build RoomEditorApp, you will first need to download and compile the
 - SgmlReaderDll.dll
 - log4net.dll
 - mindtouch.dream.dll
+
+They all need to be accessible to run the add-in. On way to achieve by copying them to the `RoomEditorApp\bin\Debug` folder and running the Revit add-in from there, cf. the path specified by
+the [`Assembly` tag in the add-in manifest file](./RoomEditorApp/RoomEditorApp.addin#L5).
 
 If you do not know what this means, please refer to the GitHub
 and [Revit programming getting started](http://thebuildingcoder.typepad.com/blog/about-the-author.html#2) guides.
