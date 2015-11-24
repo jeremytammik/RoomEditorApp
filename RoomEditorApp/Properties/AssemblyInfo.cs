@@ -91,6 +91,7 @@ using System.Runtime.InteropServices;
 // 2015-11-06 - 2016.0.0.4 - removed upload sheets command and looked at access violation using null _event when unsubscribing
 // 2015-11-06 - 2016.0.0.5 - implemented App.Event property and eliminated superfluous DbUpdater._event variable
 // 2015-11-06 - 2016.0.0.5 - eliminated obsolete API usage replace calls to BoundarySegment.Curve property by GetCurve method
+// 2015-11-24 - 2016.0.0.6 - set Copy Local to false on the Revit API assemblies
 //
 [assembly: AssemblyVersion( "2016.0.0.5" )]
 [assembly: AssemblyFileVersion( "2016.0.0.5" )]
