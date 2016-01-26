@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration( "" )]
 [assembly: AssemblyCompany( "Autodesk Inc." )]
 [assembly: AssemblyProduct( "Revit Room Editor Add-In" )]
-[assembly: AssemblyCopyright( "Copyright 2013-2015 © Jeremy Tammik Autodesk Inc." )]
+[assembly: AssemblyCopyright( "Copyright 2013-2016 © Jeremy Tammik Autodesk Inc." )]
 [assembly: AssemblyTrademark( "" )]
 [assembly: AssemblyCulture( "" )]
 
@@ -92,6 +92,7 @@ using System.Runtime.InteropServices;
 // 2015-11-06 - 2016.0.0.5 - implemented App.Event property and eliminated superfluous DbUpdater._event variable
 // 2015-11-06 - 2016.0.0.5 - eliminated obsolete API usage replace calls to BoundarySegment.Curve property by GetCurve method
 // 2015-11-24 - 2016.0.0.7 - added installation instructions and set Copy Local to false on the Revit API assemblies
+// 2016-01-26 - 2016.0.0.8 - incremented copyright year, tested for bim programming workshop in madrid
 //
-[assembly: AssemblyVersion( "2016.0.0.7" )]
-[assembly: AssemblyFileVersion( "2016.0.0.7" )]
+[assembly: AssemblyVersion( "2016.0.0.8" )]
+[assembly: AssemblyFileVersion( "2016.0.0.8" )]
