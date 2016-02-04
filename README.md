@@ -56,6 +56,15 @@ the roomedit app itself locally on your system.
 Good luck and have fun!
 
 
+## Todo
+
+- Reimplement the roomeditor database using node.js and MongoDB instead of CouchDB, like
+the [FireRatingCloud](https://github.com/jeremytammik/FireRatingCloud)
+[fireratingdb](https://github.com/jeremytammik/firerating)
+[node.js](https://nodejs.org)
+[MongoDB](https://www.mongodb.org) web server.
+
+
 ## Author
 
 Jeremy Tammik,
