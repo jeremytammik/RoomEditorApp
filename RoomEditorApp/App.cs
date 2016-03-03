@@ -71,7 +71,7 @@ namespace RoomEditorApp
     /// Our one and only Revit-provided 
     /// UIControlledApplication instance.
     /// </summary>
-    static UIControlledApplication _uiapp;
+    //static UIControlledApplication _uiapp;
 
     #region Icon resource, bitmap image and ribbon panel stuff
     /// <summary>
@@ -275,7 +275,7 @@ namespace RoomEditorApp
     public Result OnStartup(
       UIControlledApplication a )
     {
-      _uiapp = a;
+      //_uiapp = a;
 
       AddRibbonPanel( a );
 

@@ -93,6 +93,7 @@ using System.Runtime.InteropServices;
 // 2015-11-06 - 2016.0.0.5 - eliminated obsolete API usage replace calls to BoundarySegment.Curve property by GetCurve method
 // 2015-11-24 - 2016.0.0.7 - added installation instructions and set Copy Local to false on the Revit API assemblies
 // 2016-01-26 - 2016.0.0.8 - incremented copyright year, tested for bim programming workshop in madrid
+// 2016-03-03 - 2016.0.0.9 - eliminated unused _uiapp variable
 //
-[assembly: AssemblyVersion( "2016.0.0.8" )]
-[assembly: AssemblyFileVersion( "2016.0.0.8" )]
+[assembly: AssemblyVersion( "2016.0.0.9" )]
+[assembly: AssemblyFileVersion( "2016.0.0.9" )]
