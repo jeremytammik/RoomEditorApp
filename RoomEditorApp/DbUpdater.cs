@@ -161,10 +161,10 @@ namespace RoomEditorApp
 
       List<string> modifiedPropertyKeys = new List<string>();
 
-      Dictionary<string, string> dbdict 
+      Dictionary<string, string> dbdict
         = f.Properties;
 
-      Dictionary<string, string> eldict 
+      Dictionary<string, string> eldict
         = Util.GetElementProperties( e );
 
       Debug.Assert( dbdict.Count == eldict.Count,
@@ -333,28 +333,28 @@ namespace RoomEditorApp
       Util.Log( "UpdateBim end" );
     }
 
-  /// <summary>
-  /// Execute method invoked by Revit via the 
-  /// external event as a reaction to a call 
-  /// to its Raise method.
-  /// </summary>
-  public void Execute( UIApplication a )
-  {
-    // As far as I can tell, the external event 
-    // should work fine even when switching between
-    // different documents. That, however, remains
-    // to be tested in more depth (or at all).
+    /// <summary>
+    /// Execute method invoked by Revit via the 
+    /// external event as a reaction to a call 
+    /// to its Raise method.
+    /// </summary>
+    public void Execute( UIApplication a )
+    {
+      // As far as I can tell, the external event 
+      // should work fine even when switching between
+      // different documents. That, however, remains
+      // to be tested in more depth (or at all).
 
-    //Document doc = a.ActiveUIDocument.Document;
+      //Document doc = a.ActiveUIDocument.Document;
 
-    //Debug.Assert( doc.Title.Equals( _doc.Title ),
-    //  "oops ... different documents ... test this" );
+      //Debug.Assert( doc.Title.Equals( _doc.Title ),
+      //  "oops ... different documents ... test this" );
 
-    //View view = a.ActiveUIDocument.ActiveView;
-    //Debug.Print( "Active view: " + view.Name );
+      //View view = a.ActiveUIDocument.ActiveView;
+      //Debug.Print( "Active view: " + view.Name );
 
-    UpdateBim();
-  }
+      UpdateBim();
+    }
 
     /// <summary>
     /// Required IExternalEventHandler interface 
@@ -534,7 +534,7 @@ namespace RoomEditorApp
     {
       // Todo: stop thread first!
 
-      if( App.ToggleSubscription2( new DbUpdater( 
+      if( App.ToggleSubscription2( new DbUpdater(
         uiapp ) ) )
       {
         // Start a new thread to regularly check the
