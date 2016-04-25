@@ -95,6 +95,7 @@ using System.Runtime.InteropServices;
 // 2016-01-26 - 2016.0.0.8 - incremented copyright year, tested for bim programming workshop in madrid
 // 2016-03-03 - 2016.0.0.9 - eliminated unused _uiapp variable
 // 2016-04-25 - 2017.0.0.0 - flat migration to Revit 2017, moved to Visual Studio 2015 and .NET framework 4.5.2
+// 2016-04-25 - 2017.0.0.0 - additional manual project file cleanup after successful migration and first compilation
 //
 [assembly: AssemblyVersion( "2017.0.0.0" )]
 [assembly: AssemblyFileVersion( "2017.0.0.0" )]
