@@ -385,7 +385,7 @@ namespace RoomEditorApp
     }
 
     /// <summary>
-    /// Display a longer smaller message.
+    /// Display a longer message in smaller font.
     /// </summary>
     public static void InfoMsg2(
       string instruction,
