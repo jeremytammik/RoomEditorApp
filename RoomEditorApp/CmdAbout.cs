@@ -30,7 +30,7 @@ namespace RoomEditorApp
       + "Revit model in real-time. All of the components "
       + "used are completely open source, except for Revit "
       + "itself.\r\n\r\n"
-      + "Jeremy Tammik, Autodesk Inc., Tech Summit 2013 + 2014";
+      + "Jeremy Tammik, Autodesk Inc.";
 
     public Result Execute(
       ExternalCommandData commandData,
