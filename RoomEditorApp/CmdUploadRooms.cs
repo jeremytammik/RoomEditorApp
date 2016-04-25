@@ -398,8 +398,11 @@ namespace RoomEditorApp
       if( null != solid
         && 0 < solid.Faces.Size )
       {
-        Plane plane = new Plane( XYZ.BasisX,
-          XYZ.BasisY, XYZ.Zero );
+        //Plane plane = new Plane(XYZ.BasisX,
+        //  XYZ.BasisY, XYZ.Zero); // 2016
+
+        Plane plane = Plane.CreateByOriginAndBasis(
+          XYZ.Zero, XYZ.BasisX, XYZ.BasisY ); // 2017
 
         ExtrusionAnalyzer extrusionAnalyzer = null;
 
@@ -498,8 +501,8 @@ namespace RoomEditorApp
     {
       Solid union = null;
 
-      Plane plane = new Plane( XYZ.BasisX,
-        XYZ.BasisY, XYZ.Zero );
+      Plane plane = Plane.CreateByOriginAndBasis(
+        XYZ.Zero, XYZ.BasisX, XYZ.BasisY );
 
       foreach( GeometryObject obj in geo )
       {
