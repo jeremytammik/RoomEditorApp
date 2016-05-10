@@ -173,9 +173,9 @@ namespace RoomEditorApp
 
       Assembly asm = typeof( App ).Assembly;
 
-      ContextualHelp contextHelp = new ContextualHelp(
-        ContextualHelpType.ChmFile,
-        "C:a/vs/RoomEditorApp/RoomEditorApp/RoomEditor.html" );
+      //ContextualHelp contextHelp = new ContextualHelp(
+      //  ContextualHelpType.ChmFile,
+      //  "C:a/vs/RoomEditorApp/RoomEditorApp/RoomEditor.html" );
 
       for ( int i = 0; i < n; ++i )
       {
@@ -195,7 +195,7 @@ namespace RoomEditorApp
         d.ToolTipImage = GetBitmapImage( asm,
           IconResourcePath( iconName[i], "" ) );
 
-        d.SetContextualHelp( contextHelp );
+        //d.SetContextualHelp( contextHelp );
 
         _buttons[i] = splitBtn.AddPushButton( d );
       }
