@@ -305,7 +305,7 @@ namespace RoomEditorApp
 
         opt.IncludeDocs = true;
         opt.Since = LastSequence;
-        opt.View = "roomedit/map_room_to_furniture";
+        //opt.View = "roomedit/map_room_to_furniture"; // Why is this different now with NuGet package?
 
         // I tried to add a filter to this view, but 
         // that is apparently not supported by the 

@@ -97,6 +97,8 @@ using System.Runtime.InteropServices;
 // 2016-04-25 - 2017.0.0.0 - flat migration to Revit 2017, moved to Visual Studio 2015 and .NET framework 4.5.2
 // 2016-04-25 - 2017.0.0.1 - additional manual project file cleanup after successful migration and first compilation
 // 2016-04-25 - 2017.0.0.2 - eliminated deprecated Revit API usage warnings
+// 2016-05-30 - 2017.0.0.3 - computer crashed, reinstalled, switched DreamSeat to NuGet, recompiled, still need to test
+// 2016-05-30 - 2017.0.0.3 - ChangeOptions.View property disappeared and first test is successful
 //
-[assembly: AssemblyVersion( "2017.0.0.2" )]
-[assembly: AssemblyFileVersion( "2017.0.0.2" )]
+[assembly: AssemblyVersion( "2017.0.0.3" )]
+[assembly: AssemblyFileVersion( "2017.0.0.3" )]
