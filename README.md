@@ -35,7 +35,7 @@ Each of the samples consists of a C# .NET Revit API desktop add-in and a web ser
 
 ## Installation
 
-RoomEditorApp is a Revit add-in.
+RoomEditorApp is a C# .NET Revit API add-in.
 
 To install it, fork the repository, clone to your local system, load the solution file in Visual Studio, compile and install in the standard Revit add-in location, for example by copying the add-in manifest file and the .NET DLL assembly to `C:\Users\tammikj\AppData\Roaming\Autodesk\Revit\Addins\2016`
 
