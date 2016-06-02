@@ -18,6 +18,21 @@ recent [summary and overview description](http://thebuildingcoder.typepad.com/bl
 this project.
 
 
+## Connecting desktop and cloud
+
+RoomEditorApp is a member of the suite of samples connecting the desktop and the cloud.
+
+Each of the samples consists of a C# .NET Revit API desktop add-in and a web server:
+
+- [RoomEditorApp](https://github.com/jeremytammik/RoomEditorApp) and  the [roomeditdb](https://github.com/jeremytammik/roomedit) CouchDB 
+	database and web server
+- [FireRatingCloud](https://github.com/jeremytammik/FireRatingCloud) and
+	the [fireratingdb](https://github.com/jeremytammik/firerating) node.js 
+	MongoDB web server.
+- [Roomedit3dApp](https://github.com/jeremytammik/Roomedit3dApp) and 
+  the [roomedit3d](https://github.com/jeremytammik/roomedit3d) Forge Viewer extension to move furniture family instances and update the Revit BIM in real time via socket.io broadcast
+  
+
 ## Installation
 
 RoomEditorApp is a Revit add-in.
