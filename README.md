@@ -25,12 +25,12 @@ RoomEditorApp is a member of the suite of samples connecting the desktop and the
 Each of the samples consists of a C# .NET Revit API desktop add-in and a web server:
 
 - [RoomEditorApp](https://github.com/jeremytammik/RoomEditorApp) and  the [roomeditdb](https://github.com/jeremytammik/roomedit) CouchDB 
-	database and web server
+	database and web server demonstrating real-time round-trip graphical editing of furniture family instance location and rotation plus textual editing of element properties in a simplified 2D representation of the 3D BIM.
 - [FireRatingCloud](https://github.com/jeremytammik/FireRatingCloud) and
 	the [fireratingdb](https://github.com/jeremytammik/firerating) node.js 
-	MongoDB web server.
+	MongoDB web server demonstrating real-time round-trip editing of Revit element shared parameter values.
 - [Roomedit3dApp](https://github.com/jeremytammik/Roomedit3dApp) and 
-  the [roomedit3d](https://github.com/jeremytammik/roomedit3d) Forge Viewer extension to move furniture family instances and update the Revit BIM in real time via socket.io broadcast
+  the [roomedit3d](https://github.com/jeremytammik/roomedit3d) Forge Viewer extension demonstrating translation of furniture family instances in the viewer and updating the Revit BIM in real time via a socket.io broadcast.
   
 
 ## Installation
