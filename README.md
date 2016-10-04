@@ -32,7 +32,8 @@ Each of the samples consists of a C# .NET Revit API desktop add-in and a web ser
 - [FireRatingCloud](https://github.com/jeremytammik/FireRatingCloud) and
 	the [fireratingdb](https://github.com/jeremytammik/firerating)
   [node.js](https://nodejs.org)
-	[MongoDB](https://www.mongodb.com) web server demonstrating real-time round-trip editing of Revit element shared parameter values.
+	[MongoDB](https://www.mongodb.com) web server demonstrating real-time round-trip editing of Revit element shared parameter values stored in
+  a globally accessible [mongolab](http://mongolab.com)-hosted db.
 - [Roomedit3dApp](https://github.com/jeremytammik/Roomedit3dApp) and
   the first [roomedit3d](https://github.com/jeremytammik/roomedit3d) Forge Viewer extension demonstrating translation of BIM elements in the viewer and updating the Revit model in real time via a 'socket.io' broadcast.
 - The most recent Forge sample, adding the option to select any Revit model hosted
