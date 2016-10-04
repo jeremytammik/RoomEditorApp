@@ -20,17 +20,28 @@ this project.
 
 ## Connecting desktop and cloud
 
-RoomEditorApp is a member of the suite of samples connecting the desktop and the cloud.
+RoomEditorApp is the first and oldest member of the suite of samples connecting the desktop and the cloud.
 
 Each of the samples consists of a C# .NET Revit API desktop add-in and a web server:
 
-- [RoomEditorApp](https://github.com/jeremytammik/RoomEditorApp) and  the [roomeditdb](https://github.com/jeremytammik/roomedit) CouchDB
-	database and web server demonstrating real-time round-trip graphical editing of furniture family instance location and rotation plus textual editing of element properties in a simplified 2D representation of the 3D BIM.
+- [RoomEditorApp](https://github.com/jeremytammik/RoomEditorApp) and
+  the [roomeditdb](https://github.com/jeremytammik/roomedit)
+  [CouchDB](https://couchdb.apache.org)
+	database and web server demonstrating real-time round-trip graphical editing of furniture family instance location and rotation plus textual editing of element properties in a simplified
+  2D [SVG](https://www.w3.org/Graphics/SVG/) representation of the 3D BIM.
 - [FireRatingCloud](https://github.com/jeremytammik/FireRatingCloud) and
-	the [fireratingdb](https://github.com/jeremytammik/firerating) node.js
-	MongoDB web server demonstrating real-time round-trip editing of Revit element shared parameter values.
+	the [fireratingdb](https://github.com/jeremytammik/firerating)
+  [node.js](https://nodejs.org)
+	[MongoDB](https://www.mongodb.com) web server demonstrating real-time round-trip editing of Revit element shared parameter values.
 - [Roomedit3dApp](https://github.com/jeremytammik/Roomedit3dApp) and
-  the [roomedit3d](https://github.com/jeremytammik/roomedit3d) Forge Viewer extension demonstrating translation of furniture family instances in the viewer and updating the Revit BIM in real time via a socket.io broadcast.
+  the first [roomedit3d](https://github.com/jeremytammik/roomedit3d) Forge Viewer extension demonstrating translation of BIM elements in the viewer and updating the Revit model in real time via a 'socket.io' broadcast.
+- The most recent Forge sample, adding the option to select any Revit model hosted
+  on [A360](https://a360.autodesk.com), again using 
+  the [Roomedit3dApp](https://github.com/jeremytammik/Roomedit3dApp) Revit add-in working with the 
+  new [roomedit3dv3](https://github.com/Autodesk-Forge/forge-boilers.nodejs/tree/roomedit3d)
+  [Autodesk Forge](https://forge.autodesk.com)
+  [Viewer](https://developer.autodesk.com/en/docs/viewer/v2/overview) extension
+  to demonstrate translation of BIM element instances in the viewer and updating the Revit model in real time via a `socket.io` broadcast.
 
 
 ## Installation
