@@ -99,6 +99,7 @@ using System.Runtime.InteropServices;
 // 2016-05-30 - 2017.0.0.3 - computer crashed, reinstalled, switched DreamSeat to NuGet, recompiled, still need to test
 // 2016-05-30 - 2017.0.0.3 - ChangeOptions.View property disappeared and first test is successful
 // 2017-10-16 - 2018.0.0.0 - flat migration to Revit 2018
+// 2017-10-16 - 2018.0.0.1 - fix unsubscription on revit shutdown
 //
-[assembly: AssemblyVersion( "2018.0.0.0" )]
-[assembly: AssemblyFileVersion( "2018.0.0.0" )]
+[assembly: AssemblyVersion( "2018.0.0.1" )]
+[assembly: AssemblyFileVersion( "2018.0.0.1" )]
