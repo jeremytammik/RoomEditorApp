@@ -288,7 +288,12 @@ namespace RoomEditorApp
       if( Subscribed )
       {
         //_uiapp.Idling -= _handler;
-        _event.Dispose();
+        //_event.Dispose();
+
+        if( Subscribed )
+        {
+          ToggleSubscription2( null );
+        }
       }
       return Result.Succeeded;
     }
