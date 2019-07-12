@@ -12,7 +12,7 @@ using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
 using Bitmap = System.Drawing.Bitmap;
 using BoundarySegment = Autodesk.Revit.DB.BoundarySegment;
-using ComponentManager = Autodesk.Windows.ComponentManager;
+//using ComponentManager = Autodesk.Windows.ComponentManager; pre-2020
 using IWin32Window = System.Windows.Forms.IWin32Window;
 using DreamSeat;
 #endregion
@@ -664,6 +664,7 @@ namespace RoomEditorApp
     /// they contain to the cloud database.
     /// </summary>
     public static void UploadRoom(
+      IntPtr hwnd,
       Document doc,
       Room room )
     {
@@ -730,9 +731,12 @@ namespace RoomEditorApp
         furnitureInstances.Add(
           new JtPlacement2dInt( f ) );
       }
+      //IWin32Window revit_window
+      //  = new JtWindowHandle(
+      //    ComponentManager.ApplicationWindow ); // pre-2020
+
       IWin32Window revit_window
-        = new JtWindowHandle(
-          ComponentManager.ApplicationWindow );
+        = new JtWindowHandle( hwnd ); // 2020
 
       string caption = doc.Title
         + " : " + doc.GetElement( room.LevelId ).Name
@@ -758,6 +762,8 @@ namespace RoomEditorApp
       UIDocument uidoc = uiapp.ActiveUIDocument;
       Application app = uiapp.Application;
       Document doc = uidoc.Document;
+
+      IntPtr hwnd = uiapp.MainWindowHandle;
 
       if( null == doc )
       {

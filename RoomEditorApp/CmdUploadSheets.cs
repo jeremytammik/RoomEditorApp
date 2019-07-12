@@ -7,7 +7,7 @@ using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using Bitmap = System.Drawing.Bitmap;
-using ComponentManager = Autodesk.Windows.ComponentManager;
+//using ComponentManager = Autodesk.Windows.ComponentManager;
 using IWin32Window = System.Windows.Forms.IWin32Window;
 using DialogResult = System.Windows.Forms.DialogResult;
 using System.Diagnostics;
@@ -619,14 +619,17 @@ namespace RoomEditorApp
       ref string message,
       ElementSet elements )
     {
-      IWin32Window revit_window
-        = new JtWindowHandle(
-          ComponentManager.ApplicationWindow );
-
       UIApplication uiapp = commandData.Application;
       UIDocument uidoc = uiapp.ActiveUIDocument;
       Application app = uiapp.Application;
       Document doc = uidoc.Document;
+
+      //IWin32Window revit_window
+      //  = new JtWindowHandle(
+      //    ComponentManager.ApplicationWindow ); // pre-2020
+
+      IWin32Window revit_window
+        = new JtWindowHandle( uiapp.MainWindowHandle ); // 2020
 
       if( null == doc )
       {
