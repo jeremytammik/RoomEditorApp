@@ -4,6 +4,7 @@ using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.Architecture;
 using Autodesk.Revit.UI;
+using System;
 #endregion
 
 namespace RoomEditorApp
@@ -20,6 +21,8 @@ namespace RoomEditorApp
       UIDocument uidoc = uiapp.ActiveUIDocument;
       Document doc = uidoc.Document;
 
+      IntPtr hwnd = uiapp.MainWindowHandle;
+
       FilteredElementCollector rooms
         = new FilteredElementCollector( doc )
           .OfClass( typeof( SpatialElement ) )
@@ -27,7 +30,7 @@ namespace RoomEditorApp
 
       foreach( Room room in rooms )
       {
-        CmdUploadRooms.UploadRoom( doc, room );
+        CmdUploadRooms.UploadRoom( hwnd, doc, room );
       }
 
       DbUpdater.SetLastSequence();

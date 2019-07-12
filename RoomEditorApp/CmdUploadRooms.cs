@@ -818,7 +818,7 @@ namespace RoomEditorApp
 
       foreach( ElementId id in ids )
       {
-        UploadRoom( doc, 
+        UploadRoom( hwnd, doc, 
           doc.GetElement( id ) as Room );
       }
 
